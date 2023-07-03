@@ -15,10 +15,6 @@ You will have to modify different sections of this README.md to include the nece
 - Complete the sections (`## Presentation and Installation` `## Streamlit App`) following the instructions in these sections.
 - Delete this section (`## Explanations and Instructions`)
 
-**Streamlit Application**
-
-A [Streamlit] application template (https://streamlit.io/) is available in the [streamlit_app](streamlit_app) folder. You can use this template to start with your project.
-
 ## Presentation and Installation
 
 Complete this section with a brief description of your project, the context (including a link to the DataScientest course), and the objectives.
@@ -43,18 +39,3 @@ You will need to install the dependencies (in a dedicated environment) :
 ```
 pip install -r requirements.txt
 ```
-
-## Streamlit App
-
-**Add explanations on how to use the app.**
-
-To run the app (be careful with the paths of the files in the app):
-
-```shell
-conda create --name my-awesome-streamlit python=3.9
-conda activate my-awesome-streamlit
-pip install -r requirements.txt
-streamlit run app.py
-```
-
-The app should then be available at [localhost:8501](http://localhost:8501).
