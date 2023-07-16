@@ -6,5 +6,11 @@ if __name__ == "__main__":
     print("Hello from financial_data_reader")
 
     fmp = FmpCloud()
-    historical = fmp.get_historical_data("AAPL")
-    insert_historical(historical)
+
+    historical = {
+        ticker: fmp.get_historical_data(ticker)
+        for ticker in ["AAPL", "MSFT", "AMZN", "GOOG", "META"]
+    }
+
+    for vals in historical.values():
+        insert_historical(vals)
