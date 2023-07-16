@@ -32,6 +32,8 @@ services:
       dockerfile: ./data_report.Dockerfile
     ports:
       - 8050:8050
+    environment:
+      HOST: 0.0.0.0
     depends_on:
       - database
     secrets:
