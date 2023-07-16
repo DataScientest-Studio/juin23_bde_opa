@@ -3,7 +3,9 @@ version: '3'
 services:
   financial_data_reader:
     image: opa/financial_data_reader
-    build: ./financial_data_reader
+    build:
+      context: .
+      dockerfile: ./financial_data_reader.Dockerfile
     secrets:
       - fmp_cloud_api_key
 
