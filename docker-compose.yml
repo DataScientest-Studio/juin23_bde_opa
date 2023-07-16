@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  financial_data_reader:
+    image: alpine
+    command: echo "Hello from financial data reader"
+
+  database:
+    image: alpine
+    command: echo "Hello from database"
+
+  data_report:
+    image: alpine
+    command: echo "Hello from data report"
+
+  internal_api:
+    image: alpine
+    command: echo "Hello from internal API"
+
+  machine_learning:
+    image: alpine
+    command: echo "Hello from machine learning"
