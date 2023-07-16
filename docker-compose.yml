@@ -2,8 +2,8 @@ version: '3'
 
 services:
   financial_data_reader:
-    image: alpine
-    command: echo "Hello from financial data reader"
+    image: opa/financial_data_reader
+    build: ./financial_data_reader
 
   database:
     image: alpine
