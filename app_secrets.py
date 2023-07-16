@@ -1,18 +1,19 @@
 from pathlib import Path
 
+from utils import is_running_in_docker
+
 
 def get_base() -> Path:
-    docker_path = Path("/run/secrets")
-    local_path = Path("./secrets")
-
-    if docker_path.is_dir():
-        return docker_path
-    elif local_path.is_dir():
-        return local_path
+    if is_running_in_docker():
+        return Path("/run/secrets")
     else:
-        raise EnvironmentError(
-            f"There should be a {docker_path} or a {local_path} dir for secrets"
-        )
+        path = Path("./secrets")
+        if path.is_dir():
+            return path
+        else:
+            raise EnvironmentError(
+                f"Secrets should either be handled via Docker Secrets or stored in a {path} directory"
+            )
 
 
 base = get_base()

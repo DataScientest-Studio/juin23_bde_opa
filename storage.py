@@ -3,8 +3,11 @@ import datetime as dt
 from pymongo import MongoClient
 
 from app_secrets import get_secret
+from utils import is_running_in_docker
 
-mongo_uri = f'mongodb://{get_secret("mongodb_username")}:{get_secret("mongodb_password")}@localhost'
+
+mongo_host = "database" if is_running_in_docker() else "localhost"
+mongo_uri = f'mongodb://{get_secret("mongodb_username")}:{get_secret("mongodb_password")}@{mongo_host}'
 mongo_client = MongoClient(mongo_uri)
 
 opa_db = mongo_client.get_database("opa")
