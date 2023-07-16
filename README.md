@@ -19,3 +19,7 @@ By default the docker-compose won't rebuild the images even though the code may 
 First execute `./setup-local.sh`
 
 Run the financial data reader with : `python -m financial_data_reader`
+
+## Run commands on the database
+
+`docker-compose run -it --rm database mongosh mongodb://username@password:database`

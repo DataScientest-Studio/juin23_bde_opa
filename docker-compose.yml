@@ -8,10 +8,20 @@ services:
       dockerfile: ./financial_data_reader.Dockerfile
     secrets:
       - fmp_cloud_api_key
+      - mongodb_username
+      - mongodb_password
 
   database:
-    image: alpine
-    command: echo "Hello from database"
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME_FILE: /run/secrets/mongodb_username
+      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongodb_password
+    secrets:
+      - mongodb_username
+      - mongodb_password
 
   data_report:
     image: alpine
@@ -28,3 +38,7 @@ services:
 secrets:
   fmp_cloud_api_key:
     file: secrets/fmp_cloud_api_key
+  mongodb_username:
+    file: secrets/mongodb_username
+  mongodb_password:
+    file: secrets/mongodb_password

@@ -1,8 +1,10 @@
 from providers import FmpCloud
+from storage import insert_historical
 
 
 if __name__ == "__main__":
     print("Hello from financial_data_reader")
 
     fmp = FmpCloud()
-    print(fmp.get_historical_data("AAPL").historical[:10])
+    historical = fmp.get_historical_data("AAPL")
+    insert_historical(historical)
