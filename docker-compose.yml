@@ -6,6 +6,8 @@ services:
     build:
       context: .
       dockerfile: ./financial_data_reader.Dockerfile
+    depends_on:
+      - database
     secrets:
       - fmp_cloud_api_key
       - mongodb_username
@@ -26,10 +28,14 @@ services:
   data_report:
     image: alpine
     command: echo "Hello from data report"
+    depends_on:
+      - database
 
   internal_api:
     image: alpine
     command: echo "Hello from internal API"
+    depends_on:
+      - database
 
   machine_learning:
     image: alpine
