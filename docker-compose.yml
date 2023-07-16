@@ -26,10 +26,17 @@ services:
       - mongodb_password
 
   data_report:
-    image: alpine
-    command: echo "Hello from data report"
+    image: opa/data_report
+    build:
+      context: .
+      dockerfile: ./data_report.Dockerfile
+    ports:
+      - 8050:8050
     depends_on:
       - database
+    secrets:
+      - mongodb_username
+      - mongodb_password
 
   internal_api:
     image: alpine

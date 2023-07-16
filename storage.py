@@ -26,3 +26,10 @@ def insert_historical(historical: list[any]):
             for v in historical.historical
         ]
     )
+
+
+def get_historical(ticker: str, limit: int = 500):
+    return [
+        {"date": d["date"], "close": d["close"]}
+        for d in hist_collection.find({"symbol": ticker}, limit=limit)
+    ]
