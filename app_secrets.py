@@ -10,7 +10,9 @@ def get_base() -> Path:
     elif local_path.is_dir():
         return local_path
     else:
-        raise EnvironmentError(f"There should be a {docker_path} or a {local_path} dir for secrets")
+        raise EnvironmentError(
+            f"There should be a {docker_path} or a {local_path} dir for secrets"
+        )
 
 
 base = get_base()
