@@ -4,7 +4,7 @@ from datetime import date
 
 from pydantic import BaseModel
 
-from secrets import get_secret
+from app_secrets import get_secret
 from http_methods import get_json_data
 
 
