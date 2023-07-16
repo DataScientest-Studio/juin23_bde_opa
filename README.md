@@ -1,5 +1,9 @@
 # OPA Project
 
+## Requirements
+
+The project must have a `secrets` directory
+
 ## Running it
 
 `docker-compose up`.

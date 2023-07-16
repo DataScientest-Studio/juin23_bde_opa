@@ -4,6 +4,8 @@ services:
   financial_data_reader:
     image: opa/financial_data_reader
     build: ./financial_data_reader
+    secrets:
+      - fmp_cloud_api_key
 
   database:
     image: alpine
@@ -20,3 +22,7 @@ services:
   machine_learning:
     image: alpine
     command: echo "Hello from machine learning"
+
+secrets:
+  fmp_cloud_api_key:
+    file: secrets/fmp_cloud_api_key
