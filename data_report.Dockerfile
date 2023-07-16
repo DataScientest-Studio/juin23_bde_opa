@@ -7,4 +7,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD [ "python", "-m", "data_report" ]
+CMD [ "python", "-m", "opa.data_report" ]

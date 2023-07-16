@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from utils import is_running_in_docker
+from opa.utils import is_running_in_docker
 
 
 def get_base() -> Path:

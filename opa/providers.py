@@ -4,8 +4,8 @@ from datetime import date
 
 from pydantic import BaseModel
 
-from app_secrets import get_secret
-from http_methods import get_json_data
+from opa.app_secrets import get_secret
+from opa.http_methods import get_json_data
 
 
 class StockMarketProvider(ABC):

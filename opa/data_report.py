@@ -3,7 +3,7 @@ import plotly.express as px
 import pandas as pd
 
 
-from storage import get_historical
+from opa.storage import get_historical
 
 
 def get_dataframe(ticker):

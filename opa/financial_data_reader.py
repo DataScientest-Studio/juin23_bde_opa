@@ -1,5 +1,5 @@
-from providers import FmpCloud
-from storage import insert_historical
+from opa.providers import FmpCloud
+from opa.storage import insert_historical
 
 
 if __name__ == "__main__":

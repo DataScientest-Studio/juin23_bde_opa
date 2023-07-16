@@ -2,8 +2,8 @@ import datetime as dt
 
 from pymongo import MongoClient
 
-from app_secrets import get_secret
-from utils import is_running_in_docker
+from opa.app_secrets import get_secret
+from opa.utils import is_running_in_docker
 
 
 mongo_host = "database" if is_running_in_docker() else "localhost"

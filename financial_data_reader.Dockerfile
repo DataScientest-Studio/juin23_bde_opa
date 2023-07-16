@@ -7,4 +7,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD [ "python", "-m", "financial_data_reader" ]
+CMD [ "python", "-m", "opa.financial_data_reader" ]
