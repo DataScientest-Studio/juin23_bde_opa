@@ -1,0 +1,44 @@
+= OPA Project
+
+:toc:
+
+== Context
+
+
+== Financial data retrieval
+
+=== API provider choice
+
+Dozens of API providers exist for stock market data. In the relatively basic scope of this project, they are virtually identical and the main difference lies in the limits they set on request rate, and the information they require for registration.
+
+Here is an overview of those that have been reviewed :
+
+[%autowidth]
+|===
+|Company |Registration |API limits |API documentation
+
+|MarketStackfootnote:[https://marketstack.com/]
+|Email + name + phonefootnote:[https://marketstack.com/signup/free]
+|100 requests/monthfootnote:[https://marketstack.com/product]
+|Yesfootnote:[https://marketstack.com/documentation]
+
+|Alphavantagefootnote:[https://www.alphavantage.co/]
+|Emailfootnote:[https://www.alphavantage.co/support/#api-key]
+|5 requests / minute, 500 requests / dayfootnote:[https://www.alphavantage.co/support/#support]
+|Yesfootnote:[https://www.alphavantage.co/documentation/]
+
+|Yahoo Finance
+|No
+|Unrestricted in practice
+|Nofootnote:[The official Yahoo Finance API seems to have been discontinued but it is still working and its API can be retro-engineered from e.g. this unofficial Python client : https://github.com/ranaroussi/yfinance]
+
+|EODHDfootnote:[https://eodhistoricaldata.com/]
+|Google OR Github OR email + namefootnote:[https://eodhistoricaldata.com/register]
+|20 requests / day, 20 requests / minutefootnote:[https://eodhistoricaldata.com/pricing]
+|Yesfootnote:[https://eodhistoricaldata.com/financial-apis/]
+
+|FMP Cloudfootnote:[https://fmpcloud.io/]
+|Google OAuth2 OR email/passwordfootnote:[https://fmpcloud.io/register]
+|250 requests / dayfootnote:[https://fmpcloud.io/plans]
+|Yesfootnote:[https://fmpcloud.io/documentation]
+|===
