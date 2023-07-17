@@ -8,6 +8,8 @@ services:
       dockerfile: ./financial_data_reader.Dockerfile
     depends_on:
       - database
+    environment:
+      USE_HTTP_CACHE: True
     secrets:
       - fmp_cloud_api_key
       - mongodb_username
