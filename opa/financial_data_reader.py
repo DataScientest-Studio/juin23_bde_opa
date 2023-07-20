@@ -1,5 +1,5 @@
 from opa.providers import FmpCloud
-from opa.storage import insert_historical
+from opa.storage import storage
 
 
 if __name__ == "__main__":
@@ -13,4 +13,4 @@ if __name__ == "__main__":
     }
 
     for vals in historical.values():
-        insert_historical(vals)
+        storage.insert_historical(vals)
