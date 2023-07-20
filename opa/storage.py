@@ -2,6 +2,7 @@ import datetime as dt
 from abc import ABC, abstractmethod
 
 from pymongo import MongoClient
+from pymongo.errors import BulkWriteError
 
 from opa.app_secrets import get_secret
 from opa.utils import is_running_in_docker
@@ -27,17 +28,25 @@ class MongoDbStorage(Storage):
         }
 
     def insert_historical(self, historical: list[any]):
-        self.collections["historical"].insert_many(
-            [
-                {
-                    # MongoDB only handles datetimes and not dates
-                    "date": dt.datetime.combine(v.date, dt.time.min),
-                    "close": v.close,
-                    "symbol": historical.symbol,
-                }
-                for v in historical.historical
-            ]
-        )
+        try:
+            return self.collections["historical"].insert_many(
+                [
+                    {
+                        # MongoDB only handles datetimes and not dates
+                        "date": dt.datetime.combine(v.date, dt.time.min),
+                        "close": v.close,
+                        "symbol": historical.symbol,
+                    }
+                    for v in historical.historical
+                ],
+                # This ensures that at least some data will be inserted even if there are errors
+                ordered=False,
+            )
+        except BulkWriteError as err:
+            error_codes = {e["code"] for e in err.details["writeErrors"]}
+
+            if error_codes == set([121]):
+                print("ERROR: all records failed validation")
 
     def get_historical(self, ticker: str, limit: int = 500):
         return [
