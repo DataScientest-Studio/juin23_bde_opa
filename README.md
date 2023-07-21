@@ -24,6 +24,10 @@ Run the financial data reader with : `python -m financial_data_reader`
 
 `docker-compose run -it --rm database mongosh mongodb://username@password:database`
 
+## Interactive shell
+
+An interactive shell can be run with `python -m opa.shell`
+
 ## Static type analysis
 
 ... can be run with `mypy opa`.
