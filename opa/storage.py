@@ -19,6 +19,10 @@ class Storage(ABC):
     def get_historical(self, ticker: str, limit: int = 500) -> list[StockValue]:
         ...
 
+    @abstractmethod
+    def get_all_tickers(self) -> list[str]:
+        ...
+
 
 class MongoDbStorage(Storage):
     def __init__(self, uri: str) -> None:
@@ -49,6 +53,9 @@ class MongoDbStorage(Storage):
                 {"ticker": ticker}, limit=limit
             )
         ]
+
+    def get_all_tickers(self) -> list[str]:
+        return self.collections["historical"].distinct("ticker")
 
 
 host = "database" if is_running_in_docker() else "localhost"
