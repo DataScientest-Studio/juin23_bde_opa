@@ -12,5 +12,5 @@ if __name__ == "__main__":
         for ticker in ["AAPL", "MSFT", "AMZN", "GOOG", "META"]
     }
 
-    for vals in historical.values():
-        storage.insert_historical(vals)
+    all_values = [v for vals in historical.values() for v in vals]
+    storage.insert_historical(all_values)
