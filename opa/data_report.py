@@ -11,14 +11,14 @@ def get_dataframe(ticker: str) -> pd.DataFrame:
     return pd.DataFrame(data)
 
 
-@callback(Output("graph-content", "figure"), Input("dropdown-selection", "value"))
+@callback(Output("stock-evolution-graph", "figure"), Input("ticker-selector", "value"))
 def update_graph(ticker: str):
     return px.line(get_dataframe(ticker), x="date", y="close")
 
 
 @callback(
-    Output("dropdown-selection", "options"),
-    Output("dropdown-selection", "value"),
+    Output("ticker-selector", "options"),
+    Output("ticker-selector", "value"),
     Output("tickers-timer", "interval"),
     Input("tickers-timer", "n_intervals"),
 )
@@ -32,10 +32,9 @@ if __name__ == "__main__":
 
     dash_app.layout = html.Div(
         [
-            html.Div(children="My First App with Data"),
-            dcc.Dropdown([], id="dropdown-selection"),
+            dcc.Dropdown([], id="ticker-selector"),
             dcc.Interval("tickers-timer", 200, n_intervals=0),
-            dcc.Graph(id="graph-content"),
+            dcc.Graph(id="stock-evolution-graph"),
         ]
     )
     dash_app.run(debug=True)
