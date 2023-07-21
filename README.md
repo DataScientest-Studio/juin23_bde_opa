@@ -23,3 +23,7 @@ Run the financial data reader with : `python -m financial_data_reader`
 ## Run commands on the database
 
 `docker-compose run -it --rm database mongosh mongodb://username@password:database`
+
+## Static type analysis
+
+... can be run with `mypy opa`.

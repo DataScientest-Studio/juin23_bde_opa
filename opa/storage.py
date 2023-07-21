@@ -1,5 +1,6 @@
 import datetime as dt
 from abc import ABC, abstractmethod
+from typing import Any
 
 from pymongo import MongoClient
 from pymongo.errors import BulkWriteError
@@ -10,7 +11,7 @@ from opa.utils import is_running_in_docker
 
 class Storage(ABC):
     @abstractmethod
-    def insert_historical(self, historical: list[any]):
+    def insert_historical(self, historical: list[Any]):
         ...
 
     @abstractmethod
@@ -20,14 +21,14 @@ class Storage(ABC):
 
 class MongoDbStorage(Storage):
     def __init__(self, uri: str) -> None:
-        client = MongoClient(uri)
+        client: MongoClient = MongoClient(uri)
 
         self.db = client.get_database("stock_market")
         self.collections = {
             coll: self.db.get_collection(coll) for coll in ["historical", "streaming"]
         }
 
-    def insert_historical(self, historical: list[any]):
+    def insert_historical(self, historical: list[Any]):
         try:
             return self.collections["historical"].insert_many(
                 [
@@ -48,7 +49,7 @@ class MongoDbStorage(Storage):
             if error_codes == set([121]):
                 print("ERROR: all records failed validation")
 
-    def get_historical(self, ticker: str, limit: int = 500):
+    def get_historical(self, ticker: str, limit: int = 500) -> list[dict]:
         return [
             {"date": d["date"], "close": d["close"]}
             for d in self.collections["historical"].find(

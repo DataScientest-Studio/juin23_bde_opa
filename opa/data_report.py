@@ -6,13 +6,13 @@ import pandas as pd
 from opa.storage import storage
 
 
-def get_dataframe(ticker):
+def get_dataframe(ticker: str) -> pd.DataFrame:
     data = storage.get_historical(ticker)
     return pd.DataFrame(data)
 
 
 @callback(Output("graph-content", "figure"), Input("dropdown-selection", "value"))
-def update_graph(ticker):
+def update_graph(ticker: str):
     return px.line(get_dataframe(ticker), x="date", y="close")
 
 
