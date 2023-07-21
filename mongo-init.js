@@ -55,3 +55,5 @@ db.createCollection("historical", {
     }
 })
 db.createCollection("streaming")
+
+db.historical.createIndex( { "date": 1, "ticker": 1 }, { unique: true } )

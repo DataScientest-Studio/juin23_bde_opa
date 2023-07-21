@@ -25,9 +25,18 @@ class MongoDbStorage(Storage):
             return collection.insert_many(insertable, ordered=False)
         except BulkWriteError as err:
             error_codes = {e["code"] for e in err.details["writeErrors"]}
+            write_errors = err.details["writeErrors"]
+            error_codes = {e["code"] for e in write_errors}
+            duplicate_keys = {
+                frozenset(e["keyPattern"].keys())
+                for e in write_errors
+                if e["code"] == 11000
+            }
 
-            if error_codes == set([121]):
-                print("ERROR: all records failed validation")
+            if error_codes < {121, 11000} and duplicate_keys == {
+                frozenset(["ticker", "date"])
+            }:
+                print("ERROR: all records failed validation or were duplicates")
 
     def get_values(
         self, ticker: str, type_: StockValueType, limit: int = 500
