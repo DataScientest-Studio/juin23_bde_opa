@@ -1,4 +1,4 @@
-from dash import Dash, html, dcc, callback, Output, Input
+from dash import Dash, html, dcc, callback, Output, Input, no_update
 import plotly.express as px
 import pandas as pd
 
@@ -21,10 +21,18 @@ def update_graph(ticker: str):
     Output("ticker-selector", "value"),
     Output("tickers-timer", "interval"),
     Input("tickers-timer", "n_intervals"),
+    Input("ticker-selector", "value")
 )
-def update_tickers_list(n):
+def update_tickers_list(n, current_ticker):
     tickers = storage.get_all_tickers()
-    return tickers, tickers[0] if tickers else None, 2000 if tickers else 200
+
+    new_selected_value = None
+    if current_ticker:
+        new_selected_value = no_update
+    elif tickers:
+        new_selected_value = tickers[0]
+
+    return tickers, new_selected_value, 2000 if tickers else 200
 
 
 if __name__ == "__main__":
