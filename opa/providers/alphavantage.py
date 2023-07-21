@@ -32,11 +32,3 @@ class Alphavantage(StockMarketProvider):
                 "apikey": self.access_key,
             },
         )
-
-    @staticmethod
-    def into_historical_data(data):
-        raise NotImplementedError()
-
-    @staticmethod
-    def into_streaming_data(data):
-        raise NotImplementedError()

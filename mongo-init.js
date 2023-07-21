@@ -18,20 +18,36 @@ db.createCollection("historical", {
         $jsonSchema: {
             bsonType: "object",
             title: "Historical values validation",
-            required: ["_id", "date", "close", "symbol"],
+            required: ["_id", "date", "close", "ticker"],
             properties: {
                 _id: { "bsonType": "objectId" },
                 date: {
                     bsonType: "date",
                     description: "'date' must be a date and is required"
                 },
-                symbol: {
+                ticker: {
                     bsonType: "string",
-                    description: "'symbol' must be a string and is required"
+                    description: "'ticker' must be a string and is required"
                 },
                 close: {
                     bsonType: "double",
                     description: "'close' must be a double and is required"
+                },
+                open: {
+                    bsonType: "double",
+                    description: "'open' must be a double if present"
+                },
+                low: {
+                    bsonType: "double",
+                    description: "'low' must be a double if present"
+                },
+                high: {
+                    bsonType: "double",
+                    description: "'high' must be a double if present"
+                },
+                volume: {
+                    bsonType: "int",
+                    description: "'volume' must be an int if present"
                 }
             },
             additionalProperties: false
