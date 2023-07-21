@@ -4,12 +4,18 @@
 
 == Context
 
+The project's goals are detailed with a Google Documentfootnote:[https://docs.google.com/document/d/1UEL9wexhETO2MXpxvIPwVRE4WLfLOOi3YF43Zn8L5sk]
 
 == Financial data retrieval
 
 === API provider choice
 
-Dozens of API providers exist for stock market data. In the relatively basic scope of this project, they are virtually identical and the main difference lies in the limits they set on request rate, and the information they require for registration.
+As per the project's goals, two kinds of data should be retrieved :
+
+* "streaming" data : the most up-to-date and recent data ; usually very fine-grained
+* "historical" data
+
+Dozens of API providers exist for stock market data. In the relatively basic scope of this project, they are virtually identical and the main differences lie in the limits they set on request rate and the information they require for registration.
 
 Here is an overview of those that have been reviewed :
 
@@ -42,3 +48,201 @@ Here is an overview of those that have been reviewed :
 |250 requests / dayfootnote:[https://fmpcloud.io/plans]
 |Yesfootnote:[https://fmpcloud.io/documentation]
 |===
+
+=== Examples of data
+
+:url_fmpcloud_full_history: https://fmpcloud.io/api/v3/historical-price-full/AAPL?serietype=LINE
+:url_fmpcloud_short_history: https://fmpcloud.io/api/v3/historical-price-full/AAPL
+:url_fmpcloud_streaming: https://fmpcloud.io/api/v3/historical-chart/15min/AAPL
+:url_alphavantage_full_history: https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=AAPL
+:url_alphavantage_streaming: https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&interval=15min&symbol=AAPL
+
+Below is an overview of the kind of data returned from {url_fmpcloud_full_history} :
+
+.Long history data (FMPCloud)
+[,json]
+----
+{
+    "historical": [
+        {
+            "close": 190.69,
+            "date": "2023-07-14"
+        },
+        {
+            "close": 190.54,
+            "date": "2023-07-13"
+        },
+        {
+            "close": 189.77,
+            "date": "2023-07-12"
+        },
+        {
+            "close": 188.08,
+            "date": "2023-07-11"
+        },
+        {
+            "close": 188.61,
+            "date": "2023-07-10"
+        }
+    ],
+    "symbol": "AAPL"
+}
+----
+
+
+Below is an overview of the kind of data returned from {url_fmpcloud_short_history} :
+
+.Short history data (FMPCloud)
+[,json]
+----
+{
+    "historical": [
+        {
+            "adjClose": 190.690002,
+            "change": 0.46,
+            "changeOverTime": 0.0024181,
+            "changePercent": 0.24181,
+            "close": 190.69,
+            "date": "2023-07-14",
+            "high": 191.1799,
+            "label": "July 14, 23",
+            "low": 189.63,
+            "open": 190.23,
+            "unadjustedVolume": 40764621,
+            "volume": 40835691,
+            "vwap": 190.46
+        },
+        {
+            "adjClose": 190.539993,
+            "change": 0.04,
+            "changeOverTime": 0.0002099738,
+            "changePercent": 0.02099738,
+            "close": 190.54,
+            "date": "2023-07-13",
+            "high": 191.19,
+            "label": "July 13,23",
+            "low": 189.78,
+            "open": 190.5,
+            "unadjustedVolume": 41342300,
+            "volume": 41337338,
+            "vwap": 190.57
+        }
+    ],
+    "symbol": "AAPL"
+}
+----
+
+.Short history data (Alphavantage)
+[,json]
+----
+{
+    "Meta Data": {
+        "1. Information": "Daily Time Series with Splits and Dividend Events",
+        "2. Symbol": "AAPL",
+        "3. Last Refreshed": "2023-07-14",
+        "4. Output Size": "Compact",
+        "5. Time Zone": "US/Eastern"
+    },
+    "Time Series (Daily)": {
+        "2023-07-12": {
+            "1. open": "189.68",
+            "2. high": "191.7",
+            "3. low": "188.47",
+            "4. close": "189.77",
+            "5. adjusted close": "189.77",
+            "6. volume": "60750248",
+            "7. dividend amount": "0.0000",
+            "8. split coefficient": "1.0"
+        },
+        "2023-07-13": {
+            "1. open": "190.5",
+            "2. high": "191.19",
+            "3. low": "189.78",
+            "4. close": "190.54",
+            "5. adjusted close": "190.54",
+            "6. volume": "41342338",
+            "7. dividend amount": "0.0000",
+            "8. split coefficient": "1.0"
+        }
+    }
+}
+----
+
+Below is an overview of the kind of data returned from {url_fmpcloud_streaming} :
+
+.Streaming data (FMPCloud)
+[,json]
+----
+[
+    {
+        "close": 190.69,
+        "date": "2023-07-14 16:00:00",
+        "high": 190.71,
+        "low": 190.3978,
+        "open": 190.69,
+        "volume": 1654688
+    },
+    {
+        "close": 190.72,
+        "date": "2023-07-14 15:45:00",
+        "high": 190.74,
+        "low": 190.26,
+        "open": 190.42,
+        "volume": 3749214
+    },
+    {
+        "close": 190.415,
+        "date": "2023-07-14 15:30:00",
+        "high": 190.49,
+        "low": 190.16,
+        "open": 190.275,
+        "volume": 1254758
+    },
+    {
+        "close": 190.275,
+        "date": "2023-07-14 15:15:00",
+        "high": 190.42,
+        "low": 190.04,
+        "open": 190.04,
+        "volume": 1315560
+    }
+]
+----
+
+.Streaming data (Alphavantage)
+[,json]
+----
+{
+    "Meta Data": {
+        "1. Information": "Intraday (15min) open, high, low, close prices and volume",
+        "2. Symbol": "AAPL",
+        "3. Last Refreshed": "2023-07-14 19:45:00",
+        "4. Interval": "15min",
+        "5. Output Size": "Compact",
+        "6. Time Zone": "US/Eastern"
+    },
+    "Time Series (15min)": {
+        "2023-07-14 19:15:00": {
+            "1. open": "190.8000",
+            "2. high": "190.8100",
+            "3. low": "190.7500",
+            "4. close": "190.7600",
+            "5. volume": "2896"
+        },
+        "2023-07-14 19:30:00": {
+            "1. open": "190.7600",
+            "2. high": "190.7600",
+            "3. low": "190.7000",
+            "4. close": "190.7100",
+            "5. volume": "2211"
+        },
+        "2023-07-14 19:45:00": {
+            "1. open": "190.7300",
+            "2. high": "190.7500",
+            "3. low": "190.6900",
+            "4. close": "190.7200",
+            "5. volume": "11717"
+        }
+    }
+}
+----
