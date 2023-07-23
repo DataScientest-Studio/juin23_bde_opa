@@ -21,4 +21,5 @@ base = get_base()
 
 def get_secret(key: str) -> str:
     with open(base / key, "r") as f:
-        return f.read()
+        # The "secret" is just the first line in the file, stripped of whitespace/end-of-line characters
+        return f.readline().strip()
