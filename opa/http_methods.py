@@ -12,4 +12,9 @@ session = (
 
 def get_json_data(url: str, **kwargs):
     http = session.get(url, **kwargs)
+    status = http.status_code
+
+    if status >= 300:
+        raise RuntimeError(f"Got unhandled response code={status} : {http.json()}")
+
     return http.json()
