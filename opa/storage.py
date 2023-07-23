@@ -26,7 +26,7 @@ class Storage(ABC):
 
 class MongoDbStorage(Storage):
     def __init__(self, uri: str) -> None:
-        client: MongoClient = MongoClient(uri)
+        client: MongoClient = MongoClient(uri, serverSelectionTimeoutMS=5000)
 
         self.db = client.get_database("stock_market")
         self.collections = {
