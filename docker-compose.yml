@@ -46,10 +46,17 @@ services:
       - mongodb_password
 
   internal_api:
-    image: alpine
-    command: echo "Hello from internal API"
+    image: opa/api
+    build:
+      context: .
+      dockerfile: ./api.Dockerfile
+    ports:
+      - 8000:8000
     depends_on:
       - database
+    secrets:
+      - mongodb_username
+      - mongodb_password
 
   machine_learning:
     image: alpine
