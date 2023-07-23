@@ -1,18 +1,18 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from datetime import datetime
-from dataclasses import dataclass
-from typing import Optional
 
 
-@dataclass
-class StockValue:
+from pydantic import BaseModel
+
+
+class StockValue(BaseModel):
     ticker: str
     date: datetime
     close: float
-    open: Optional[float] = None
-    low: Optional[float] = None
-    high: Optional[float] = None
-    volume: Optional[int] = None
+    open: float | None = None
+    low: float | None = None
+    high: float | None = None
+    volume: int | None = None
 
 
 class StockValueMixin:
