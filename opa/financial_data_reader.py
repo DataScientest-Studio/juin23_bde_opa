@@ -1,4 +1,4 @@
-from opa.financial_data import StockValue
+from opa.financial_data import StockValue, StockValueType
 from opa.providers import StockMarketProvider, FmpCloud
 from opa.storage import storage
 
@@ -12,7 +12,7 @@ def retrieve_data_and_store(
     values = [
         stock_value
         for ticker in tickers
-        for stock_value in provider.get_historical_data(ticker)
+        for stock_value in provider.get_stock_values(ticker, StockValueType.HISTORICAL)
     ]
     storage.insert_historical(values)
     return values
