@@ -7,16 +7,16 @@ from opa.financial_data import StockValueType
 from opa.storage import storage
 
 
-def get_dataframe(ticker: str) -> pd.DataFrame:
-    data = [
-        h.model_dump() for h in storage.get_values(ticker, StockValueType.HISTORICAL)
-    ]
+def get_dataframe(ticker: str, type_: StockValueType) -> pd.DataFrame:
+    data = [h.model_dump() for h in storage.get_values(ticker, type_)]
     return pd.DataFrame(data)
 
 
 @callback(Output("stock-evolution-graph", "figure"), Input("ticker-selector", "value"))
 def update_graph(ticker: str):
-    return px.line(get_dataframe(ticker), x="date", y="close")
+    return px.line(
+        get_dataframe(ticker, StockValueType.HISTORICAL), x="date", y="close"
+    )
 
 
 @callback(
