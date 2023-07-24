@@ -1,8 +1,14 @@
 from abc import abstractmethod
 from datetime import datetime
+from enum import Enum
 
 
 from pydantic import BaseModel
+
+
+class StockValueType(Enum):
+    HISTORICAL = "historical"
+    STREAMING = "streaming"
 
 
 class StockValue(BaseModel):
