@@ -21,7 +21,7 @@ def update_graph(ticker: str):
     Output("ticker-selector", "value"),
     Output("tickers-timer", "interval"),
     Input("tickers-timer", "n_intervals"),
-    Input("ticker-selector", "value")
+    Input("ticker-selector", "value"),
 )
 def update_tickers_list(n, current_ticker):
     tickers = storage.get_all_tickers()
