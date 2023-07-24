@@ -2,9 +2,13 @@
 
 :toc:
 
+<<<
+
 == Context
 
 The project's goals are detailed with a Google Documentfootnote:[https://docs.google.com/document/d/1UEL9wexhETO2MXpxvIPwVRE4WLfLOOi3YF43Zn8L5sk]
+
+<<<
 
 == Financial data retrieval
 
@@ -17,15 +21,19 @@ As per the project's goals, two kinds of data should be retrieved :
 
 Dozens of API providers exist for stock market data. In the relatively basic scope of this project, they are virtually identical and the main differences lie in the limits they set on request rate and the information they require for registration.
 
+====
 .Some stock market data providers
 MarketStack:: https://marketstack.com/
 Alphavantage:: https://www.alphavantage.co/
 EODHD:: https://eodhistoricaldata.com/
 FMP Cloud:: https://fmpcloud.io/
 Yahoo Finance:: The official Yahoo Finance API seems to have been discontinued but it is still working and its API can be retro-engineered from e.g. this unofficial Python client : https://github.com/ranaroussi/yfinance
+====
 
-Here is an overview of those that have been reviewed :
+An overview of those that have been reviewed can be found in the  <<comparison-table>> :
 
+[#comparison-table]
+.Comparison of stock Market data providers
 [%autowidth]
 |===
 |Company |Registration |API limits |API documentation
@@ -64,9 +72,11 @@ s|FMP Cloud
 :url_alphavantage_full_history: https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=AAPL
 :url_alphavantage_streaming: https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&interval=15min&symbol=AAPL
 
+Once in possession of an API key, retrieving data from those providers is simply done via a simple `GET` request on the appropriate endpoint. The ticker is set either in some part of the URL path (e.g. `{url_fmpcloud_streaming}`), or as a query string parameter (e.g. `{url_alphavantage_streaming}`). The body of the server response contains the data encoded in JSON format.
+
 Below is an overview of the kind of data returned from {url_fmpcloud_full_history} :
 
-.Long history data (FMPCloud)
+.Long history data retrieved from FMPCloudfootnote:[{url_fmpcloud_full_history}]
 [,json]
 ----
 {
