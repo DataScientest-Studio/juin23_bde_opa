@@ -55,8 +55,7 @@ class MongoDbStorage(Storage):
         collection = self.collections[type_.value]
 
         return [
-            StockValue(ticker=ticker, date=d["date"], close=d["close"])
-            for d in collection.find({"ticker": ticker}, limit=limit)
+            StockValue(**d) for d in collection.find({"ticker": ticker}, limit=limit)
         ]
 
     def get_all_tickers(self) -> list[str]:
