@@ -35,7 +35,7 @@ class FmpCloudStreamingValue(BaseModel, StockValueMixin):
         ticker = kwargs.pop("ticker")
         return StockValue(
             ticker=ticker,
-            date=datetime.combine(self.date, time.min),
+            date=self.date,
             close=self.close,
             open=self.open,
             low=self.low,
