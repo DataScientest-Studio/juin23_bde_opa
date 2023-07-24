@@ -6,6 +6,10 @@ services:
     build:
       context: .
       dockerfile: ./financial_data_reader.Dockerfile
+    # With a ~5s database query timeout, the reader will crash on a cold startup (while the
+    # database is still initializing).
+    # TODO: Investigate if it's a proper solution.
+    restart: on-failure
     depends_on:
       - database
     environment:
