@@ -239,14 +239,52 @@ Below are 4 examples of data mainly retrieved from FMP Cloud, retaining only som
 }
 ----
 
-From those examples we can observe that both historical and streaming data from any provider will always contain at least the following elements :
+From those examples we can observe that both historical and streaming data from any provider follow the same schema. They define _units of time_ over which some values are given. 
 
-Date:: The date for which the values are provided (`datetime`)
-Close:: The value at closing (`float`)
+A given data record will always contain at least the following elements :
+
+Date:: The moment in time for which the values are provided
+Interval length:: The duration over which those values are computed (15 minutes, 24 hours, ...)
+Close:: The value at the end of the unit of time
 
 And they will optionally contain the following additional elements :
 
-Open:: The value at opening (`float`)
-Low:: The lowest value (`float`)
-High:: The highest value (`float`)
-Volume:: The number of stocks exchanged (`int`)
+Open:: The value at the start of the unit of time
+Low:: The lowest value over the unit of time
+High:: The highest value over the unit of time
+Volume:: The number of stocks exchanged over the unit of time
+
+In terms of data format, the _date_ is (or can be trivially converted to) a `datetime`. The interval length can be represented as a number of minutes expressed in `int`. The _close_, _open_, _low_, _high_ values are prices in dollars, of type `float`. The volume is an `int`.
+
+[%autowidth]
+|===
+|Value |Type |Optional?
+
+|date
+|`datetime`
+|no
+
+|interval
+|`int`
+|no
+
+|close
+|`float`
+|no
+
+|open
+|`float`
+|yes
+
+|high
+|`float`
+|yes
+
+|low
+|`float`
+|yes
+
+|volume
+|`int`
+|yes
+|===
