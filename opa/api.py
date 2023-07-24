@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 import os
 
-from opa.financial_data import StockValue
+from opa.financial_data import StockValue, StockValueType
 from opa.storage import storage
 
 
@@ -20,4 +20,4 @@ async def all_tickers() -> list[str]:
 
 @app.get("/{ticker}/historical")
 async def historical(ticker: str) -> list[StockValue]:
-    return storage.get_historical(ticker)
+    return storage.get_values(ticker, StockValueType.HISTORICAL)

@@ -14,7 +14,7 @@ def retrieve_data_and_store(
         for ticker in tickers
         for stock_value in provider.get_stock_values(ticker, StockValueType.HISTORICAL)
     ]
-    storage.insert_historical(values)
+    storage.insert_values(values, StockValueType.HISTORICAL)
     return values
 
 

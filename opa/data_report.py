@@ -3,11 +3,14 @@ import plotly.express as px
 import pandas as pd
 
 
+from opa.financial_data import StockValueType
 from opa.storage import storage
 
 
 def get_dataframe(ticker: str) -> pd.DataFrame:
-    data = [h.model_dump() for h in storage.get_historical(ticker)]
+    data = [
+        h.model_dump() for h in storage.get_values(ticker, StockValueType.HISTORICAL)
+    ]
     return pd.DataFrame(data)
 
 
