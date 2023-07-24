@@ -7,7 +7,7 @@ from opa.storage import storage
 
 
 def get_dataframe(ticker: str) -> pd.DataFrame:
-    data = storage.get_historical(ticker)
+    data = [h.model_dump() for h in storage.get_historical(ticker)]
     return pd.DataFrame(data)
 
 
