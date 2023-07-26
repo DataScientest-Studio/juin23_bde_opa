@@ -7,7 +7,6 @@ from dataclasses import dataclass, field
 @dataclass
 class Env:
     use_http_cache: bool
-    in_docker: bool = field(init=False)
     secrets_dir: Path = field(init=False)
     http_cache_db_dir: Path = field(init=False)
     mongodb_host: str = field(init=False)
