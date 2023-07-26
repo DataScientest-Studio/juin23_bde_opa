@@ -1,6 +1,5 @@
 import os
 from pathlib import Path
-from urllib3.util import Url
 from dataclasses import dataclass, field
 
 
@@ -24,11 +23,11 @@ class Env:
             self.http_cache_db_dir = local_app_data / "http_cache"
             self.mongodb_host = "localhost"
 
-        self.mongodb_uri = Url(
-            scheme="mongodb",
-            auth=f'{self.get_secret("mongodb_username")}:{self.get_secret("mongodb_password")}',
+        self.mongodb_uri = "mongodb://{username}:{password}@{host}".format(
+            username=self.get_secret("mongodb_username"),
+            password=self.get_secret("mongodb_password"),
             host=self.mongodb_host,
-        ).url
+        )
 
     def get_secret(self, key: str) -> str:
         with open(self.secrets_dir / key, "r") as f:
