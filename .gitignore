@@ -130,3 +130,6 @@ dmypy.json
 
 secrets/
 *.sqlite
+
+docs/**.html
+docs/**.pdf
