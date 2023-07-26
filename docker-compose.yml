@@ -71,11 +71,11 @@ services:
 
 secrets:
   fmp_cloud_api_key:
-    file: secrets/fmp_cloud_api_key
+    file: app_data/secrets/fmp_cloud_api_key
   mongodb_username:
-    file: secrets/mongodb_username
+    file: app_data/secrets/mongodb_username
   mongodb_password:
-    file: secrets/mongodb_password
+    file: app_data/secrets/mongodb_password
 
 volumes:
   db-data:

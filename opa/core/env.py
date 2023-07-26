@@ -20,8 +20,9 @@ class Env:
             self.mongodb_host = "database"
 
         else:
-            self.secrets_dir = Path("./secrets")
-            self.http_cache_db_dir = Path.cwd() / "app_data" / "http_cache"
+            local_app_data = Path.cwd() / "app_data"
+            self.secrets_dir = local_app_data / "secrets"
+            self.http_cache_db_dir = local_app_data / "http_cache"
             self.mongodb_host = "localhost"
 
         self.mongodb_uri = Url(
