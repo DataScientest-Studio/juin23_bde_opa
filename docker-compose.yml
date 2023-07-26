@@ -14,6 +14,8 @@ services:
       - database
     environment:
       USE_HTTP_CACHE: True
+    volumes:
+      - http-cache:/var/http_cache
     secrets:
       - fmp_cloud_api_key
       - mongodb_username
@@ -82,3 +84,10 @@ volumes:
       type: 'none'
       o: 'bind'
       device: './app_data/db'
+
+  http-cache:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: './app_data/http_cache'
