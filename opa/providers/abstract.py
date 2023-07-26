@@ -14,9 +14,3 @@ class StockMarketProvider(ABC):
 
     def get_raw_stock_values(self, ticker: str, type_: StockValueType) -> dict:
         raise NotImplementedError()
-
-    def get_raw_historical_data(self, ticker) -> dict:
-        raise NotImplementedError()
-
-    def get_raw_streaming_data(self, ticker) -> dict:
-        raise NotImplementedError()
