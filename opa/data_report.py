@@ -12,11 +12,26 @@ def get_dataframe(ticker: str, type_: StockValueType) -> pd.DataFrame:
     return pd.DataFrame(data)
 
 
+def add_range_selectors(figure):
+    return figure.update_xaxes(
+        rangeslider_visible=True,
+        rangeselector={
+            "buttons": [
+                dict(label="1m", count=1, step="month", stepmode="backward"),
+                dict(label="6m", count=6, step="month", stepmode="backward"),
+                dict(label="YTD", count=1, step="year", stepmode="todate"),
+                dict(label="1y", count=1, step="year", stepmode="backward"),
+                dict(step="all"),
+            ]
+        },
+    )
+
+
 @callback(Output("stock-evolution-graph", "figure"), Input("ticker-selector", "value"))
 def update_graph(ticker: str):
-    return px.line(
-        get_dataframe(ticker, StockValueType.HISTORICAL), x="date", y="close"
-    )
+    df = get_dataframe(ticker, StockValueType.HISTORICAL)
+    figure = px.line(df, x="date", y="close")
+    return add_range_selectors(figure)
 
 
 @callback(
