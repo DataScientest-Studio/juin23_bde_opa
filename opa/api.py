@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 import os
 
-from opa.financial_data import StockValue, StockValueType
+from opa.core.financial_data import StockValue, StockValueType
 from opa.storage import storage
 
 

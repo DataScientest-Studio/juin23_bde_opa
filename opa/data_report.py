@@ -3,7 +3,7 @@ import plotly.express as px
 import pandas as pd
 
 
-from opa.financial_data import StockValueType
+from opa.core.financial_data import StockValueType
 from opa.storage import storage
 
 

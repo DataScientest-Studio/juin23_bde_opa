@@ -1,8 +1,8 @@
 from pymongo import MongoClient
 from pymongo.errors import BulkWriteError
 
-from opa.env import get_secret, is_running_in_docker
-from opa.financial_data import StockValue, StockValueType
+from opa.core.env import get_secret, is_running_in_docker
+from opa.core.financial_data import StockValue, StockValueType
 from opa.storage import Storage
 
 

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from opa.financial_data import StockValue, StockValueType
+from opa.core.financial_data import StockValue, StockValueType
 
 
 class Storage(ABC):

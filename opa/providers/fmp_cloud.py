@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 from opa.http_methods import get_json_data
 from opa.providers import StockMarketProvider
-from opa.financial_data import StockValue, StockValueMixin, StockValueType
+from opa.core.financial_data import StockValue, StockValueMixin, StockValueType
 
 
 class FmpCloudHistoricalValue(BaseModel, StockValueMixin):

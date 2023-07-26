@@ -1,5 +1,5 @@
 from opa.http_methods import get_json_data
-from opa.financial_data import StockValue, StockValueType
+from opa.core import StockValue, StockValueType
 from opa.providers import StockMarketProvider
 
 
