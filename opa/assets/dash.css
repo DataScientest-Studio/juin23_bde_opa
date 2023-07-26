@@ -21,6 +21,11 @@ main {
     justify-self: end;
 }
 
+#type-selector {
+    grid-area: tickers;
+    align-self: center;
+}
+
 #company-info {
     grid-area: company-info;
     max-height: 20vh;

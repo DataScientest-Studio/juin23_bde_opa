@@ -31,12 +31,15 @@ def set_transparent_background(figure):
     return figure.update_layout(paper_bgcolor="hsla(0,0%,0%,0%)")
 
 
-@callback(Output("stock-evolution-graph", "figure"), Input("ticker-selector", "value"))
-def update_graph(ticker: str):
-    df = get_dataframe(ticker, StockValueType.HISTORICAL)
+@callback(
+    Output("stock-evolution-graph", "figure"),
+    Input("ticker-selector", "value"),
+    Input("type-selector", "value"),
+)
+def update_graph(ticker: str, type_: str):
+    df = get_dataframe(ticker, StockValueType(type_))
     figure = px.line(df, x="date", y="close")
     return set_transparent_background(add_range_selectors(figure))
-
 
 @callback(
     Output("ticker-selector", "options"),
@@ -77,6 +80,11 @@ if __name__ == "__main__":
             dcc.Dropdown([], id="ticker-selector"),
             html.Div(id="company-info"),
             html.Button("Refresh tickers list", id="tickers-refresh"),
+            dcc.Dropdown(
+                [t.value for t in StockValueType],
+                StockValueType.HISTORICAL.value,
+                id="type-selector",
+            ),
             dcc.Graph(id="stock-evolution-graph"),
         ]
     )
