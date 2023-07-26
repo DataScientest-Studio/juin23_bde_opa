@@ -59,3 +59,12 @@ main {
 #company-info p {
     grid-area: description;
 }
+
+.dropdown-option {
+    display: flex;
+    column-gap: 1em;
+}
+
+.dropdown-option img {
+    height: 20px;
+}

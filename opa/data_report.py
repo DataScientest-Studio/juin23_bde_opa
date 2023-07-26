@@ -75,14 +75,29 @@ def update_graph(ticker: str, type_str: str):
 )
 def refresh_tickers_list(n, current_ticker):
     tickers = opa_storage.get_all_tickers()
+    infos = opa_storage.get_company_infos(tickers)
+
+    options = [
+        {
+            "value": i.symbol,
+            "label": html.Span(
+                [
+                    html.Img(src=i.image),
+                    html.Span(i.name),
+                ],
+                className="dropdown-option",
+            ),
+        }
+        for i in sorted(infos.values(), key=lambda i: i.name)
+    ]
 
     new_selected_value = None
     if current_ticker:
         new_selected_value = no_update
     elif tickers:
-        new_selected_value = tickers[0]
+        new_selected_value = options[0]["value"]
 
-    return tickers, new_selected_value
+    return options, new_selected_value
 
 
 @callback(
