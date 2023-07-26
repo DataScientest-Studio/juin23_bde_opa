@@ -1,5 +1,6 @@
 from dash import Dash, html, dcc, callback, Output, Input, no_update
 import plotly.express as px
+import plotly.graph_objects as go
 import pandas as pd
 
 
@@ -44,7 +45,23 @@ def set_transparent_background(figure):
 def update_graph(ticker: str, type_str: str):
     type_ = StockValueType(type_str)
     df = get_dataframe(ticker, type_)
-    figure = px.line(df, x="date", y="close")
+
+    figure = None
+    match type_:
+        case StockValueType.HISTORICAL:
+            figure = px.line(df, x="date", y="close")
+
+        case StockValueType.STREAMING:
+            figure = go.Figure(
+                go.Ohlc(
+                    x=df.date,
+                    open=df["open"],
+                    high=df["high"],
+                    low=df["low"],
+                    close=df["close"],
+                )
+            )
+
     return set_transparent_background(
         add_range_selectors(figure, type_ == StockValueType.STREAMING)
     )
