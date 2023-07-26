@@ -18,6 +18,6 @@ async def all_tickers() -> list[str]:
     return storage.get_all_tickers()
 
 
-@app.get("/{ticker}/historical")
-async def historical(ticker: str) -> list[StockValue]:
-    return storage.get_values(ticker, StockValueType.HISTORICAL)
+@app.get("/{ticker}")
+async def historical(ticker: str, type: StockValueType) -> list[StockValue]:
+    return storage.get_values(ticker, type)
