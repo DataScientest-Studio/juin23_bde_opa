@@ -3,7 +3,7 @@ from pymongo.errors import BulkWriteError
 
 from opa.core.env import get_secret, is_running_in_docker
 from opa.core.financial_data import StockValue, StockValueType
-from opa.storage import Storage
+from opa.core.storage import Storage
 
 
 class MongoDbStorage(Storage):

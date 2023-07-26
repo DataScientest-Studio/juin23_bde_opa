@@ -1,5 +1,6 @@
 from opa.core.financial_data import StockValue, StockValueType
-from opa.providers import StockMarketProvider, FmpCloud
+from opa.core.providers import StockMarketProvider
+from opa.providers import FmpCloud
 from opa.storage import storage
 
 
