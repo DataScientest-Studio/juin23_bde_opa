@@ -49,18 +49,10 @@ class FmpCloud(StockMarketProvider):
 
     def get_stock_values(self, ticker: str, type_: StockValueType) -> list[StockValue]:
         json = self.get_raw_stock_values(ticker, type_)
-
-        match type_:
-            case StockValueType.HISTORICAL:
-                validated = FmpCloudHistoricalData(**json)
-                return [v.as_stock_value(ticker=ticker) for v in validated.historical]
-
-            case StockValueType.STREAMING:
-                validated = [FmpCloudStreamingValue(**v) for v in json]
-                return [v.as_stock_value(ticker=ticker) for v in validated]
-
-            case _:
-                raise TypeError(f"type should be a StockValueType, got {type_}")
+        return [
+            v.as_stock_value(ticker=ticker)
+            for v in self._as_validated_list_of_values(json, type_)
+        ]
 
     def get_raw_stock_values(self, ticker: str, type_: StockValueType) -> dict:
         match type_:
@@ -75,6 +67,20 @@ class FmpCloud(StockMarketProvider):
                     f"https://fmpcloud.io/api/v3/historical-chart/15min/{ticker}",
                     params={"apikey": self.access_key},
                 )
+
+            case _:
+                raise TypeError(f"type should be a StockValueType, got {type_}")
+
+    @staticmethod
+    def _as_validated_list_of_values(
+        json, type_
+    ) -> list[FmpCloudHistoricalValue] | list[FmpCloudStreamingValue]:
+        match type_:
+            case StockValueType.HISTORICAL:
+                return FmpCloudHistoricalData(**json).historical
+
+            case StockValueType.STREAMING:
+                return [FmpCloudStreamingValue(**v) for v in json]
 
             case _:
                 raise TypeError(f"type should be a StockValueType, got {type_}")
