@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 from pymongo.errors import BulkWriteError
 
-from opa.core.env import get_secret, is_running_in_docker
+from opa.core import environment
 from opa.core.financial_data import StockValue, StockValueType
 from opa.core.storage import Storage
 
@@ -50,6 +50,4 @@ class MongoDbStorage(Storage):
         )
 
 
-host = "database" if is_running_in_docker() else "localhost"
-uri = f'mongodb://{get_secret("mongodb_username")}:{get_secret("mongodb_password")}@{host}'
-storage = MongoDbStorage(uri)
+storage = MongoDbStorage(environment.mongodb_uri)
