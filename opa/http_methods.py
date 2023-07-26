@@ -1,4 +1,3 @@
-import os
 import requests
 
 import requests_cache
@@ -11,7 +10,7 @@ session = (
     requests_cache.CachedSession(
         "opa", backend=SQLiteCache(db_path=environment.http_cache_db_dir / "opa")
     )
-    if os.getenv("USE_HTTP_CACHE", False)
+    if environment.use_http_cache
     else requests.Session()
 )
 
