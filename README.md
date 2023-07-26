@@ -1,8 +1,17 @@
 # OPA Project
 
-## Requirements
+## Secrets
 
-The project must have a `secrets` directory
+The app secrets are kept within a `app_data/secrets` directory whose content is not versioned for obvious reasons.
+
+It should contain the following files :
+
+```
+app_data/secrets
+├── fmp_cloud_api_key
+├── mongodb_password
+└── mongodb_username
+```
 
 ## Running it
 

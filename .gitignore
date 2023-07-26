@@ -128,10 +128,17 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-secrets/
 *.sqlite
 
-app_data/**
+# All the following directories must exist for the app to start but their content is not versioned.
+app_data/db/*
+!/app_data/db/.gitkeep
+
+app_data/http_cache/*
+!/app_data/http_cache/.gitkeep
+
+app_data/secrets/*
+!/app_data/secrets/.gitkeep
 
 docs/**.html
 docs/**.pdf
