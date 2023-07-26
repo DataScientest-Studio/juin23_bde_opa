@@ -7,8 +7,7 @@ from IPython import embed
 from opa.storage import storage
 from opa.providers import FmpCloud
 from opa.http_methods import get_json_data
-from opa.app_secrets import get_secret
-from opa.utils import is_running_in_docker
+from opa.env import get_secret, is_running_in_docker
 from opa.financial_data import StockValueType
 
 fmp = FmpCloud()

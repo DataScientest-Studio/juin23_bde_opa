@@ -1,9 +1,17 @@
 from pathlib import Path
 
-from opa.utils import is_running_in_docker
+
+def is_running_in_docker() -> bool:
+    # Shamelessly copied/pasted from: https://stackoverflow.com/a/73564246
+    cgroup = Path("/proc/self/cgroup")
+    return (
+        Path("/.dockerenv").is_file()
+        or cgroup.is_file()
+        and "docker" in cgroup.read_text()
+    )
 
 
-def get_base() -> Path:
+def _get_base() -> Path:
     if is_running_in_docker():
         return Path("/run/secrets")
     else:
@@ -16,7 +24,7 @@ def get_base() -> Path:
             )
 
 
-base = get_base()
+base = _get_base()
 
 
 def get_secret(key: str) -> str:

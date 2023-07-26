@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from opa.app_secrets import get_secret
+from opa.env import get_secret
 from opa.financial_data import StockValue, StockValueType
 
 
