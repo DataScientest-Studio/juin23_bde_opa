@@ -12,7 +12,11 @@ def get_dataframe(ticker: str, type_: StockValueType) -> pd.DataFrame:
     return pd.DataFrame(data)
 
 
-def add_range_selectors(figure):
+def add_range_selectors(figure, hour_break=False):
+    breaks = [dict(bounds=["sat", "sun"])]
+    if hour_break:
+        breaks += [dict(bounds=[16, 9.5], pattern="hour")]
+
     return figure.update_xaxes(
         rangeslider_visible=True,
         rangeselector={
@@ -24,6 +28,7 @@ def add_range_selectors(figure):
                 dict(step="all"),
             ]
         },
+        rangebreaks=breaks,
     )
 
 
@@ -36,10 +41,14 @@ def set_transparent_background(figure):
     Input("ticker-selector", "value"),
     Input("type-selector", "value"),
 )
-def update_graph(ticker: str, type_: str):
-    df = get_dataframe(ticker, StockValueType(type_))
+def update_graph(ticker: str, type_str: str):
+    type_ = StockValueType(type_str)
+    df = get_dataframe(ticker, type_)
     figure = px.line(df, x="date", y="close")
-    return set_transparent_background(add_range_selectors(figure))
+    return set_transparent_background(
+        add_range_selectors(figure, type_ == StockValueType.STREAMING)
+    )
+
 
 @callback(
     Output("ticker-selector", "options"),
