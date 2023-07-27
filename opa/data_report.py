@@ -53,6 +53,19 @@ def update_tickers_list(n, current_ticker):
     return tickers, new_selected_value, 2000 if tickers else 200
 
 
+@callback(
+    Output("company-info", "children"),
+    Input("ticker-selector", "value"),
+)
+def update_company_info(ticker: str):
+    info = storage.get_company_infos([ticker])[ticker]
+    return [
+        html.H2(info["name"]),
+        html.Img(src=info["image"]),
+        html.P(info["description"]),
+    ]
+
+
 if __name__ == "__main__":
     dash_app = Dash(__name__)
 
@@ -60,6 +73,7 @@ if __name__ == "__main__":
         [
             dcc.Dropdown([], id="ticker-selector"),
             dcc.Interval("tickers-timer", 200, n_intervals=0),
+            html.Div(id="company-info"),
             dcc.Graph(id="stock-evolution-graph"),
         ]
     )
