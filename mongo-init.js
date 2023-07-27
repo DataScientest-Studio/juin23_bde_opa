@@ -58,3 +58,4 @@ db.createCollection("streaming")
 db.createCollection("company_info")
 
 db.historical.createIndex( { "date": 1, "ticker": 1 }, { unique: true } )
+db.company_info.createIndex( { "symbol": 1 }, { unique: true } )

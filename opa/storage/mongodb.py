@@ -64,9 +64,12 @@ class MongoDbStorage(Storage):
         )
 
     def insert_company_infos(self, infos: list[CompanyInfo]):
-        return self.collections[CompanyInfo].insert_many(
-            [i.model_dump() for i in infos], ordered=False
-        )
+        try:
+            return self.collections[CompanyInfo].insert_many(
+                [i.model_dump() for i in infos], ordered=False
+            )
+        except BulkWriteError as err:
+            ...
 
     def get_company_infos(self, tickers: list[str]) -> dict[str, CompanyInfo]:
         return {
