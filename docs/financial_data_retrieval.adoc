@@ -297,18 +297,18 @@ Now that we have a better understanding of the kind of data we will be handling,
 .Definition of StockValue class
 [,python]
 ----
-include::../opa/financial_data.py[lines=8..15]
+include::../opa/core/financial_data.py[lines=8..15]
 ----
 
 === Access to providers' data
 
-An abstract class is defined to retrieve data from a provider, with 2 simple methods to get either streaming or historical data.
+An abstract class is defined to retrieve data from a provider, with a method that can get either streaming or historical data.
 
 [#python-stock-market-provider-definition]
 .Definition of StockMarketProvider abstract class
 [,python]
 ----
-include::../opa/providers/abstract.py[lines=7..17]
+include::../opa/core/providers.py[lines=6..12]
 ----
 
 The implementation of the class that gets data from FMP Cloud provider can be found in link:../opa/providers/fmp_cloud.py[fmp_cloud.py].
