@@ -1,33 +1,14 @@
-from opa.core.financial_data import StockValue, StockValueType
-from opa.core.providers import StockMarketProvider
 from opa.providers import FmpCloud
 from opa.storage import storage
+from opa.core import StockValueType, FinancialDataReader
 
 
 ALL_VALUES = ["AAPL", "MSFT", "AMZN", "GOOG", "META"]
 
 
-def retrieve_company_info_and_store(provider: StockMarketProvider, tickers: list[str]):
-    infos = provider.get_company_info(tickers)
-    return storage.insert_company_infos(infos)
-
-
-def retrieve_data_and_store(
-    provider: StockMarketProvider, tickers: list[str], type_: StockValueType
-) -> list[StockValue]:
-    values = [
-        stock_value
-        for ticker in tickers
-        for stock_value in provider.get_stock_values(ticker, type_)
-    ]
-    storage.insert_values(values, type_)
-    return values
-
-
 if __name__ == "__main__":
-    print("Hello from financial_data_reader")
-
     fmp = FmpCloud()
-    retrieve_company_info_and_store(fmp, ALL_VALUES)
-    retrieve_data_and_store(fmp, ALL_VALUES, StockValueType.HISTORICAL)
-    retrieve_data_and_store(fmp, ALL_VALUES, StockValueType.STREAMING)
+    reader = FinancialDataReader(fmp, storage)
+    reader.import_company_info(ALL_VALUES)
+    reader.import_stock_values(ALL_VALUES, StockValueType.HISTORICAL)
+    reader.import_stock_values(ALL_VALUES, StockValueType.STREAMING)
