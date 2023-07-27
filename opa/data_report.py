@@ -27,11 +27,15 @@ def add_range_selectors(figure):
     )
 
 
+def set_transparent_background(figure):
+    return figure.update_layout(paper_bgcolor="hsla(0,0%,0%,0%)")
+
+
 @callback(Output("stock-evolution-graph", "figure"), Input("ticker-selector", "value"))
 def update_graph(ticker: str):
     df = get_dataframe(ticker, StockValueType.HISTORICAL)
     figure = px.line(df, x="date", y="close")
-    return add_range_selectors(figure)
+    return set_transparent_background(add_range_selectors(figure))
 
 
 @callback(
@@ -69,7 +73,7 @@ def update_company_info(ticker: str):
 if __name__ == "__main__":
     dash_app = Dash(__name__)
 
-    dash_app.layout = html.Div(
+    dash_app.layout = html.Main(
         [
             dcc.Dropdown([], id="ticker-selector"),
             dcc.Interval("tickers-timer", 200, n_intervals=0),

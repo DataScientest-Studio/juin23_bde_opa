@@ -1,0 +1,50 @@
+body {
+    background-color: #ddd;
+}
+
+/* Layout of the whole page */
+main {
+    display: grid;
+    grid-template-areas: 
+    "company-info ticker-selector"
+    "graph graph";
+    grid-template-columns: 2fr 1fr;
+}
+
+#ticker-selector {
+    grid-area: ticker-selector;
+}
+
+#company-info {
+    grid-area: company-info;
+    max-height: 20vh;
+    overflow-y: auto;
+    background-color: #ddd;
+}
+
+#stock-evolution-graph {
+    grid-area: graph;
+    height: 80vh;
+}
+
+/* Layout of company information card */
+#company-info {
+    display: grid;
+    grid-template-areas: 
+    "title image"
+    "description description";
+    grid-template-columns: 1fr auto;
+}
+
+#company-info h2 {
+    grid-area: title;
+}
+
+#company-info img {
+    grid-area: image;
+    max-width: 10vw;
+}
+
+#company-info p {
+    grid-area: description;
+}
