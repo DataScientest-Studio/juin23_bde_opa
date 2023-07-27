@@ -68,5 +68,11 @@ class MongoDbStorage(Storage):
             [i.model_dump() for i in infos], ordered=False
         )
 
+    def get_company_infos(self, tickers: list[str]) -> dict[str, CompanyInfo]:
+        return {
+            i["symbol"]: i
+            for i in self.collections[CompanyInfo].find({"symbol": {"$in": tickers}})
+        }
+
 
 storage = MongoDbStorage(environment.mongodb_uri)

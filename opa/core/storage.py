@@ -21,3 +21,7 @@ class Storage(ABC):
     @abstractmethod
     def insert_company_infos(self, infos: list[CompanyInfo]):
         ...
+
+    @abstractmethod
+    def get_company_infos(self, tickers: list[str]) -> dict[str, CompanyInfo]:
+        ...
