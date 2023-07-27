@@ -7,6 +7,11 @@ from opa.storage import storage
 ALL_VALUES = ["AAPL", "MSFT", "AMZN", "GOOG", "META"]
 
 
+def retrieve_company_info_and_store(provider: StockMarketProvider, tickers: list[str]):
+    infos = provider.get_company_info(tickers)
+    return storage.insert_company_infos(infos)
+
+
 def retrieve_data_and_store(
     provider: StockMarketProvider, tickers: list[str], type_: StockValueType
 ) -> list[StockValue]:
@@ -23,5 +28,6 @@ if __name__ == "__main__":
     print("Hello from financial_data_reader")
 
     fmp = FmpCloud()
+    retrieve_company_info_and_store(fmp, ALL_VALUES)
     retrieve_data_and_store(fmp, ALL_VALUES, StockValueType.HISTORICAL)
     retrieve_data_and_store(fmp, ALL_VALUES, StockValueType.STREAMING)
