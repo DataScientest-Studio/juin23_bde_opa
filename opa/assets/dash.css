@@ -6,13 +6,19 @@ body {
 main {
     display: grid;
     grid-template-areas: 
-    "company-info ticker-selector"
+    "company-info tickers"
     "graph graph";
     grid-template-columns: 2fr 1fr;
 }
 
 #ticker-selector {
-    grid-area: ticker-selector;
+    grid-area: tickers;
+}
+
+#tickers-refresh {
+    grid-area: tickers;
+    align-self: end;
+    justify-self: end;
 }
 
 #company-info {

@@ -41,11 +41,10 @@ def update_graph(ticker: str):
 @callback(
     Output("ticker-selector", "options"),
     Output("ticker-selector", "value"),
-    Output("tickers-timer", "interval"),
-    Input("tickers-timer", "n_intervals"),
+    Input("tickers-refresh", "n_clicks"),
     Input("ticker-selector", "value"),
 )
-def update_tickers_list(n, current_ticker):
+def refresh_tickers_list(n, current_ticker):
     tickers = storage.get_all_tickers()
 
     new_selected_value = None
@@ -54,7 +53,7 @@ def update_tickers_list(n, current_ticker):
     elif tickers:
         new_selected_value = tickers[0]
 
-    return tickers, new_selected_value, 2000 if tickers else 200
+    return tickers, new_selected_value
 
 
 @callback(
@@ -76,8 +75,8 @@ if __name__ == "__main__":
     dash_app.layout = html.Main(
         [
             dcc.Dropdown([], id="ticker-selector"),
-            dcc.Interval("tickers-timer", 200, n_intervals=0),
             html.Div(id="company-info"),
+            html.Button("Refresh tickers list", id="tickers-refresh"),
             dcc.Graph(id="stock-evolution-graph"),
         ]
     )
