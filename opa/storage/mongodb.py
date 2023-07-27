@@ -53,15 +53,7 @@ class MongoDbStorage(Storage):
         ]
 
     def get_all_tickers(self) -> list[str]:
-        # We first build a set to ensure that all values stay distinct and
-        # then convert it to a list in order to be indexable
-        return list(
-            {
-                t
-                for collection in self.collections.values()
-                for t in collection.distinct("ticker")
-            }
-        )
+        return self.collections[CompanyInfo].distinct("symbol")
 
     def insert_company_infos(self, infos: list[CompanyInfo]):
         try:
