@@ -45,11 +45,35 @@ def set_transparent_background(figure):
 def update_graph(ticker: str, type_str: str):
     type_ = StockValueType(type_str)
     df = get_dataframe(ticker, type_)
+    df["rolling_close_3"] = df[["close"]][::-1].rolling(window=3).mean()[::-1]
+    df["rolling_close_7"] = df[["close"]][::-1].rolling(window=7).mean()[::-1]
 
     figure = None
     match type_:
         case StockValueType.HISTORICAL:
-            figure = px.line(df, x="date", y="close")
+            figure = go.Figure([
+                go.Scatter(
+                    x=df.date,
+                    y=df.close,
+                    mode='markers',
+                    marker=dict(color='black', size=2),
+                    showlegend=True
+                ),
+                go.Scatter(
+                    x=df.date,
+                    y=df.rolling_close_3,
+                    mode='lines',
+                    line=dict(color='red', width=1),
+                    showlegend=True
+                ),
+                go.Scatter(
+                    x=df.date,
+                    y=df.rolling_close_7,
+                    mode='lines',
+                    line=dict(color='blue',width=1),
+                    showlegend=True
+                )
+            ])
 
         case StockValueType.STREAMING:
             figure = go.Figure(
