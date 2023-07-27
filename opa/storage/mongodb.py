@@ -65,7 +65,7 @@ class MongoDbStorage(Storage):
 
     def get_company_infos(self, tickers: list[str]) -> dict[str, CompanyInfo]:
         return {
-            i["symbol"]: i
+            i["symbol"]: CompanyInfo(**i)
             for i in self.collections[CompanyInfo].find({"symbol": {"$in": tickers}})
         }
 

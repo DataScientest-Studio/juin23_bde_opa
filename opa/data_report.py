@@ -63,9 +63,9 @@ def refresh_tickers_list(n, current_ticker):
 def update_company_info(ticker: str):
     info = storage.get_company_infos([ticker])[ticker]
     return [
-        html.H2(info["name"]),
-        html.Img(src=info["image"]),
-        html.P(info["description"]),
+        html.H2(info.name),
+        html.Img(src=info.image),
+        html.P(info.description),
     ]
 
 
