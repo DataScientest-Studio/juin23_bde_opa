@@ -4,7 +4,13 @@ from pydantic import BaseModel
 
 from opa.http_methods import get_json_data
 from opa.core.providers import StockMarketProvider
-from opa.core.financial_data import StockValue, StockValueMixin, StockValueType
+from opa.core.financial_data import (
+    StockValue,
+    StockValueMixin,
+    StockValueType,
+    CompanyInfo,
+    CompanyInfoMixin,
+)
 
 
 class FmpCloudHistoricalValue(BaseModel, StockValueMixin):
@@ -41,6 +47,35 @@ class FmpCloudStreamingValue(BaseModel, StockValueMixin):
             low=self.low,
             high=self.high,
             volume=self.volume,
+        )
+
+
+class FmpCloudCompanyInfo(BaseModel, CompanyInfoMixin):
+    symbol: str
+    companyName: str
+    currency: str
+    website: str
+    description: str
+    sector: str
+    country: str
+    image: str
+    ipoDate: date
+    address: str
+    city: str
+
+    def as_company_info(self, **kwargs) -> CompanyInfo:
+        return CompanyInfo(
+            symbol=self.symbol,
+            name=self.companyName,
+            currency=self.currency,
+            website=self.website,
+            description=self.description,
+            sector=self.sector,
+            country=self.country,
+            image=self.image,
+            ipo_date=datetime.combine(self.ipoDate, time.min),
+            address=self.address,
+            city=self.city,
         )
 
 
@@ -84,3 +119,15 @@ class FmpCloud(StockMarketProvider):
 
             case _:
                 raise TypeError(f"type should be a StockValueType, got {type_}")
+
+    def get_company_info(self, tickers: list[str]) -> list[CompanyInfo]:
+        # This part is sorted so that getting info for the same list of tickers always
+        # yields the exact same HTTP request.
+        tickers_as_str = ",".join(sorted(tickers))
+
+        data = get_json_data(
+            f"https://fmpcloud.io/api/v3/profile/{tickers_as_str}",
+            params={"apikey": self.access_key},
+        )
+
+        return [FmpCloudCompanyInfo(**v).as_company_info() for v in data]
