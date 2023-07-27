@@ -3,6 +3,7 @@ from datetime import date, datetime, time
 from pydantic import BaseModel
 
 from opa.http_methods import get_json_data
+from opa.core.env import environment
 from opa.core.providers import StockMarketProvider
 from opa.core.financial_data import (
     StockValue,
@@ -80,7 +81,8 @@ class FmpCloudCompanyInfo(BaseModel, CompanyInfoMixin):
 
 
 class FmpCloud(StockMarketProvider):
-    api_key_secret_file = "fmp_cloud_api_key"
+    def __init__(self):
+        self.access_key = environment.get_secret("fmp_cloud_api_key")
 
     def get_stock_values(self, ticker: str, type_: StockValueType) -> list[StockValue]:
         json = self.get_raw_stock_values(ticker, type_)
