@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from opa.core.financial_data import StockValue, StockValueType
+from opa.core.financial_data import StockValue, StockValueType, CompanyInfo
 
 
 class Storage(ABC):
@@ -16,4 +16,8 @@ class Storage(ABC):
 
     @abstractmethod
     def get_all_tickers(self) -> list[str]:
+        ...
+
+    @abstractmethod
+    def insert_company_infos(self, infos: list[CompanyInfo]):
         ...

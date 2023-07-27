@@ -2,7 +2,7 @@ from pymongo import MongoClient
 from pymongo.errors import BulkWriteError
 
 from opa.core import environment
-from opa.core.financial_data import StockValue, StockValueType
+from opa.core.financial_data import StockValue, StockValueType, CompanyInfo
 from opa.core.storage import Storage
 
 
@@ -11,8 +11,12 @@ class MongoDbStorage(Storage):
         client: MongoClient = MongoClient(uri, serverSelectionTimeoutMS=5000)
 
         self.db = client.get_database("stock_market")
+        collections = {
+            stock_type: stock_type.value for stock_type in StockValueType
+        } | {CompanyInfo: "company_info"}
         self.collections = {
-            coll: self.db.get_collection(coll.value) for coll in StockValueType
+            key: self.db.get_collection(mongo_name)
+            for (key, mongo_name) in collections.items()
         }
 
     def insert_values(self, values: list[StockValue], type_: StockValueType):
@@ -57,6 +61,11 @@ class MongoDbStorage(Storage):
                 for collection in self.collections.values()
                 for t in collection.distinct("ticker")
             }
+        )
+
+    def insert_company_infos(self, infos: list[CompanyInfo]):
+        return self.collections[CompanyInfo].insert_many(
+            [i.model_dump() for i in infos], ordered=False
         )
 
 
