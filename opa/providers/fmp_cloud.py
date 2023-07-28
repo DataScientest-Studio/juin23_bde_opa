@@ -2,8 +2,8 @@ from datetime import date, datetime, time
 
 from pydantic import BaseModel
 
+from opa import environment
 from opa.http_methods import get_json_data
-from opa.core.env import environment
 from opa.core.providers import StockMarketProvider
 from opa.core.financial_data import (
     StockValue,

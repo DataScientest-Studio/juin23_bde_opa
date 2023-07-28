@@ -4,11 +4,11 @@ import pandas as pd
 
 
 from opa.core.financial_data import StockValueType
-from opa.storage import storage
+from opa.storage import opa_storage
 
 
 def get_dataframe(ticker: str, type_: StockValueType) -> pd.DataFrame:
-    data = [h.model_dump() for h in storage.get_values(ticker, type_)]
+    data = [h.model_dump() for h in opa_storage.get_values(ticker, type_)]
     return pd.DataFrame(data)
 
 
@@ -45,7 +45,7 @@ def update_graph(ticker: str):
     Input("ticker-selector", "value"),
 )
 def refresh_tickers_list(n, current_ticker):
-    tickers = storage.get_all_tickers()
+    tickers = opa_storage.get_all_tickers()
 
     new_selected_value = None
     if current_ticker:
@@ -61,7 +61,7 @@ def refresh_tickers_list(n, current_ticker):
     Input("ticker-selector", "value"),
 )
 def update_company_info(ticker: str):
-    info = storage.get_company_infos([ticker])[ticker]
+    info = opa_storage.get_company_infos([ticker])[ticker]
     return [
         html.H2(info.name),
         html.Img(src=info.image),

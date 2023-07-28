@@ -6,8 +6,7 @@ from IPython import embed
 
 from opa.core import *
 from opa.http_methods import get_json_data
-from opa.storage import storage
-from opa.providers import FmpCloud
+from opa.providers import opa_provider
+from opa.storage import opa_storage
 
-fmp = FmpCloud()
 embed()

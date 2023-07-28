@@ -3,7 +3,7 @@ import requests
 import requests_cache
 from requests_cache.backends.sqlite import SQLiteCache
 
-from opa.core import environment
+from opa import environment
 
 
 session = (

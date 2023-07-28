@@ -1,7 +1,6 @@
 from pymongo import MongoClient
 from pymongo.errors import BulkWriteError
 
-from opa.core import environment
 from opa.core.financial_data import StockValue, StockValueType, CompanyInfo
 from opa.core.storage import Storage
 
@@ -68,6 +67,3 @@ class MongoDbStorage(Storage):
             i["symbol"]: CompanyInfo(**i)
             for i in self.collections[CompanyInfo].find({"symbol": {"$in": tickers}})
         }
-
-
-storage = MongoDbStorage(environment.mongodb_uri)
