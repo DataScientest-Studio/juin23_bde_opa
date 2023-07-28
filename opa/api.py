@@ -18,5 +18,5 @@ async def all_tickers() -> list[str]:
 
 
 @app.get("/{ticker}")
-async def historical(ticker: str, type: StockValueType) -> list[StockValue]:
+async def get_stock_values(ticker: str, type: StockValueType) -> list[StockValue]:
     return opa_storage.get_values(ticker, type)
