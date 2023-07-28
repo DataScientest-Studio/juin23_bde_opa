@@ -6,9 +6,9 @@ body {
 main {
     display: grid;
     grid-template-areas: 
-    "company-info tickers"
+    "tickers company-info"
     "graph graph";
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 1fr 2fr;
 }
 
 #ticker-selector {
