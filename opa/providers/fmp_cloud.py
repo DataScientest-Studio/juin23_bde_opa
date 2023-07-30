@@ -1,4 +1,5 @@
 from datetime import date, datetime, time
+from pathlib import Path
 
 from pydantic import BaseModel
 
@@ -94,16 +95,13 @@ class FmpCloud(StockMarketProvider):
     def get_raw_stock_values(self, ticker: str, type_: StockValueType) -> dict:
         match type_:
             case StockValueType.HISTORICAL:
-                return get_json_data(
-                    f"https://fmpcloud.io/api/v3/historical-price-full/{ticker}",
-                    params={"serietype": "line", "apikey": self.access_key},
+                return self._get_json_data(
+                    f"/historical-price-full/{ticker}",
+                    serietype="line",
                 )
 
             case StockValueType.STREAMING:
-                return get_json_data(
-                    f"https://fmpcloud.io/api/v3/historical-chart/15min/{ticker}",
-                    params={"apikey": self.access_key},
-                )
+                return self._get_json_data(f"/historical-chart/15min/{ticker}")
 
             case _:
                 raise TypeError(f"type should be a StockValueType, got {type_}")
@@ -127,9 +125,12 @@ class FmpCloud(StockMarketProvider):
         # yields the exact same HTTP request.
         tickers_as_str = ",".join(sorted(tickers))
 
-        data = get_json_data(
-            f"https://fmpcloud.io/api/v3/profile/{tickers_as_str}",
-            params={"apikey": self.access_key},
-        )
+        data = self._get_json_data(f"/profile/{tickers_as_str}")
 
         return [FmpCloudCompanyInfo(**v).as_company_info() for v in data]
+
+    def _get_json_data(self, path: str, **params):
+        path = path[1:] if path.startswith("/") else path
+        url = f"https://fmpcloud.io/api/v3/{path}"
+        params = params | {"apikey": self.access_key}
+        return get_json_data(str(url), params=params)

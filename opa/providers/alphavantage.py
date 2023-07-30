@@ -20,23 +20,19 @@ class Alphavantage(StockMarketProvider):
         match type_:
             case StockValueType.HISTORICAL:
                 # Documentation available here: https://www.alphavantage.co/documentation/#dailyadj
-                return get_json_data(
-                    f"https://www.alphavantage.co/query",
-                    params={
-                        "function": "TIME_SERIES_DAILY_ADJUSTED",
-                        "symbol": ticker,
-                        "apikey": self.access_key,
-                    },
+                return self._get_json_data(
+                    function="TIME_SERIES_DAILY_ADJUSTED",
+                    symbol=ticker,
                 )
 
             case StockValueType.STREAMING:
                 # Documentation available here: https://www.alphavantage.co/documentation/#intraday
-                return get_json_data(
-                    f"https://www.alphavantage.co/query",
-                    params={
-                        "function": "TIME_SERIES_INTRADAY",
-                        "symbol": ticker,
-                        "interval": "15min",
-                        "apikey": self.access_key,
-                    },
+                return self._get_json_data(
+                    function="TIME_SERIES_INTRADAY",
+                    symbol=ticker,
+                    interval="15min",
                 )
+
+    def _get_json_data(self, **params):
+        params = params | {"apikey": self.access_key}
+        return get_json_data("https://www.alphavantage.co/query", params=params)
