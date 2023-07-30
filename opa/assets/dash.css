@@ -60,11 +60,23 @@ main {
     grid-area: description;
 }
 
+/* Override React's defaults for drop down menu */
+.VirtualizedSelectOption,
+.Select-control {
+    background-color: #ddd;
+}
+
+.VirtualizedSelectFocusedOption,
+.VirtualizedSelectSelectedOption {
+    background-color: #ccc;
+}
+
 .dropdown-option {
-    display: flex;
+    display: inline-flex;
     column-gap: 1em;
 }
 
 .dropdown-option img {
     height: 20px;
+    align-self: center;
 }
