@@ -1,12 +1,14 @@
 from datetime import date, datetime, time
 from pathlib import Path
+from datetime import datetime
+from typing import Optional
 
 from pydantic import BaseModel
 from loguru import logger
 
 from opa import environment
 from opa.http_methods import get_json_data
-from opa.core.providers import StockMarketProvider
+from opa.core.providers import StockMarketProvider, TimeRangeSpecifier
 from opa.core.financial_data import (
     StockValue,
     StockValueMixin,
@@ -86,8 +88,13 @@ class FmpCloud(StockMarketProvider):
     def __init__(self):
         self.access_key = environment.get_secret("fmp_cloud_api_key")
 
-    def get_stock_values(self, ticker: str, type_: StockValueType) -> list[StockValue]:
-        json = self.get_raw_stock_values(ticker, type_)
+    def get_stock_values(
+        self,
+        ticker: str,
+        type_: StockValueType,
+        time_range: TimeRangeSpecifier = (None, None),
+    ) -> list[StockValue]:
+        json = self.get_raw_stock_values(ticker, type_, time_range)
         ret = [
             v.as_stock_value(ticker=ticker)
             for v in self._as_validated_list_of_values(json, type_)
@@ -98,19 +105,39 @@ class FmpCloud(StockMarketProvider):
         )
         return ret
 
-    def get_raw_stock_values(self, ticker: str, type_: StockValueType) -> dict:
+    def get_raw_stock_values(
+        self,
+        ticker: str,
+        type_: StockValueType,
+        time_range: TimeRangeSpecifier = (None, None),
+    ) -> dict:
+        date_range = self._get_date_range_params(time_range)
+
         match type_:
             case StockValueType.HISTORICAL:
                 return self._get_json_data(
-                    f"/historical-price-full/{ticker}",
-                    serietype="line",
+                    f"/historical-price-full/{ticker}", serietype="line", **date_range
                 )
 
             case StockValueType.STREAMING:
-                return self._get_json_data(f"/historical-chart/15min/{ticker}")
+                return self._get_json_data(
+                    f"/historical-chart/15min/{ticker}", **date_range
+                )
 
             case _:
                 raise TypeError(f"type should be a StockValueType, got {type_}")
+
+    @staticmethod
+    def _get_date_range_params(range: TimeRangeSpecifier) -> dict:
+        match range:
+            case (None, None):
+                return {}
+            case (None, to_):
+                return {"to": to_}
+            case (from_, None):
+                return {"from": from_}
+            case (from_, to_):
+                return {"from": from_, "to": to_}
 
     @staticmethod
     def _as_validated_list_of_values(
