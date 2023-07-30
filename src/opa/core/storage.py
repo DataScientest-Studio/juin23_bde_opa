@@ -25,3 +25,7 @@ class Storage(ABC):
     @abstractmethod
     def get_company_infos(self, tickers: list[str]) -> dict[str, CompanyInfo]:
         ...
+
+    @abstractmethod
+    def get_stats(self, type_: StockValueType) -> dict[str, dict]:
+        ...
