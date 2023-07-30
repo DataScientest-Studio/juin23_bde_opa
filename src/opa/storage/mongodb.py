@@ -90,3 +90,23 @@ class MongoDbStorage(Storage):
         logger.info("Fetched company info for {} companies from storage", len(ret))
 
         return ret
+
+    def get_stats(self, type_: StockValueType) -> dict[str, dict]:
+        ret = {
+            grouped["_id"]: {k: v for k, v in grouped.items() if k != "_id"}
+            for grouped in self.collections[type_].aggregate(
+                [
+                    {
+                        "$group": {
+                            "_id": "$ticker",
+                            "latest": {"$max": "$date"},
+                            "oldest": {"$min": "$date"},
+                            "count": {"$count": {}},
+                        }
+                    }
+                ]
+            )
+        }
+        logger.info("Getting stats from storage")
+
+        return ret
