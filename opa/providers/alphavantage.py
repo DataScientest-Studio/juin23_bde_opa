@@ -1,4 +1,5 @@
 from opa import environment
+from opa.core import CompanyInfo
 from opa.http_methods import get_json_data
 from opa.core.financial_data import StockValue, StockValueType
 from opa.core.providers import StockMarketProvider
@@ -14,6 +15,9 @@ class Alphavantage(StockMarketProvider):
         self.access_key = environment.get_secret("alphavantage_api_key")
 
     def get_stock_values(self, ticker: str, type_: StockValueType) -> list[StockValue]:
+        raise NotImplementedError()
+
+    def get_company_info(self, tickers: list[str]) -> list[CompanyInfo]:
         raise NotImplementedError()
 
     def get_raw_stock_values(self, ticker: str, type_: StockValueType) -> dict:
