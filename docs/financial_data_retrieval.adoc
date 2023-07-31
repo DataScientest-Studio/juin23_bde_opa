@@ -296,8 +296,9 @@ Now that we have a better understanding of the kind of data we will be handling,
 [#python-stock-value-definition]
 .Definition of StockValue class
 [,python]
+// This should display the definition of StockValue class
 ----
-include::../opa/core/financial_data.py[lines=8..15]
+include::../opa/core/financial_data.py[lines=14..21]
 ----
 
 === Access to providers' data
@@ -307,6 +308,7 @@ An abstract class is defined to retrieve data from a provider, with a method tha
 [#python-stock-market-provider-definition]
 .Definition of StockMarketProvider abstract class
 [,python]
+// This should display the definition of StockMarketProvider class
 ----
 include::../opa/core/providers.py[lines=6..12]
 ----
@@ -318,8 +320,9 @@ The implementation of the class that gets data from FMP Cloud provider can be fo
 To ensure that the data we get from the APIs is in a format that we expect, we use the `pydantic` libraryfootnote:[https://docs.pydantic.dev/2.0/] to define some models of the data.
 
 [,python]
+// This should display the definitions of FmpCloud* classes
 ----
-include::../opa/providers/fmp_cloud.py[lines=10..12;19..33]
+include::../opa/providers/fmp_cloud.py[lines=17..20;28..39]
 ----
 
 Validation of the server's response can now be done by simply instantiating one of those classes with e.g. [,python]`FmpCloudHistoricalData(**json)`.
