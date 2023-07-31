@@ -1,8 +1,11 @@
+from loguru import logger
 from fastapi import FastAPI
 
 from opa.core.financial_data import StockValue, StockValueType
 from opa.storage import opa_storage
 
+
+logger.info("API app starting up...")
 
 app = FastAPI()
 

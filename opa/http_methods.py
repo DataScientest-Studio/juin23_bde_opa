@@ -1,6 +1,8 @@
 import requests
 
+from loguru import logger
 import requests_cache
+from requests_cache.models.response import CachedResponse
 from requests_cache.backends.sqlite import SQLiteCache
 
 from opa import environment
@@ -21,5 +23,11 @@ def get_json_data(url: str, **kwargs):
 
     if status >= 300:
         raise RuntimeError(f"Got unhandled response code={status} : {http.json()}")
+
+    logger.debug(
+        "Got successful HTTP response from {cached}{url}",
+        cached="cached " if isinstance(http, CachedResponse) else "",
+        url=http.url,
+    )
 
     return http.json()

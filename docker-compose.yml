@@ -1,5 +1,8 @@
 version: '3'
 
+x-environment: &environment
+  LOGURU_LEVEL: INFO
+
 services:
   financial_data_reader:
     image: opa/financial_data_reader
@@ -16,6 +19,7 @@ services:
     depends_on:
       - database
     environment:
+      <<: *environment
       USE_HTTP_CACHE: True
     volumes:
       - http-cache:/var/http_cache
@@ -51,6 +55,7 @@ services:
     ports:
       - 8050:8050
     environment:
+      <<: *environment
       HOST: 0.0.0.0
     depends_on:
       - database
@@ -66,6 +71,7 @@ services:
       args:
         - REQUIREMENTS_FILE=./requirements-api.txt
     command: [ "uvicorn", "opa.api:app", "--host", "0.0.0.0", "--port", "8000", "--reload" ]
+    environment: *environment
     ports:
       - 8000:8000
     depends_on:

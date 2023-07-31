@@ -1,8 +1,8 @@
+from loguru import logger
 from dash import Dash, html, dcc, callback, Output, Input, no_update
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
-
 
 from opa.core.financial_data import StockValueType
 from opa.storage import opa_storage
@@ -114,6 +114,7 @@ def update_company_info(ticker: str):
 
 
 if __name__ == "__main__":
+    logger.info("Data report app starting up...")
     dash_app = Dash(__name__)
 
     dash_app.layout = html.Main(
@@ -130,3 +131,4 @@ if __name__ == "__main__":
         ]
     )
     dash_app.run(debug=True)
+    logger.warning("Data report app finishing")

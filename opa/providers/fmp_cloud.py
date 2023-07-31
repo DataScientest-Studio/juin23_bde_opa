@@ -2,6 +2,7 @@ from datetime import date, datetime, time
 from pathlib import Path
 
 from pydantic import BaseModel
+from loguru import logger
 
 from opa import environment
 from opa.http_methods import get_json_data
@@ -87,10 +88,15 @@ class FmpCloud(StockMarketProvider):
 
     def get_stock_values(self, ticker: str, type_: StockValueType) -> list[StockValue]:
         json = self.get_raw_stock_values(ticker, type_)
-        return [
+        ret = [
             v.as_stock_value(ticker=ticker)
             for v in self._as_validated_list_of_values(json, type_)
         ]
+
+        logger.info(
+            "Fetched {count} {type_} stock values", count=len(ret), type_=type_.value
+        )
+        return ret
 
     def get_raw_stock_values(self, ticker: str, type_: StockValueType) -> dict:
         match type_:
@@ -127,7 +133,9 @@ class FmpCloud(StockMarketProvider):
 
         data = self._get_json_data(f"/profile/{tickers_as_str}")
 
-        return [FmpCloudCompanyInfo(**v).as_company_info() for v in data]
+        ret = [FmpCloudCompanyInfo(**v).as_company_info() for v in data]
+        logger.info("Fetched company info for {} companies", len(ret))
+        return ret
 
     def _get_json_data(self, path: str, **params):
         path = path[1:] if path.startswith("/") else path
