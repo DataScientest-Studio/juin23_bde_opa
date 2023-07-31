@@ -1,0 +1,49 @@
+== Data storage
+
+=== Scope
+
+From <<_financial_data_retrieval>>, we now have a good grasp of the kind of data we will be handling within this project. So far we have only been retrieving it via an external API, and it would be very impractical to keep on doing so.
+
+It is cumbersome indeed to rely on HTTP requests to an external provider. It is extremely slow, and the number of requests we can issue is limited. Chances are we will often be requesting the exact same sets of data. And last but not least, we have no way to organize and query the data to extract the patterns we might be looking for in a machine learning model or simply for data visualisation.
+
+A better approach would be to retrieve all the data we might need by emitting those API requests once and for all and storing the data contained in their response in an organized way ; we could update it when necessary.
+
+Any automated tool or data scientist that may need that data will now use that cache.
+
+=== Constraints
+
+We have seen that the financial data we aim to retrieve is always shaped basically in the same way, whether it is historical or streaming data. Some fields are not always present, though.
+
+[,python]
+// This should display the definition of StockValue class
+----
+include::../opa/core/financial_data.py[lines=14..21]
+----
+
+Though they is no numerical ID, short strings named "tickers" or "symbols" in stock market jargon are used to identify a given stock on a stock marketfootnote:[https://en.wikipedia.org/wiki/Ticker_symbol] ; they are unique by design and can therefore be safely used to identify a given company.
+
+The data does not exhibit any complex relationship patterns either. There is a 1-to-n relationship between companies and stock values. And any other additional information we might need in the future will likely be related to the company as well.
+
+Being the measurement of a stock value at a given moment, the data is intrinsically time-related and exhibit all the characteristics of time-series data.
+
+There is no hard constraint in terms of data consistency or durability. The stored data will be merely a cache of the data available in external APIs, and therefore not critical in any sense. No original data is ever produced by our applications ; in the worst case the data is still available from the APIs and one can always retrieve from them.
+
+=== Choice of a database
+
+////
+We have to choose a type of database :
+
+* Relational
+* Document oriented
+* Key value 
+* Column-oriented
+* Graph 
+
+Time series collections with MongoDB : https://www.mongodb.com/docs/v6.0/core/timeseries-collections/
+
+MongoDB allows schema validationfootnote:[https://www.mongodb.com/docs/manual/core/schema-validation/]
+
+Read/write patterns : data is written once, read several times, and never updated.
+
+////
+
