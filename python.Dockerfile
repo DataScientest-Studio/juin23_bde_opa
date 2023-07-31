@@ -1,10 +1,10 @@
 FROM python:3
 
+ARG REQUIREMENTS_FILE
+
 WORKDIR /usr/src/app
 
-COPY requirements-data_report.txt ./requirements.txt
+COPY ${REQUIREMENTS_FILE} ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
-
-CMD [ "python", "-m", "opa.data_report" ]

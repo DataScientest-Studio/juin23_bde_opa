@@ -5,7 +5,10 @@ services:
     image: opa/financial_data_reader
     build:
       context: .
-      dockerfile: ./financial_data_reader.Dockerfile
+      dockerfile: ./python.Dockerfile
+      args:
+        - REQUIREMENTS_FILE=./requirements-financial_data_reader.txt
+    command: [ "python", "-m", "opa.financial_data_reader" ]
     # With a ~5s database query timeout, the reader will crash on a cold startup (while the
     # database is still initializing).
     # TODO: Investigate if it's a proper solution.
@@ -41,7 +44,10 @@ services:
     image: opa/data_report
     build:
       context: .
-      dockerfile: ./data_report.Dockerfile
+      dockerfile: ./python.Dockerfile
+      args:
+        - REQUIREMENTS_FILE=./requirements-data_report.txt
+    command: [ "python", "-m", "opa.data_report" ]
     ports:
       - 8050:8050
     environment:
@@ -56,7 +62,10 @@ services:
     image: opa/api
     build:
       context: .
-      dockerfile: ./api.Dockerfile
+      dockerfile: ./python.Dockerfile
+      args:
+        - REQUIREMENTS_FILE=./requirements-api.txt
+    command: [ "uvicorn", "opa.api:app", "--host", "0.0.0.0", "--port", "8000", "--reload" ]
     ports:
       - 8000:8000
     depends_on:
