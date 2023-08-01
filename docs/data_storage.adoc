@@ -14,6 +14,8 @@ Any automated tool or data scientist that may need that data will now use that c
 
 We have seen that the financial data we aim to retrieve is always shaped basically in the same way, whether it is historical or streaming data. Some fields are not always present, though.
 
+[#python-stock-value-class-2]
+.Definition of an abstract StockValue class
 [,python]
 // This should display the definition of StockValue class
 ----
@@ -28,22 +30,47 @@ Being the measurement of a stock value at a given moment, the data is intrinsica
 
 There is no hard constraint in terms of data consistency or durability. The stored data will be merely a cache of the data available in external APIs, and therefore not critical in any sense. No original data is ever produced by our applications ; in the worst case the data is still available from the APIs and one can always retrieve from them.
 
+In terms of data access patterns, the values stored in the database will be written to only once (when it is retrieved from the API) and read many times.
+
 === Choice of a database
 
+So many database options exist that we will first restrict our choice by choosing among the various types of databases, that is :
+
+. Relational
+. Graph-oriented
+. Column-oriented
+. Key-value
+. Document-oriented
+
+The choice here is that of a design philosophy, since the lines are quite blurred between the different categories ; e.g. almost all SQL databases have a very good support of JSON, making them very capable as "document-oriented" databases.
+
+As we have seen, the data we'll be handling has very few relational properties. A fully-fledged SQL relational database is therefore not the favored option. It does not exhibit any interesting graph properties either, rendering a graph-oriented database useless. 
+
+Column-oriented databases are more of an option for e.g. OnLine Analytical Processing of data with complex relationships, which is not the case here.
+
+Key-value databases trade expressiveness in data structure / query for very high performance. They might be a reasonable option given the simple structure of our data.
+
+Overall, though, we do not really need that very high performance, and we'll be happy to trade a bit of performance for the light data structuring that document-oriented databases offers. We might also need the expressiveness they allow in terms of query / aggregations / ...
+
+A document-oriented datastore therefore appears like a good choice. MongoDBfootnote:[https://www.mongodb.com/] is the most popular implementation of such a database. It supports time-series collectionsfootnote:[https://www.mongodb.com/docs/v6.0/core/timeseries-collections/] of which stock prices are a prime example. It also features schema validationfootnote:[https://www.mongodb.com/docs/manual/core/schema-validation/] to ensure that the documents we insert are in an expected format.
+
+=== Implementation
+
+Should we change our mind regarding the database choice, we'll keep some flexibility by defining a `Storage` class with an API that will abstract away the concrete implementation of the database.
+
+[#python-storage-abstract-class]
+.Definition of an abstract Storage class
+[,python]
+// This should display the definition of Storage class
+----
+include::../opa/core/storage.py[lines=6..27]
+----
+
+With regards to the layout of the MongoDB database, we will define as many collections as we have different kinds of data ; one for historical stock values, one for streaming/recent stock values, one for additional company information, ...
+
 ////
-We have to choose a type of database :
-
-* Relational
-* Document oriented
-* Key value 
-* Column-oriented
-* Graph 
-
-Time series collections with MongoDB : https://www.mongodb.com/docs/v6.0/core/timeseries-collections/
-
-MongoDB allows schema validationfootnote:[https://www.mongodb.com/docs/manual/core/schema-validation/]
-
-Read/write patterns : data is written once, read several times, and never updated.
-
+Unique index
+Schema constraints
+Error handling
+Performance measurement
 ////
-
