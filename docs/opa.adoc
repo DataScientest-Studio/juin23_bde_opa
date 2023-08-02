@@ -1,4 +1,5 @@
 = OPA Project
+:source-highlighter: highlight.js
 
 :toc:
 
