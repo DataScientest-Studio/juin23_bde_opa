@@ -256,6 +256,8 @@ Volume:: The number of stocks exchanged over the unit of time
 
 In terms of data format, the _date_ is (or can be trivially converted to) a `datetime`. The interval length can be represented as a number of minutes expressed in `int`. The _close_, _open_, _low_, _high_ values are prices in dollars, of type `float`. The volume is an `int`.
 
+[#stock-value-record-fields]
+.Fields contained in a typical stock value record
 [%autowidth]
 |===
 |Value |Type |Optional?
