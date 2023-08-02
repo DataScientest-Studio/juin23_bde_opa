@@ -66,11 +66,35 @@ Should we change our mind regarding the database choice, we'll keep some flexibi
 include::../opa/core/storage.py[lines=6..27]
 ----
 
-With regards to the layout of the MongoDB database, we will define as many collections as we have different kinds of data ; one for historical stock values, one for streaming/recent stock values, one for additional company information, ...
+The layout of the MongoDB database itself will be setup using the approach recommended of the MongoDB Docker image's pagefootnote:["Initializing a fresh instance" paragraph on https://hub.docker.com/_/mongo], via a `mongo-init.js` file executed on the first startup.
+
+We will define as many collections as we have different kinds of data ; one for historical stock values, one for streaming/recent stock values, one for additional company information, ...
+
+Each of these collections has a unique index to ensure that no data is duplicated.
+
+[#definition-of-unique-indexes]
+.Definition of unique indexes
+[,js]
+// This should display the calls do db.collection.createIndex(...)
+----
+include::../mongo-init.js[lines=60..61]
+----
+
+We also leverage MongoDB's schema validation feature to ensure that the inserted data always matches a well-defined set of rules defined from the data format exposed in <<stock-value-record-fields>>. Those rules include ensuring that some fields are ALWAYS present (`ticker`, `date` and `close` values) ; and that fields should have the expected type (mostly `double`, with some `date` or `int`).
+
+[#definition-of-constraints]
+.Definition of constraints
+[,js]
+// This should display the json-schema used for validation of historical values
+----
+include::../mongo-init.js[lines=17..27]
+                ...
+include::../mongo-init.js[lines=32..35]
+                ...
+include::../mongo-init.js[lines=48..55]
+----
 
 ////
-Unique index
-Schema constraints
 Error handling
 Performance measurement
 ////
