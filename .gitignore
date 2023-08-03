@@ -172,3 +172,5 @@ app_data/secrets/*
 !/app_data/secrets/.gitkeep
 
 docs/report/**.html
+
+.ipynb_checkpoints

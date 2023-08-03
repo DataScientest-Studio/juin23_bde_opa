@@ -139,6 +139,27 @@ services:
     image: alpine
     command: echo "Hello from machine learning"
 
+  notebook:
+    image: opa/demo-notebook
+    build:
+      context: .
+      dockerfile: ./jupyter.Dockerfile
+    ports:
+      - 10000:8888
+    environment:
+      <<: *environment
+      OPA_USE_HTTP_CACHE: True
+    profiles:
+      - notebook
+    volumes:
+      - http-cache:/var/http_cache
+      - ./src:/home/jovyan/src
+      - ./opa/notebooks:/home/jovyan/notebooks
+    secrets:
+      - fmp_cloud_api_key
+      - mongodb_username
+      - mongodb_password
+
 secrets:
   fmp_cloud_api_key:
     file: app_data/secrets/fmp_cloud_api_key
