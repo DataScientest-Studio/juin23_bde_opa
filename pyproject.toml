@@ -20,6 +20,7 @@ storage = [
 data_report = [
     "dash>=2.11.1",
     "pandas>=2.0.3",
+    "setuptools>=68.0.0",
 ]
 financial_reader = [
     "requests-cache>=1.1.0",
