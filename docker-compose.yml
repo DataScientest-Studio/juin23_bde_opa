@@ -87,6 +87,37 @@ services:
       - mongodb_username
       - mongodb_password
 
+  test_functional:
+    image: opa/test_functional
+    build:
+      context: .
+      dockerfile: ./tests.Dockerfile
+      args:
+        - OPTIONAL_DEPENDENCIES_GROUPS=tests_functional
+    command: [ "pdm", "run", "pytest", "-rfE", "tests/functional" ]
+    environment: *environment
+    depends_on:
+      - internal_api
+    profiles:
+      - test
+
+  test_integration:
+    image: opa/test_integration
+    build:
+      context: .
+      dockerfile: ./tests.Dockerfile
+      args:
+        - OPTIONAL_DEPENDENCIES_GROUPS=tests_integration,storage
+    command: [ "pdm", "run", "pytest", "-rfE", "tests/integration" ]
+    environment: *environment
+    depends_on:
+      - database
+    profiles:
+      - test
+    secrets:
+      - mongodb_username
+      - mongodb_password
+
   machine_learning:
     image: alpine
     command: echo "Hello from machine learning"

@@ -29,6 +29,13 @@ financial_reader = [
 api = [
     "fastapi[all]>=0.100.1",
 ]
+tests_functional = [
+    "requests>=2.31.0",
+    "pytest>=7.4.0",
+]
+tests_integration = [
+    "pytest>=7.4.0",
+]
 
 [tool.pdm.dev-dependencies]
 dev = [
@@ -37,5 +44,8 @@ dev = [
     "mypy>=1.4.1",
     "types-requests>=2.31.0.2",
     "pandas-stubs>=2.0.2.230605",
+    "pytest>=7.4.0",
 ]
 
+[tool.pytest.ini_options]
+testpaths = "tests"
