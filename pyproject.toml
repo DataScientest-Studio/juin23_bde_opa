@@ -38,8 +38,3 @@ dev = [
     "pandas-stubs>=2.0.2.230605",
 ]
 
-[tool.pdm]
-include-package-data = true
-
-[tool.pdm.package-data]
-opa = ["*.css"]
