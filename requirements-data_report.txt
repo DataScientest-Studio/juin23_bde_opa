@@ -1,5 +1,0 @@
-loguru
-pydantic
-pymongo
-dash
-pandas

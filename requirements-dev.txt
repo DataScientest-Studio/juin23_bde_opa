@@ -1,8 +1,0 @@
-black
-ipykernel
-ipython
-mypy
-
-# For static type check
-types-requests
-pandas-stubs
