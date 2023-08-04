@@ -298,7 +298,7 @@ Now that we have a better understanding of the kind of data we will be handling,
 [,python]
 // This should display the definition of StockValue class
 ----
-include::../opa/core/financial_data.py[lines=14..21]
+include::../src/opa/core/financial_data.py[lines=14..21]
 ----
 
 === Access to providers' data
@@ -310,7 +310,7 @@ An abstract class is defined to retrieve data from a provider, with a method tha
 [,python]
 // This should display the definition of StockMarketProvider class
 ----
-include::../opa/core/providers.py[lines=6..12]
+include::../src/opa/core/providers.py[lines=6..12]
 ----
 
 The implementation of the class that gets data from FMP Cloud provider can be found in link:../opa/providers/fmp_cloud.py[fmp_cloud.py].
@@ -322,7 +322,7 @@ To ensure that the data we get from the APIs is in a format that we expect, we u
 [,python]
 // This should display the definitions of FmpCloud* classes
 ----
-include::../opa/providers/fmp_cloud.py[lines=17..20;28..39]
+include::../src/opa/providers/fmp_cloud.py[lines=17..20;28..39]
 ----
 
 Validation of the server's response can now be done by simply instantiating one of those classes with e.g. [,python]`FmpCloudHistoricalData(**json)`.
