@@ -1,5 +1,13 @@
 # OPA Project
 
+## Run with Docker Compose
+
+Once the secrets are installed (see next paragraph), services can be started using a simple : `docker compose up -d`.
+
+The dashboard will be available on http://localhost:8050
+
+The API documentation will be available on http://localhost:8000/docs
+
 ## Secrets
 
 The app secrets are kept within a `app_data/secrets` directory whose content is not versioned for obvious reasons.
@@ -13,30 +21,52 @@ app_data/secrets
 └── mongodb_username
 ```
 
-## Running it
+## Development commands
 
-`docker-compose up`.
+### Run locally
 
-## Force rebuild
+For development convenience, some parts of the application can be run on the local machine.
 
-By default the docker-compose won't rebuild the images even though the code may have changed.
+#### Using pip
 
-`docker-compose up --force-recreate --build`
+For this, please run the following steps in your favorite shell :
 
-## Run locally
+```
+python -m venv ${LOCAL_VENV}
+source ${LOCAL_VENV}/bin/activate
 
-First execute `./setup-local.sh`
+pip install --upgrade pip
+pip install .[storage,data_report,financial_reader,api]
+```
 
-Run the financial data reader with : `python -m financial_data_reader`
+The financial data reader can be run with `python -m opa.financial_data_reader`.
 
-## Run commands on the database
+The dashboard can be run with `python -m opa.data_report`.
 
-`docker-compose run -it --rm database mongosh mongodb://username@password:database`
+#### Using pdm
 
-## Interactive shell
+The `opa` package can be installed with `pdm install`.
 
-An interactive shell can be run with `python -m opa.shell`
+The financial data reader can be run with `pdm run python -m opa.financial_data_reader`.
 
-## Static type analysis
+The dashboard can be run with `pdm run python -m opa.data_report`.
+
+### Miscellaneous
+
+#### Interactive shell
+
+An interactive shell can be started with `pdm run python -m opa.shell`
+
+#### Run commands on the database
+
+MongoDB shell can be accessed via : `docker compose run -it --rm database mongosh mongodb://username@password:database`
+
+#### Static type analysis
 
 ... can be run with `mypy opa`.
+
+#### Force rebuild of docker images
+
+By default the docker compose doesn't rebuild the images even though the code may have changed.
+
+`docker compose up --force-recreate --build`
