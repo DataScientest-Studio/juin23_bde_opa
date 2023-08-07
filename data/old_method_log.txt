@@ -1,0 +1,9 @@
+2023-08-07 20:24:17.771 | INFO     | opa.providers.fmp_cloud:get_company_info:137 - Fetched company info for 5 companies
+2023-08-07 20:24:17.791 | INFO     | opa.storage.mongodb:insert_company_infos:142 - Company infos were already present, ditching data from 5 companies
+2023-08-07 20:24:17.840 | INFO     | opa.storage.mongodb:get_stats:174 - Getting stats from storage
+2023-08-07 20:24:17.960 | INFO     | opa.providers.fmp_cloud:get_stock_values:96 - Fetched 10752 historical stock values
+2023-08-07 20:24:18.074 | INFO     | opa.providers.fmp_cloud:get_stock_values:96 - Fetched 9426 historical stock values
+2023-08-07 20:24:18.160 | INFO     | opa.providers.fmp_cloud:get_stock_values:96 - Fetched 6600 historical stock values
+2023-08-07 20:24:18.200 | INFO     | opa.providers.fmp_cloud:get_stock_values:96 - Fetched 4774 historical stock values
+2023-08-07 20:24:18.225 | INFO     | opa.providers.fmp_cloud:get_stock_values:96 - Fetched 2822 historical stock values
+2023-08-07 20:24:23.108 | WARNING  | opa.storage.mongodb:insert_values:95 - Only 1 stock values out of 34374 could be inserted (34373 were duplicates of existing values)

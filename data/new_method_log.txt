@@ -1,0 +1,9 @@
+2023-08-07 20:25:05.022 | INFO     | opa.providers.fmp_cloud:get_company_info:137 - Fetched company info for 5 companies
+2023-08-07 20:25:05.043 | INFO     | opa.storage.mongodb:insert_company_infos:142 - Company infos were already present, ditching data from 5 companies
+2023-08-07 20:25:05.095 | INFO     | opa.storage.mongodb:get_stats:174 - Getting stats from storage
+2023-08-07 20:25:05.193 | INFO     | opa.providers.fmp_cloud:get_stock_values:96 - Fetched 10752 historical stock values
+2023-08-07 20:25:05.302 | INFO     | opa.providers.fmp_cloud:get_stock_values:96 - Fetched 9426 historical stock values
+2023-08-07 20:25:05.386 | INFO     | opa.providers.fmp_cloud:get_stock_values:96 - Fetched 6600 historical stock values
+2023-08-07 20:25:05.427 | INFO     | opa.providers.fmp_cloud:get_stock_values:96 - Fetched 4774 historical stock values
+2023-08-07 20:25:05.452 | INFO     | opa.providers.fmp_cloud:get_stock_values:96 - Fetched 2822 historical stock values
+2023-08-07 20:25:05.470 | INFO     | opa.core.financial_data_reader:import_stock_values:46 - 34374 'historical' values fetched by the reader were discarded because they cover a timespan already present in the storage
