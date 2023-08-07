@@ -4,7 +4,12 @@ from pymongo import MongoClient
 from pymongo.errors import BulkWriteError
 from loguru import logger
 
-from opa.core.financial_data import StockValue, StockValueType, CompanyInfo
+from opa.core.financial_data import (
+    StockValue,
+    StockValueType,
+    CompanyInfo,
+    StockCollectionStats,
+)
 from opa.core.storage import Storage
 
 
@@ -148,9 +153,11 @@ class MongoDbStorage(Storage):
 
         return ret
 
-    def get_stats(self, type_: StockValueType) -> dict[str, dict]:
+    def get_stats(self, type_: StockValueType) -> dict[str, StockCollectionStats]:
         ret = {
-            grouped["_id"]: {k: v for k, v in grouped.items() if k != "_id"}
+            grouped["_id"]: StockCollectionStats(
+                **{k: v for k, v in grouped.items() if k != "_id"}
+            )
             for grouped in self.collections[type_].aggregate(
                 [
                     {

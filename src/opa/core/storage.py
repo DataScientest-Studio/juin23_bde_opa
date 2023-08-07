@@ -1,6 +1,11 @@
 from abc import ABC, abstractmethod
 
-from opa.core.financial_data import StockValue, StockValueType, CompanyInfo
+from opa.core.financial_data import (
+    StockValue,
+    StockValueType,
+    CompanyInfo,
+    StockCollectionStats,
+)
 
 
 class Storage(ABC):
@@ -27,5 +32,5 @@ class Storage(ABC):
         ...
 
     @abstractmethod
-    def get_stats(self, type_: StockValueType) -> dict[str, dict]:
+    def get_stats(self, type_: StockValueType) -> dict[str, StockCollectionStats]:
         ...

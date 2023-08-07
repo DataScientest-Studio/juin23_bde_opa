@@ -45,3 +45,9 @@ class CompanyInfoMixin:
     @abstractmethod
     def as_company_info(self, **kwargs) -> CompanyInfo:
         ...
+
+
+class StockCollectionStats(BaseModel):
+    latest: datetime
+    oldest: datetime
+    count: int
