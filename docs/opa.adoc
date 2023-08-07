@@ -14,3 +14,7 @@ include::financial_data_retrieval.adoc[]
 <<<
 
 include::data_storage.adoc[]
+
+<<<
+
+include::data_report.adoc[]
