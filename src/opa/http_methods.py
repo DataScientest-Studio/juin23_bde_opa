@@ -1,4 +1,5 @@
 import requests
+from datetime import timedelta
 
 from loguru import logger
 import requests_cache
@@ -10,7 +11,12 @@ from opa import environment
 
 session = (
     requests_cache.CachedSession(
-        "opa", backend=SQLiteCache(db_path=environment.http_cache_db_dir / "opa")
+        "opa",
+        backend=SQLiteCache(db_path=environment.http_cache_db_dir / "opa"),
+        # This should certainly be set by request, but within the limited scope of this
+        # project, new data is fetched every day, and the API rate is limited anyway.
+        # Hardcoding the value is good enough.
+        expire_after=timedelta(hours=12.0),
     )
     if environment.use_http_cache
     else requests.Session()
