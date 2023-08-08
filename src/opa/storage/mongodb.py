@@ -1,7 +1,7 @@
 from collections import Counter
 
 from pymongo import MongoClient
-from pymongo.errors import BulkWriteError
+from pymongo.errors import BulkWriteError, CollectionInvalid
 from loguru import logger
 
 from opa.core.financial_data import (
@@ -20,17 +20,74 @@ DUPLICATE_KEY_ERROR = 11000
 DOCUMENT_VALIDATION_FAILURE_ERROR = 121
 
 
+def _get_json_schema_validator(
+    title: str, required_fields: list[str], field_types: dict[str, str]
+) -> dict:
+    props = {
+        field: {"bsonType": type_, "description": f"'{field}' must be a {type_}"}
+        for (field, type_) in field_types.items()
+    }
+
+    return {
+        "$jsonSchema": {
+            "bsonType": "object",
+            "title": title,
+            "required": required_fields,
+            "properties": props,
+            "additionalProperties": False,
+        }
+    }
+
+
 class MongoDbStorage(Storage):
+    stock_value_fields_types = {
+        "_id": "objectId",
+        "date": "date",
+        "ticker": "string",
+        "close": "double",
+        "open": "double",
+        "low": "double",
+        "high": "double",
+        "volume": "int",
+    }
+    stock_value_required_fields = ["_id", "date", "close", "ticker"]
+    date_ticker_unique_index = {"date": 1, "ticker": 1}
+
+    collection_args = {
+        StockValueType.HISTORICAL: {
+            "name": StockValueType.HISTORICAL.value,
+            "create_args": {
+                "validator": _get_json_schema_validator(
+                    "Historical values validation",
+                    stock_value_required_fields,
+                    stock_value_fields_types,
+                )
+            },
+            "unique_index": date_ticker_unique_index,
+        },
+        StockValueType.STREAMING: {
+            "name": StockValueType.STREAMING.value,
+            "create_args": {
+                "validator": _get_json_schema_validator(
+                    "Streaming values validation",
+                    stock_value_required_fields,
+                    stock_value_fields_types,
+                )
+            },
+            "unique_index": date_ticker_unique_index,
+        },
+        CompanyInfo: {"name": "company_info", "unique_index": {"symbol": 1}},
+    }
+
     def __init__(self, uri: str) -> None:
         client: MongoClient = MongoClient(uri, serverSelectionTimeoutMS=5000)
 
         self.db = client.get_database("stock_market")
-        collections = {
-            stock_type: stock_type.value for stock_type in StockValueType
-        } | {CompanyInfo: "company_info"}
+        self._create_collections_if_not_exist()
+
         self.collections = {
-            key: self.db.get_collection(mongo_name)
-            for (key, mongo_name) in collections.items()
+            key: self.db.get_collection(coll["name"])
+            for (key, coll) in self.collection_args.items()
         }
 
     def insert_values(self, values: list[StockValue], type_: StockValueType):
@@ -174,3 +231,25 @@ class MongoDbStorage(Storage):
         logger.info("Getting stats from storage")
 
         return ret
+
+    def _create_collections_if_not_exist(self):
+        for coll in self.collection_args.values():
+            name = coll["name"]
+
+            try:
+                create_args = coll.get("create_args", {})
+                self.db.create_collection(name, check_exists=True, **create_args)
+                logger.info("Collection {} successfully created", name)
+
+            except CollectionInvalid as err:
+                msg = err.args[0]
+                if "already exists" in msg:
+                    # This is not an actual error
+                    logger.info("Collection {} already exists, skipping creation", name)
+                else:
+                    raise err
+
+            unique_index = coll.get("unique_index")
+            if unique_index:
+                # create_index is invariant and won't raise if the index already exists
+                self.db[name].create_index(unique_index.items(), unique=True)
