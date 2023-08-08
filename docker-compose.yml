@@ -70,7 +70,7 @@ services:
       dockerfile: ./pdm.Dockerfile
       args:
         - OPTIONAL_DEPENDENCIES_GROUPS=storage,api
-    command: [ "uvicorn", "opa.api:app", "--host", "0.0.0.0", "--port", "8000", "--reload" ]
+    command: [ "uvicorn", "opa.api:app", "--host", "0.0.0.0", "--port", "8000"]
     environment: *environment
     ports:
       - 8000:8000
