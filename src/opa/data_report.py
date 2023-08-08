@@ -127,7 +127,7 @@ if __name__ == "__main__":
                 StockValueType.HISTORICAL.value,
                 id="type-selector",
             ),
-            dcc.Graph(id="stock-evolution-graph"),
+            dcc.Graph(id="stock-evolution-graph", config={"scrollZoom": True}),
         ]
     )
     dash_app.run(debug=True)
