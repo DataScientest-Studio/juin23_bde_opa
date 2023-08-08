@@ -14,7 +14,7 @@ def get_dataframe(ticker: str, type_: StockValueType) -> pd.DataFrame:
 
 
 def add_range_selectors(figure, hour_break=False):
-    breaks = [dict(bounds=["sat", "sun"])]
+    breaks = [dict(bounds=["sat", "mon"])]
     if hour_break:
         breaks += [dict(bounds=[16, 9.5], pattern="hour")]
 
