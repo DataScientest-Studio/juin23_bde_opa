@@ -17,9 +17,13 @@ It should contain the following files :
 ```
 app_data/secrets
 ├── fmp_cloud_api_key
-├── mongodb_password
-└── mongodb_username
+├── mongodb_root_username
+├── mongodb_root_password
+├── mongodb_username
+└── mongodb_password
 ```
+
+Strong passwords can be generated using e.g. `openssl rand -base64 20`
 
 ## Development commands
 
