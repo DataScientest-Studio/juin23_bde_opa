@@ -25,6 +25,10 @@ app_data/secrets
 
 Strong passwords can be generated using e.g. `openssl rand -base64 20`
 
+## Environment variables
+
+`MONGO_DATABASE` can be used to tweak the name of the MongoDB database to use (defaults to "stock_market-dev").
+
 ## Development commands
 
 ### Run locally

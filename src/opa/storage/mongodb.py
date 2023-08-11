@@ -79,10 +79,10 @@ class MongoDbStorage(Storage):
         CompanyInfo: {"name": "company_info", "unique_index": {"symbol": 1}},
     }
 
-    def __init__(self, uri: str) -> None:
+    def __init__(self, uri: str, database: str) -> None:
         client: MongoClient = MongoClient(uri, serverSelectionTimeoutMS=5000)
 
-        self.db = client.get_database("stock_market")
+        self.db = client.get_database(database)
         self._create_collections_if_not_exist()
 
         self.collections = {

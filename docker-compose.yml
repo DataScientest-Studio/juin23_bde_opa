@@ -2,6 +2,7 @@ version: '3'
 
 x-environment: &environment
   LOGURU_LEVEL: INFO
+  MONGO_DATABASE: ${MONGO_DATABASE:-stock_market-dev}
 
 services:
   financial_data_reader:
