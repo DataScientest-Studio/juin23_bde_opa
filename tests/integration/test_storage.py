@@ -2,7 +2,7 @@ import pytest
 from faker import Faker
 from datetime import timedelta
 
-from opa.core import CompanyInfo, StockValue, StockValueType
+from opa.core import CompanyInfo, StockValue, StockValueType, StockCollectionStats
 from opa.storage import opa_storage
 
 
@@ -87,3 +87,27 @@ class TestIntegration:
         symbols = [c.symbol for c in company_infos]
 
         assert opa_storage.get_company_infos(symbols) == expected
+
+    def test_all_tickers(self, company_infos):
+        """`get_all_tickers` should return all the tickers for which we have company info,
+        in no particular order"""
+        opa_storage.insert_company_infos(company_infos)
+
+        expected = sorted([c.symbol for c in company_infos])
+
+        all_tickers = opa_storage.get_all_tickers()
+        assert sorted(all_tickers) == expected
+
+    def test_stats(self, ticker, stock_values_serie, stock_value_type):
+        """`get_stats` should return coherent stats on the input ticker"""
+        opa_storage.insert_values(stock_values_serie, stock_value_type)
+
+        expected = {
+            ticker: StockCollectionStats(
+                oldest=min((v.date for v in stock_values_serie)),
+                latest=max((v.date for v in stock_values_serie)),
+                count=len(stock_values_serie),
+            )
+        }
+
+        assert opa_storage.get_stats(stock_value_type) == expected
