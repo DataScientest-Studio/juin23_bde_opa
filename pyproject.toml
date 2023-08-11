@@ -35,6 +35,8 @@ tests_functional = [
 ]
 tests_integration = [
     "pytest>=7.4.0",
+    "pytest-randomly>=3.13.0",
+    "faker>=19.3.0",
 ]
 
 [tool.pdm.dev-dependencies]

@@ -6,7 +6,7 @@ groups = ["default", "storage", "data_report", "financial_reader", "api", "dev",
 cross_platform = true
 static_urls = false
 lock_version = "4.3"
-content_hash = "sha256:6f5fd420a63d950b6092f8b902ca07b92a8684d902b824d0f0ce5cc1fe23af20"
+content_hash = "sha256:913f5d2c69bece26b7aa91cab235c2c7e9276bf4c9ad8840ccc29ad81e2f14ca"
 
 [[package]]
 name = "annotated-types"
@@ -276,6 +276,19 @@ summary = "Get the currently executing AST node of a frame, and other informatio
 files = [
     {file = "executing-1.2.0-py2.py3-none-any.whl", hash = "sha256:0314a69e37426e3608aada02473b4161d4caf5a4b244d1d0c48072b8fee7bacc"},
     {file = "executing-1.2.0.tar.gz", hash = "sha256:19da64c18d2d851112f09c287f8d3dbbdf725ab0e569077efb6cdcbd3497c107"},
+]
+
+[[package]]
+name = "faker"
+version = "19.3.0"
+requires_python = ">=3.8"
+summary = "Faker is a Python package that generates fake data for you."
+dependencies = [
+    "python-dateutil>=2.4",
+]
+files = [
+    {file = "Faker-19.3.0-py3-none-any.whl", hash = "sha256:bee54278d6e1289573317604ab6f4782acca724396bf261eaf1890de228e553d"},
+    {file = "Faker-19.3.0.tar.gz", hash = "sha256:7d6ed00de3eef9bd57504500c67ee034cab959e4248f9c24aca33e08af82ca93"},
 ]
 
 [[package]]
@@ -897,6 +910,19 @@ dependencies = [
 files = [
     {file = "pytest-7.4.0-py3-none-any.whl", hash = "sha256:78bf16451a2eb8c7a2ea98e32dc119fd2aa758f1d5d66dbf0a59d69a3969df32"},
     {file = "pytest-7.4.0.tar.gz", hash = "sha256:b4bf8c45bd59934ed84001ad51e11b4ee40d40a1229d2c79f9c592b0a3f6bd8a"},
+]
+
+[[package]]
+name = "pytest-randomly"
+version = "3.13.0"
+requires_python = ">=3.8"
+summary = "Pytest plugin to randomly order tests and control random.seed."
+dependencies = [
+    "pytest",
+]
+files = [
+    {file = "pytest_randomly-3.13.0-py3-none-any.whl", hash = "sha256:e78d898ef4066f89744e5075083aa7fb6f0de07ffd70ca9c4435cda590cf1eac"},
+    {file = "pytest_randomly-3.13.0.tar.gz", hash = "sha256:079c78b94693189879fbd7304de4e147304f0811fa96249ea5619f2f1cd33df0"},
 ]
 
 [[package]]
