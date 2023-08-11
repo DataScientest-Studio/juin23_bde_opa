@@ -109,7 +109,9 @@ services:
       args:
         - OPTIONAL_DEPENDENCIES_GROUPS=tests_integration,storage
     command: [ "pdm", "run", "pytest", "-rfE", "tests/integration" ]
-    environment: *environment
+    environment:
+      <<: *environment
+      OPA_MONGO_DATABASE: stock_market-test
     depends_on:
       - database
     profiles:
