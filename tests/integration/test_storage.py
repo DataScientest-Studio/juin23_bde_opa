@@ -17,7 +17,7 @@ def fake_ticker() -> str:
     return fake.pystr(max_chars=5).upper()
 
 
-@pytest.fixture(scope="function", autouse=True)
+@pytest.fixture(scope="function")
 def db_wipeout():
     # This relies on knowledge of opa_storage implementation but it's good enough
     # in this scope
@@ -71,6 +71,7 @@ def company_infos() -> list[CompanyInfo]:
     ]
 
 
+@pytest.mark.usefixtures("db_wipeout")
 class TestIntegration:
     def test_values_retrieval(self, ticker, stock_values_serie, stock_value_type):
         """`get_values` should return all the values that were inserted via `insert_values`,
