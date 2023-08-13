@@ -5,10 +5,7 @@ from opa import environment
 from .mongodb import MongoDbStorage
 
 
-if environment.in_docker:
-    mongodb_host = "database"
-else:
-    mongodb_host = "localhost"
+mongodb_host = os.getenv("MONGO_HOST", "localhost")
 
 mongodb_uri = "mongodb://{username}:{password}@{host}".format(
     username=environment.get_secret("mongodb_username"),
