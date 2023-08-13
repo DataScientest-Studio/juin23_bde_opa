@@ -1,16 +1,7 @@
 import pytest
-from faker import Faker
-from datetime import timedelta
 
-from opa.core import CompanyInfo, StockValue, StockValueType, StockCollectionStats
+from opa.core import StockCollectionStats
 from opa.storage import opa_storage
-
-
-fake = Faker()
-
-
-def fake_value() -> float:
-    return fake.pyfloat(right_digits=2, min_value=0.5, max_value=100.0)
 
 
 @pytest.fixture(scope="function")
@@ -23,23 +14,6 @@ def db_wipeout():
         c.delete_many({})
 
     yield
-
-
-@pytest.fixture(params=StockValueType)
-def stock_value_type(request):
-    return request.param
-
-
-@pytest.fixture
-def stock_values_serie(stock_value_type, ticker) -> list[StockValue]:
-    start = fake.date_time()
-
-    if stock_value_type == StockValueType.HISTORICAL:
-        dates = [start + timedelta(days=n) for n in range(100)]
-    elif stock_value_type == StockValueType.STREAMING:
-        dates = [start + timedelta(minutes=15 * n) for n in range(100)]
-
-    return [StockValue(ticker=ticker, date=d, close=fake_value()) for d in dates]
 
 
 @pytest.mark.usefixtures("db_wipeout")

@@ -1,10 +1,6 @@
 import pytest
-from faker import Faker
 
 from opa.core import FinancialDataReader, Storage, StockMarketProvider
-
-
-fake = Faker()
 
 
 @pytest.fixture
