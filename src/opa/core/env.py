@@ -12,12 +12,12 @@ class Env:
     def __post_init__(self):
         local_app_data = Path("app_data")
 
-        secrets_dir = os.getenv("SECRETS_DIR")
+        secrets_dir = os.getenv("OPA_SECRETS_DIR")
         self.secrets_dir = (
             Path(secrets_dir) if secrets_dir else local_app_data / "secrets"
         )
 
-        http_cache_db_dir = os.getenv("HTTP_CACHE_DIR")
+        http_cache_db_dir = os.getenv("OPA_HTTP_CACHE_DIR")
         self.http_cache_db_dir = (
             Path(http_cache_db_dir)
             if http_cache_db_dir

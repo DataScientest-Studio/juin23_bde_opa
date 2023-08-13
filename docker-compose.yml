@@ -1,11 +1,11 @@
 version: '3'
 
 x-environment: &environment
-  SECRETS_DIR: /run/secrets
-  HTTP_CACHE_DIR: /var/http_cache
   LOGURU_LEVEL: INFO
-  MONGO_HOST: database
-  MONGO_DATABASE: ${MONGO_DATABASE:-stock_market-dev}
+  OPA_SECRETS_DIR: /run/secrets
+  OPA_HTTP_CACHE_DIR: /var/http_cache
+  OPA_MONGO_HOST: database
+  OPA_MONGO_DATABASE: ${OPA_MONGO_DATABASE:-stock_market-dev}
 
 services:
   financial_data_reader:

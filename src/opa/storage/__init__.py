@@ -5,7 +5,7 @@ from opa import environment
 from .mongodb import MongoDbStorage
 
 
-mongodb_host = os.getenv("MONGO_HOST", "localhost")
+mongodb_host = os.getenv("OPA_MONGO_HOST", "localhost")
 
 mongodb_uri = "mongodb://{username}:{password}@{host}".format(
     username=environment.get_secret("mongodb_username"),
@@ -14,5 +14,5 @@ mongodb_uri = "mongodb://{username}:{password}@{host}".format(
 )
 
 opa_storage = MongoDbStorage(
-    mongodb_uri, os.getenv("MONGO_DATABASE", "stock_market-dev")
+    mongodb_uri, os.getenv("OPA_MONGO_DATABASE", "stock_market-dev")
 )
