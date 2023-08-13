@@ -105,7 +105,7 @@ services:
       context: .
       dockerfile: ./tests.Dockerfile
       args:
-        - OPTIONAL_DEPENDENCIES_GROUPS=tests_functional
+        - OPTIONAL_DEPENDENCIES_GROUPS=test,tests_functional
     command: [ "pdm", "run", "pytest", "-rfE", "tests/functional" ]
     environment: *environment
     depends_on:
@@ -119,7 +119,7 @@ services:
       context: .
       dockerfile: ./tests.Dockerfile
       args:
-        - OPTIONAL_DEPENDENCIES_GROUPS=tests_integration,storage
+        - OPTIONAL_DEPENDENCIES_GROUPS=test,storage
     command: [ "pdm", "run", "pytest", "-rfE", "tests/integration" ]
     environment:
       <<: *environment
