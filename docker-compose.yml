@@ -87,6 +87,18 @@ services:
       - mongodb_username
       - mongodb_password
 
+  test_unit:
+    image: opa/test_unit
+    build:
+      context: .
+      dockerfile: ./tests.Dockerfile
+      args:
+        - OPTIONAL_DEPENDENCIES_GROUPS=test
+    command: [ "pdm", "run", "pytest", "-rfE", "tests/unit" ]
+    environment: *environment
+    profiles:
+      - test
+
   test_functional:
     image: opa/test_functional
     build:

@@ -13,10 +13,6 @@ def fake_value() -> float:
     return fake.pyfloat(right_digits=2, min_value=0.5, max_value=100.0)
 
 
-def fake_ticker() -> str:
-    return fake.pystr(max_chars=5).upper()
-
-
 @pytest.fixture(scope="function")
 def db_wipeout():
     # This relies on knowledge of opa_storage implementation but it's good enough
@@ -27,11 +23,6 @@ def db_wipeout():
         c.delete_many({})
 
     yield
-
-
-@pytest.fixture
-def ticker():
-    return fake_ticker()
 
 
 @pytest.fixture(params=StockValueType)
@@ -49,26 +40,6 @@ def stock_values_serie(stock_value_type, ticker) -> list[StockValue]:
         dates = [start + timedelta(minutes=15 * n) for n in range(100)]
 
     return [StockValue(ticker=ticker, date=d, close=fake_value()) for d in dates]
-
-
-@pytest.fixture
-def company_infos() -> list[CompanyInfo]:
-    return [
-        CompanyInfo(
-            symbol=fake_ticker(),
-            name=fake.company(),
-            website=fake.url(),
-            description=fake.text(),
-            currency=fake.currency_symbol(),
-            sector=fake.word(),
-            country=fake.country(),
-            image=fake.url(),
-            ipo_date=fake.date_time(),
-            address=fake.address(),
-            city=fake.city(),
-        )
-        for _ in range(10)
-    ]
 
 
 @pytest.mark.usefixtures("db_wipeout")
