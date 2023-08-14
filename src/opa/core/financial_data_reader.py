@@ -2,7 +2,12 @@ from dataclasses import dataclass
 
 from loguru import logger
 
-from opa.core.financial_data import StockValue, StockValueType
+from opa.core.financial_data import (
+    StockValue,
+    StockValueType,
+    StockValueSerieGranularity,
+    StockValueKind,
+)
 from opa.core.providers import StockMarketProvider
 from opa.core.storage import Storage
 
@@ -17,12 +22,17 @@ class FinancialDataReader:
         return self.storage.insert_company_infos(infos)
 
     def import_stock_values(
-        self, tickers: list[str], type_: StockValueType
+        self,
+        tickers: list[str],
+        type_: StockValueType,
+        kind: StockValueKind,
+        granularity: StockValueSerieGranularity,
     ) -> list[StockValue]:
         stats = self.storage.get_stats(type_)
 
         api_values = {
-            ticker: self.provider.get_stock_values(ticker, type_) for ticker in tickers
+            ticker: self.provider.get_stock_values(ticker, type_, kind, granularity)
+            for ticker in tickers
         }
 
         # Filter out all the values that are within the same time range as those
