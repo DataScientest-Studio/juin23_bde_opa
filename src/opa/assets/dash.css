@@ -38,6 +38,21 @@ main {
     height: 80vh;
 }
 
+#errors {
+    grid-area: graph;
+    color: red;
+    font-weight: bold;
+    z-index: 1;
+    align-self: center;
+    justify-self: center;
+    background-color: white;
+}
+
+#errors.active {
+    padding: 0.5em;
+    border: 1px solid black;
+}
+
 /* Layout of company information card */
 #company-info {
     display: grid;

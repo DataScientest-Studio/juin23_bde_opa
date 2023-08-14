@@ -8,9 +8,9 @@ from opa.core.financial_data import StockValueType
 from opa.storage import opa_storage
 
 
-def get_dataframe(ticker: str, type_: StockValueType) -> pd.DataFrame:
+def get_dataframe(ticker: str, type_: StockValueType) -> pd.DataFrame | None:
     data = [h.model_dump() for h in opa_storage.get_values(ticker, type_)]
-    return pd.DataFrame(data)
+    return pd.DataFrame(data) if data else None
 
 
 def add_range_selectors(figure, hour_break=False):
@@ -39,12 +39,21 @@ def set_transparent_background(figure):
 
 @callback(
     Output("stock-evolution-graph", "figure"),
+    Output("errors", "children"),
+    Output("errors", "className"),
     Input("ticker-selector", "value"),
     Input("type-selector", "value"),
 )
 def update_graph(ticker: str, type_str: str):
     type_ = StockValueType(type_str)
     df = get_dataframe(ticker, type_)
+
+    if df is None:
+        return (
+            no_update,
+            f"Sorry, no {type_str} values could be found for {ticker}",
+            "active",
+        )
 
     figure = None
     match type_:
@@ -62,8 +71,12 @@ def update_graph(ticker: str, type_str: str):
                 )
             )
 
-    return set_transparent_background(
-        add_range_selectors(figure, type_ == StockValueType.STREAMING)
+    return (
+        set_transparent_background(
+            add_range_selectors(figure, type_ == StockValueType.STREAMING)
+        ),
+        "",
+        "",
     )
 
 
@@ -128,6 +141,7 @@ if __name__ == "__main__":
                 id="type-selector",
             ),
             dcc.Graph(id="stock-evolution-graph", config={"scrollZoom": True}),
+            html.Div(id="errors"),
         ]
     )
     dash_app.run(debug=True)
