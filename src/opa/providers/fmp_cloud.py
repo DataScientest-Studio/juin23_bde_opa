@@ -18,7 +18,7 @@ from opa.core.financial_data import (
 )
 
 
-class FmpCloudHistoricalValue(BaseModel, StockValueMixin):
+class FmpCloudSimpleValue(BaseModel, StockValueMixin):
     date: date
     close: float
 
@@ -32,12 +32,12 @@ class FmpCloudHistoricalValue(BaseModel, StockValueMixin):
         )
 
 
-class FmpCloudHistoricalData(BaseModel):
+class FmpCloudSimpleData(BaseModel):
     symbol: str
-    historical: list[FmpCloudHistoricalValue]
+    historical: list[FmpCloudSimpleValue]
 
 
-class FmpCloudStreamingValue(BaseModel, StockValueMixin):
+class FmpCloudOhlcValue(BaseModel, StockValueMixin):
     date: datetime
     open: float
     close: float
@@ -102,11 +102,14 @@ class FmpCloud(StockMarketProvider):
         json = self.get_raw_stock_values(ticker, kind, granularity)
         ret = [
             v.as_stock_value(ticker=ticker)
-            for v in self._as_validated_list_of_values(json, type_)
+            for v in self._as_validated_list_of_values(json, kind, granularity)
         ]
 
         logger.info(
-            "Fetched {count} {type_} stock values", count=len(ret), type_=type_.value
+            "Fetched {count} {kind} {granularity}-grained stock values",
+            count=len(ret),
+            kind=kind.value,
+            granularity=granularity.value,
         )
         return ret
 
@@ -133,17 +136,17 @@ class FmpCloud(StockMarketProvider):
 
     @staticmethod
     def _as_validated_list_of_values(
-        json, type_
-    ) -> list[FmpCloudHistoricalValue] | list[FmpCloudStreamingValue]:
-        match type_:
-            case StockValueType.HISTORICAL:
-                return FmpCloudHistoricalData(**json).historical
+        json, kind: StockValueKind, granularity: StockValueSerieGranularity
+    ) -> list[FmpCloudSimpleValue] | list[FmpCloudOhlcValue]:
+        match (kind, granularity):
+            case (StockValueKind.SIMPLE, StockValueSerieGranularity.COARSE):
+                return FmpCloudSimpleData(**json).historical
 
-            case StockValueType.STREAMING:
-                return [FmpCloudStreamingValue(**v) for v in json]
+            case (StockValueKind.OHLC, StockValueSerieGranularity.FINE):
+                return [FmpCloudOhlcValue(**v) for v in json]
 
             case _:
-                raise TypeError(f"type should be a StockValueType, got {type_}")
+                raise TypeError(f"cannot validate ({kind, granularity}) stock values")
 
     def get_company_info(self, tickers: list[str]) -> list[CompanyInfo]:
         # This part is sorted so that getting info for the same list of tickers always
