@@ -34,19 +34,18 @@ class Alphavantage(StockMarketProvider):
     def get_raw_stock_values(
         self,
         ticker: str,
-        type_: StockValueType,
         kind: StockValueKind,
         granularity: StockValueSerieGranularity,
     ) -> dict:
-        match type_:
-            case StockValueType.HISTORICAL:
+        match (kind, granularity):
+            case (StockValueKind.SIMPLE, StockValueSerieGranularity.COARSE):
                 # Documentation available here: https://www.alphavantage.co/documentation/#dailyadj
                 return self._get_json_data(
                     function="TIME_SERIES_DAILY_ADJUSTED",
                     symbol=ticker,
                 )
 
-            case StockValueType.STREAMING:
+            case (StockValueKind.OHLC, StockValueSerieGranularity.FINE):
                 # Documentation available here: https://www.alphavantage.co/documentation/#intraday
                 return self._get_json_data(
                     function="TIME_SERIES_INTRADAY",

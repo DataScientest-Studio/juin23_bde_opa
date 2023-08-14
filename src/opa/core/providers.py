@@ -23,7 +23,6 @@ class StockMarketProvider(ABC):
     def get_raw_stock_values(
         self,
         ticker: str,
-        type_: StockValueType,
         kind: StockValueKind,
         granularity: StockValueSerieGranularity,
     ) -> dict:

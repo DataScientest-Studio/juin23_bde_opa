@@ -99,7 +99,7 @@ class FmpCloud(StockMarketProvider):
         kind: StockValueKind,
         granularity: StockValueSerieGranularity,
     ) -> list[StockValue]:
-        json = self.get_raw_stock_values(ticker, type_, kind, granularity)
+        json = self.get_raw_stock_values(ticker, kind, granularity)
         ret = [
             v.as_stock_value(ticker=ticker)
             for v in self._as_validated_list_of_values(json, type_)
@@ -113,22 +113,23 @@ class FmpCloud(StockMarketProvider):
     def get_raw_stock_values(
         self,
         ticker: str,
-        type_: StockValueType,
         kind: StockValueKind,
         granularity: StockValueSerieGranularity,
     ) -> dict:
-        match type_:
-            case StockValueType.HISTORICAL:
+        match (kind, granularity):
+            case (StockValueKind.SIMPLE, StockValueSerieGranularity.COARSE):
                 return self._get_json_data(
                     f"/historical-price-full/{ticker}",
                     serietype="line",
                 )
 
-            case StockValueType.STREAMING:
+            case (StockValueKind.OHLC, StockValueSerieGranularity.FINE):
                 return self._get_json_data(f"/historical-chart/15min/{ticker}")
 
             case _:
-                raise TypeError(f"type should be a StockValueType, got {type_}")
+                raise TypeError(
+                    f"This provider cannot provide ({kind, granularity}) stock values"
+                )
 
     @staticmethod
     def _as_validated_list_of_values(
