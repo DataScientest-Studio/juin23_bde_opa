@@ -59,6 +59,20 @@ The financial data reader can be run with `pdm run python -m opa.financial_data_
 
 The dashboard can be run with `pdm run python -m opa.data_report`.
 
+### Running tests
+
+Several types of tests can be run either locally or within a dedicated Docker container :
+
+1. functional (run against a live version of the application)
+1. integration (run against a live test database)
+1. unit (run in isolation with mock components)
+
+They can be run either via docker-compose : `docker compose up --profile test` or locally :
+
+* `pdm run pytest tests/functional`
+* `pdm run pytest tests/integration`
+* `pdm run pytest tests/unit`
+
 ### Miscellaneous
 
 #### Interactive shell
