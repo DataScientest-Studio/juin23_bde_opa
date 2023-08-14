@@ -1,1 +1,1 @@
-from .env import environment
+from .config import settings

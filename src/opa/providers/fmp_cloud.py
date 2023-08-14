@@ -4,7 +4,7 @@ from pathlib import Path
 from pydantic import BaseModel
 from loguru import logger
 
-from opa import environment
+from opa import settings
 from opa.http_methods import get_json_data
 from opa.core.providers import StockMarketProvider
 from opa.core.financial_data import (
@@ -84,7 +84,7 @@ class FmpCloudCompanyInfo(BaseModel, CompanyInfoMixin):
 
 class FmpCloud(StockMarketProvider):
     def __init__(self):
-        self.access_key = environment.get_secret("fmp_cloud_api_key")
+        self.access_key = settings.secrets.fmp_cloud_api_key
 
     def get_stock_values(self, ticker: str, type_: StockValueType) -> list[StockValue]:
         json = self.get_raw_stock_values(ticker, type_)

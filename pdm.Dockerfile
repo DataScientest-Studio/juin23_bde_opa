@@ -18,9 +18,13 @@ RUN mkdir __pypackages__ && pdm sync --prod --no-editable -G ${OPTIONAL_DEPENDEN
 # run stage
 FROM python:3.11
 
+RUN mkdir /etc/opa/
+
 # retrieve packages from build stage
 ENV PYTHONPATH=/project/pkgs
 COPY --from=builder /project/__pypackages__/3.11/lib /project/pkgs
 
 # retrieve executables
 COPY --from=builder /project/__pypackages__/3.11/bin/* /bin/
+
+COPY settings.toml /etc/opa/

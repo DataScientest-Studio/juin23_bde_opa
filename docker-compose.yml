@@ -2,8 +2,9 @@ version: '3'
 
 x-environment: &environment
   LOGURU_LEVEL: INFO
-  OPA_SECRETS_DIR: /run/secrets
-  OPA_HTTP_CACHE_DIR: /var/http_cache
+  SETTINGS_FILE_FOR_DYNACONF: /etc/opa/settings.toml
+  OPA_SECRETS_DIR: "@path /run/secrets"
+  OPA_HTTP_CACHE_DIR: "@path /var/http_cache"
   OPA_MONGO_HOST: database
   OPA_MONGO_DATABASE: ${OPA_MONGO_DATABASE:-stock_market-dev}
 
@@ -24,7 +25,7 @@ services:
       - database
     environment:
       <<: *environment
-      USE_HTTP_CACHE: True
+      OPA_USE_HTTP_CACHE: True
     volumes:
       - http-cache:/var/http_cache
     secrets:
