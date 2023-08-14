@@ -11,6 +11,16 @@ class StockValueType(Enum):
     STREAMING = "streaming"
 
 
+class StockValueSerieGranularity(Enum):
+    FINE = "fine"
+    COARSE = "coarse"
+
+
+class StockValueKind(Enum):
+    SIMPLE = "simple"
+    OHLC = "ohlc"
+
+
 class StockValue(BaseModel):
     ticker: str
     date: datetime

@@ -4,6 +4,8 @@ from .financial_data import (
     StockValueMixin,
     CompanyInfo,
     StockCollectionStats,
+    StockValueKind,
+    StockValueSerieGranularity,
 )
 from .providers import StockMarketProvider
 from .storage import Storage

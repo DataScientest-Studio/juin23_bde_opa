@@ -12,7 +12,7 @@ from opa.core.financial_data import (
     StockValueMixin,
     StockValueType,
     CompanyInfo,
-    CompanyInfoMixin,
+    CompanyInfoMixin, StockValueSerieGranularity, StockValueKind
 )
 
 
