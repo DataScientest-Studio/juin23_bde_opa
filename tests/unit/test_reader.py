@@ -1,6 +1,12 @@
 import pytest
 
-from opa.core import FinancialDataReader, Storage, StockMarketProvider
+from opa.core import (
+    FinancialDataReader,
+    Storage,
+    StockMarketProvider,
+    StockCollectionStats,
+)
+from tests.fixtures import fake_ticker
 
 
 @pytest.fixture
@@ -51,3 +57,77 @@ class TestImportCompanyInfo:
 
         provider_for_company_infos.get_company_info.assert_called_once_with(tickers)
         storage.insert_company_infos.assert_called_once_with(company_infos)
+
+
+class TestImportStockValues:
+    @pytest.fixture
+    def storage_empty(self, storage):
+        storage.get_stats.return_value = {}
+        return storage
+
+    @pytest.fixture
+    def tickers(self):
+        return [fake_ticker() for _ in range(5)]
+
+    @pytest.fixture
+    def storage_with_all_data(self, storage, tickers, stock_values_serie):
+        storage.get_stats.return_value = {
+            t: StockCollectionStats(
+                latest=max((v.date for v in stock_values_serie)),
+                oldest=min((v.date for v in stock_values_serie)),
+                count=len(stock_values_serie),
+            )
+            for t in tickers
+        }
+        return storage
+
+    @pytest.fixture
+    def provider_for_stock_values(self, provider, stock_values_serie):
+        provider.get_stock_values.return_value = stock_values_serie
+        return provider
+
+    def test_no_stored_data(
+        self,
+        tickers,
+        provider_for_stock_values,
+        storage_empty,
+        reader,
+        stock_value_type,
+        stock_values_serie,
+    ):
+        reader.import_stock_values(tickers, stock_value_type)
+
+        provider_for_stock_values.get_stock_values.assert_called()
+
+        called_tickers = []
+        for args in provider_for_stock_values.get_stock_values.call_args_list:
+            called_tickers.append(args.args[0])
+            type_ = args.args[1]
+            assert type_ == stock_value_type
+        assert sorted(tickers) == sorted(called_tickers)
+
+        storage_empty.insert_values.assert_called_once()
+        assert sorted(
+            storage_empty.insert_values.call_args.args[0], key=lambda v: v.date
+        ) == sorted(stock_values_serie * 5, key=lambda v: v.date)
+
+    def test_all_stored_data(
+        self,
+        tickers,
+        provider_for_stock_values,
+        storage_with_all_data,
+        reader,
+        stock_value_type,
+    ):
+        reader.import_stock_values(tickers, stock_value_type)
+
+        provider_for_stock_values.get_stock_values.assert_called()
+
+        called_tickers = []
+        for args in provider_for_stock_values.get_stock_values.call_args_list:
+            called_tickers.append(args.args[0])
+            type_ = args.args[1]
+            assert type_ == stock_value_type
+        assert sorted(tickers) == sorted(called_tickers)
+
+        storage_with_all_data.insert_values.assert_not_called()
