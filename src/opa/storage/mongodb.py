@@ -44,13 +44,14 @@ class MongoDbStorage(Storage):
         "_id": "objectId",
         "date": "date",
         "ticker": "string",
+        "interval": "int",
         "close": "double",
         "open": "double",
         "low": "double",
         "high": "double",
         "volume": "int",
     }
-    stock_value_required_fields = ["_id", "date", "close", "ticker"]
+    stock_value_required_fields = ["_id", "date", "close", "ticker", "interval"]
     date_ticker_unique_index = {"date": 1, "ticker": 1}
 
     collection_args = {

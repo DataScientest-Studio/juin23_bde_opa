@@ -23,7 +23,10 @@ class FmpCloudHistoricalValue(BaseModel, StockValueMixin):
     def as_stock_value(self, **kwargs) -> StockValue:
         ticker = kwargs.pop("ticker")
         return StockValue(
-            ticker=ticker, date=datetime.combine(self.date, time.min), close=self.close
+            ticker=ticker,
+            date=datetime.combine(self.date, time.min),
+            close=self.close,
+            interval=24 * 60 * 60,
         )
 
 
@@ -50,6 +53,7 @@ class FmpCloudStreamingValue(BaseModel, StockValueMixin):
             low=self.low,
             high=self.high,
             volume=self.volume,
+            interval=15 * 60,
         )
 
 

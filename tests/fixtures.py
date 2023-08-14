@@ -32,10 +32,15 @@ def stock_values_serie(stock_value_type, ticker) -> list[StockValue]:
 
     if stock_value_type == StockValueType.HISTORICAL:
         dates = [start + timedelta(days=n) for n in range(100)]
+        interval = 15 * 60  # 15 minutes
     elif stock_value_type == StockValueType.STREAMING:
         dates = [start + timedelta(minutes=15 * n) for n in range(100)]
+        interval = 24 * 60 * 60  # one day
 
-    return [StockValue(ticker=ticker, date=d, close=fake_value()) for d in dates]
+    return [
+        StockValue(ticker=ticker, date=d, interval=interval, close=fake_value())
+        for d in dates
+    ]
 
 
 @pytest.fixture

@@ -15,6 +15,7 @@ class StockValue(BaseModel):
     ticker: str
     date: datetime
     close: float
+    interval: int
     open: float | None = None
     low: float | None = None
     high: float | None = None
