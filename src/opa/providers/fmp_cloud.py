@@ -12,7 +12,9 @@ from opa.core.financial_data import (
     StockValueMixin,
     StockValueType,
     CompanyInfo,
-    CompanyInfoMixin, StockValueSerieGranularity, StockValueKind
+    CompanyInfoMixin,
+    StockValueSerieGranularity,
+    StockValueKind,
 )
 
 
@@ -90,8 +92,14 @@ class FmpCloud(StockMarketProvider):
     def __init__(self):
         self.access_key = settings.secrets.fmp_cloud_api_key
 
-    def get_stock_values(self, ticker: str, type_: StockValueType) -> list[StockValue]:
-        json = self.get_raw_stock_values(ticker, type_)
+    def get_stock_values(
+        self,
+        ticker: str,
+        type_: StockValueType,
+        kind: StockValueKind,
+        granularity: StockValueSerieGranularity,
+    ) -> list[StockValue]:
+        json = self.get_raw_stock_values(ticker, type_, kind, granularity)
         ret = [
             v.as_stock_value(ticker=ticker)
             for v in self._as_validated_list_of_values(json, type_)
@@ -102,7 +110,13 @@ class FmpCloud(StockMarketProvider):
         )
         return ret
 
-    def get_raw_stock_values(self, ticker: str, type_: StockValueType) -> dict:
+    def get_raw_stock_values(
+        self,
+        ticker: str,
+        type_: StockValueType,
+        kind: StockValueKind,
+        granularity: StockValueSerieGranularity,
+    ) -> dict:
         match type_:
             case StockValueType.HISTORICAL:
                 return self._get_json_data(
