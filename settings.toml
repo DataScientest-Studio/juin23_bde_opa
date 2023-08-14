@@ -1,6 +1,6 @@
 [default]
 use_http_cache = false
-secrets_dir = "@path app_data/secrets"
-http_cache_dir = "@path app_data/http_cache"
+secrets_dir = "app_data/secrets"
+http_cache_dir = "app_data/http_cache"
 mongo_host = "localhost"
 mongo_database = "stock_market-dev"

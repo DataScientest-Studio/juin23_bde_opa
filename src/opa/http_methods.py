@@ -1,5 +1,6 @@
 import requests
 from datetime import timedelta
+from pathlib import Path
 
 from loguru import logger
 import requests_cache
@@ -12,7 +13,7 @@ from opa import settings
 session = (
     requests_cache.CachedSession(
         "opa",
-        backend=SQLiteCache(db_path=settings.http_cache_dir / "opa"),
+        backend=SQLiteCache(db_path=Path(settings.http_cache_dir) / "opa"),
         # This should certainly be set by request, but within the limited scope of this
         # project, new data is fetched every day, and the API rate is limited anyway.
         # Hardcoding the value is good enough.

@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from dynaconf import Dynaconf, add_converter
+from dynaconf import Dynaconf
 
 
 def get_secret(file: str) -> str:
@@ -22,7 +22,6 @@ def load_secrets(settings):
     return data
 
 
-add_converter("path", Path)
 settings = Dynaconf(
     environments=True,
     envvar_prefix="OPA",
