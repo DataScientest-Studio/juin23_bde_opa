@@ -7,6 +7,7 @@ x-environment: &environment
   OPA_HTTP_CACHE_DIR: /var/http_cache
   OPA_MONGO_HOST: database
   OPA_MONGO_DATABASE: ${OPA_MONGO_DATABASE:-stock_market-dev}
+  OPA_API_HOST: internal_api
 
 services:
   financial_data_reader:

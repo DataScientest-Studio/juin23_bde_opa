@@ -14,11 +14,15 @@ def load_secrets(settings):
     root = Path(settings.secrets_dir)
 
     data = {"dynaconf_merge": True}
-    data["secrets"] = {
-        file: get_secret(root / file)
-        for file in os.listdir(root)
-        if not file.startswith(".")
-    }
+    try:
+        data["secrets"] = {
+            file: get_secret(root / file)
+            for file in os.listdir(root)
+            if not file.startswith(".")
+        }
+    except FileNotFoundError:
+        ...
+
     return data
 
 
