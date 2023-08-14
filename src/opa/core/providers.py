@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 
 from opa.core import (
     StockValue,
-    StockValueType,
     CompanyInfo,
     StockValueSerieGranularity,
     StockValueKind,
@@ -14,7 +13,6 @@ class StockMarketProvider(ABC):
     def get_stock_values(
         self,
         ticker: str,
-        type_: StockValueType,
         kind: StockValueKind,
         granularity: StockValueSerieGranularity,
     ) -> list[StockValue]:

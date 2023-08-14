@@ -31,7 +31,7 @@ class FinancialDataReader:
         stats = self.storage.get_stats(type_)
 
         api_values = {
-            ticker: self.provider.get_stock_values(ticker, type_, kind, granularity)
+            ticker: self.provider.get_stock_values(ticker, kind, granularity)
             for ticker in tickers
         }
 

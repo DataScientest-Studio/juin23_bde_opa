@@ -22,7 +22,6 @@ class Alphavantage(StockMarketProvider):
     def get_stock_values(
         self,
         ticker: str,
-        type_: StockValueType,
         kind: StockValueKind,
         granularity: StockValueSerieGranularity,
     ) -> list[StockValue]:
