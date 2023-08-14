@@ -8,6 +8,7 @@ authors = [
 dependencies = [
     "loguru>=0.7.0",
     "pydantic>=2.1.1",
+    "dynaconf>=3.2.1",
 ]
 requires-python = ">=3.11"
 readme = "README.md"

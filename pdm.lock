@@ -6,7 +6,7 @@ groups = ["default", "storage", "data_report", "financial_reader", "api", "dev"]
 cross_platform = true
 static_urls = false
 lock_version = "4.3"
-content_hash = "sha256:7945da039969f4478a66e75502e869fa9aa84c3c7e4fb3cd7a50ba0cff75862f"
+content_hash = "sha256:5d5c5519275e9a026a475f703308fa0901d61b8b12d4cc88628b8f5d9faa3aee"
 
 [[package]]
 name = "annotated-types"
@@ -243,6 +243,16 @@ summary = "DNS toolkit"
 files = [
     {file = "dnspython-2.4.1-py3-none-any.whl", hash = "sha256:5b7488477388b8c0b70a8ce93b227c5603bc7b77f1565afe8e729c36c51447d7"},
     {file = "dnspython-2.4.1.tar.gz", hash = "sha256:c33971c79af5be968bb897e95c2448e11a645ee84d93b265ce0b7aabe5dfdca8"},
+]
+
+[[package]]
+name = "dynaconf"
+version = "3.2.1"
+requires_python = ">=3.8"
+summary = "The dynamic configurator for your Python Project"
+files = [
+    {file = "dynaconf-3.2.1-py2.py3-none-any.whl", hash = "sha256:a4af12524f1fc527c6c0cdd4bb38cf83992d5155ad516baa98d9d01b7a731d09"},
+    {file = "dynaconf-3.2.1.tar.gz", hash = "sha256:00dbd7541ca0f99bcb207cfc8aee0ac8f7d6b32bbb372e5b2865f0cb829b06c3"},
 ]
 
 [[package]]

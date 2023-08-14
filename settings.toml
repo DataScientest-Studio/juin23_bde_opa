@@ -1,0 +1,5 @@
+[default]
+secrets_dir = "app_data/secrets"
+http_cache_dir = "app_data/http_cache"
+mongo_host = "localhost"
+mongo_database = "stock_market-dev"
