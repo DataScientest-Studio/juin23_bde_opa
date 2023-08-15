@@ -7,6 +7,7 @@ from loguru import logger
 from opa.core.financial_data import (
     StockValue,
     StockValueType,
+    StockValueKind,
     CompanyInfo,
     StockCollectionStats,
 )
@@ -230,17 +231,17 @@ class MongoDbStorage(Storage):
 
         return ret
 
-    def get_stats(self, type_: StockValueType) -> dict[str, StockCollectionStats]:
+    def get_stats(self, kind: StockValueKind) -> dict[str, StockCollectionStats]:
         filter = (
             {"open": {"$exists": 1}}
-            if type_ == StockValueType.STREAMING
+            if kind == StockValueKind.OHLC
             else {"open": {"$exists": 0}}
         )
         ret = {
             grouped["_id"]: StockCollectionStats(
                 **{k: v for k, v in grouped.items() if k != "_id"}
             )
-            for grouped in self.collections[type_].aggregate(
+            for grouped in self.collections[STOCK_VALUES_COLLECTION].aggregate(
                 [
                     {"$match": filter},
                     {
