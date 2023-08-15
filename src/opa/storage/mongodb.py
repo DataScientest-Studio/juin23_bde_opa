@@ -76,7 +76,7 @@ class MongoDbStorage(Storage):
         self._create_collections_if_not_exist()
 
         self.collections = {
-            key: self.db.get_collection(coll["name"])
+            key: self.db.get_collection(coll["name"])  # type: ignore
             for (key, coll) in self.collection_args.items()
         }
 

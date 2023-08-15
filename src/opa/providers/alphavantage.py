@@ -51,6 +51,11 @@ class Alphavantage(StockMarketProvider):
                     interval="15min",
                 )
 
+            case _:
+                raise TypeError(
+                    f"This provider cannot provide ({kind, granularity}) stock values"
+                )
+
     def _get_json_data(self, **params):
         params = params | {"apikey": self.access_key}
         return get_json_data("https://www.alphavantage.co/query", params=params)
