@@ -187,11 +187,17 @@ class MongoDbStorage(Storage):
     def get_values(
         self, ticker: str, type_: StockValueType, limit: int = 500
     ) -> list[StockValue]:
-        collection = self.collections[type_]
+        collection = self.collections[STOCK_VALUES_COLLECTION]
+        base_query = (
+            {"open": {"$exists": 1}}
+            if type_ == StockValueType.STREAMING
+            else {"open": {"$exists": 0}}
+        )
+        query = base_query | {"ticker": ticker}
 
         ret = [
             StockValue(**d)
-            for d in collection.find({"ticker": ticker}, limit=limit).sort("date", -1)
+            for d in collection.find(query, limit=limit).sort("date", -1)
         ]
         logger.info(
             "{count} {type_} stock values retrieved from storage",
