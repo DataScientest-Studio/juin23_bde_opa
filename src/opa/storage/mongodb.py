@@ -13,6 +13,9 @@ from opa.core.financial_data import (
 from opa.core.storage import Storage
 
 
+STOCK_VALUES_COLLECTION = "stock_values"
+
+
 # MongoDB error codes that we handle here
 # https://github.com/mongodb/mongo/blob/master/src/mongo/base/error_codes.yml
 MULTIPLE_ERRORS_OCCURRED_ERROR = 65
@@ -56,7 +59,7 @@ class MongoDbStorage(Storage):
 
     collection_args = {
         StockValueType.HISTORICAL: {
-            "name": StockValueType.HISTORICAL.value,
+            "name": STOCK_VALUES_COLLECTION,
             "create_args": {
                 "validator": _get_json_schema_validator(
                     "Historical values validation",
@@ -67,7 +70,7 @@ class MongoDbStorage(Storage):
             "unique_index": date_ticker_unique_index,
         },
         StockValueType.STREAMING: {
-            "name": StockValueType.STREAMING.value,
+            "name": STOCK_VALUES_COLLECTION,
             "create_args": {
                 "validator": _get_json_schema_validator(
                     "Streaming values validation",
@@ -92,7 +95,7 @@ class MongoDbStorage(Storage):
         }
 
     def insert_values(self, values: list[StockValue], type_: StockValueType):
-        collection = self.collections[type_]
+        collection = self.collections[STOCK_VALUES_COLLECTION]
         insertable = [
             {k: v for (k, v) in val.__dict__.items() if v is not None} for val in values
         ]
