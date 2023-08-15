@@ -4,7 +4,6 @@ from loguru import logger
 
 from opa.core.financial_data import (
     StockValue,
-    StockValueType,
     StockValueSerieGranularity,
     StockValueKind,
 )

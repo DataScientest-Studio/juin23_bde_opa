@@ -3,7 +3,6 @@ from opa.core import CompanyInfo
 from opa.http_methods import get_json_data
 from opa.core.financial_data import (
     StockValue,
-    StockValueType,
     StockValueSerieGranularity,
     StockValueKind,
 )

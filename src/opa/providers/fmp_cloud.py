@@ -10,7 +10,6 @@ from opa.core.providers import StockMarketProvider
 from opa.core.financial_data import (
     StockValue,
     StockValueMixin,
-    StockValueType,
     CompanyInfo,
     CompanyInfoMixin,
     StockValueSerieGranularity,
