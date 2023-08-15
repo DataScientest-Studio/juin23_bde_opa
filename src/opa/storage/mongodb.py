@@ -6,15 +6,11 @@ from loguru import logger
 
 from opa.core.financial_data import (
     StockValue,
-    StockValueType,
     StockValueKind,
     CompanyInfo,
     StockCollectionStats,
 )
 from opa.core.storage import Storage
-
-
-STOCK_VALUES_COLLECTION = "stock_values"
 
 
 # MongoDB error codes that we handle here
@@ -59,33 +55,11 @@ class MongoDbStorage(Storage):
     date_ticker_unique_index = {"date": 1, "ticker": 1}
 
     collection_args = {
-        STOCK_VALUES_COLLECTION: {
-            "name": STOCK_VALUES_COLLECTION,
+        StockValue: {
+            "name": "stock_values",
             "create_args": {
                 "validator": _get_json_schema_validator(
                     "Stock values validation",
-                    stock_value_required_fields,
-                    stock_value_fields_types,
-                )
-            },
-            "unique_index": date_ticker_unique_index,
-        },
-        StockValueType.HISTORICAL: {
-            "name": STOCK_VALUES_COLLECTION,
-            "create_args": {
-                "validator": _get_json_schema_validator(
-                    "Historical values validation",
-                    stock_value_required_fields,
-                    stock_value_fields_types,
-                )
-            },
-            "unique_index": date_ticker_unique_index,
-        },
-        StockValueType.STREAMING: {
-            "name": STOCK_VALUES_COLLECTION,
-            "create_args": {
-                "validator": _get_json_schema_validator(
-                    "Streaming values validation",
                     stock_value_required_fields,
                     stock_value_fields_types,
                 )
@@ -107,7 +81,7 @@ class MongoDbStorage(Storage):
         }
 
     def insert_values(self, values: list[StockValue]):
-        collection = self.collections[STOCK_VALUES_COLLECTION]
+        collection = self.collections[StockValue]
         insertable = [
             {k: v for (k, v) in val.__dict__.items() if v is not None} for val in values
         ]
@@ -188,7 +162,7 @@ class MongoDbStorage(Storage):
     def get_values(
         self, ticker: str, kind: StockValueKind, limit: int = 500
     ) -> list[StockValue]:
-        collection = self.collections[STOCK_VALUES_COLLECTION]
+        collection = self.collections[StockValue]
         base_query = (
             {"open": {"$exists": 1}}
             if kind == StockValueKind.OHLC
@@ -241,7 +215,7 @@ class MongoDbStorage(Storage):
             grouped["_id"]: StockCollectionStats(
                 **{k: v for k, v in grouped.items() if k != "_id"}
             )
-            for grouped in self.collections[STOCK_VALUES_COLLECTION].aggregate(
+            for grouped in self.collections[StockValue].aggregate(
                 [
                     {"$match": filter},
                     {
