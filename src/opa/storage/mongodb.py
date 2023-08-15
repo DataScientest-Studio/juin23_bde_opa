@@ -231,12 +231,18 @@ class MongoDbStorage(Storage):
         return ret
 
     def get_stats(self, type_: StockValueType) -> dict[str, StockCollectionStats]:
+        filter = (
+            {"open": {"$exists": 1}}
+            if type_ == StockValueType.STREAMING
+            else {"open": {"$exists": 0}}
+        )
         ret = {
             grouped["_id"]: StockCollectionStats(
                 **{k: v for k, v in grouped.items() if k != "_id"}
             )
             for grouped in self.collections[type_].aggregate(
                 [
+                    {"$match": filter},
                     {
                         "$group": {
                             "_id": "$ticker",
@@ -244,7 +250,7 @@ class MongoDbStorage(Storage):
                             "oldest": {"$min": "$date"},
                             "count": {"$count": {}},
                         }
-                    }
+                    },
                 ]
             )
         }
