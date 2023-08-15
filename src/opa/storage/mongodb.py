@@ -6,7 +6,7 @@ from loguru import logger
 
 from opa.core.financial_data import (
     StockValue,
-    StockValueType,
+    StockValueKind,
     CompanyInfo,
     StockCollectionStats,
 )
@@ -55,22 +55,11 @@ class MongoDbStorage(Storage):
     date_ticker_unique_index = {"date": 1, "ticker": 1}
 
     collection_args = {
-        StockValueType.HISTORICAL: {
-            "name": StockValueType.HISTORICAL.value,
+        StockValue: {
+            "name": "stock_values",
             "create_args": {
                 "validator": _get_json_schema_validator(
-                    "Historical values validation",
-                    stock_value_required_fields,
-                    stock_value_fields_types,
-                )
-            },
-            "unique_index": date_ticker_unique_index,
-        },
-        StockValueType.STREAMING: {
-            "name": StockValueType.STREAMING.value,
-            "create_args": {
-                "validator": _get_json_schema_validator(
-                    "Streaming values validation",
+                    "Stock values validation",
                     stock_value_required_fields,
                     stock_value_fields_types,
                 )
@@ -91,8 +80,8 @@ class MongoDbStorage(Storage):
             for (key, coll) in self.collection_args.items()
         }
 
-    def insert_values(self, values: list[StockValue], type_: StockValueType):
-        collection = self.collections[type_]
+    def insert_values(self, values: list[StockValue]):
+        collection = self.collections[StockValue]
         insertable = [
             {k: v for (k, v) in val.__dict__.items() if v is not None} for val in values
         ]
@@ -100,9 +89,8 @@ class MongoDbStorage(Storage):
             # `ordered=False` ensures that at least some data will be inserted even if there are errors
             ret = collection.insert_many(insertable, ordered=False)
             logger.info(
-                "Successfully inserted {count} new {type_} stock values",
+                "Successfully inserted {count} new stock values",
                 count=len(ret.inserted_ids),
-                type_=type_.value,
             )
 
             return ret
@@ -172,18 +160,24 @@ class MongoDbStorage(Storage):
                 logger.error("{} documents had validation errors", validation_errors)
 
     def get_values(
-        self, ticker: str, type_: StockValueType, limit: int = 500
+        self, ticker: str, kind: StockValueKind, limit: int = 500
     ) -> list[StockValue]:
-        collection = self.collections[type_]
+        collection = self.collections[StockValue]
+        base_query = (
+            {"open": {"$exists": 1}}
+            if kind == StockValueKind.OHLC
+            else {"open": {"$exists": 0}}
+        )
+        query = base_query | {"ticker": ticker}
 
         ret = [
             StockValue(**d)
-            for d in collection.find({"ticker": ticker}, limit=limit).sort("date", -1)
+            for d in collection.find(query, limit=limit).sort("date", -1)
         ]
         logger.info(
-            "{count} {type_} stock values retrieved from storage",
+            "{count} {kind} stock values retrieved from storage",
             count=len(ret),
-            type_=type_.value,
+            kind=kind.value,
         )
 
         return ret
@@ -211,13 +205,19 @@ class MongoDbStorage(Storage):
 
         return ret
 
-    def get_stats(self, type_: StockValueType) -> dict[str, StockCollectionStats]:
+    def get_stats(self, kind: StockValueKind) -> dict[str, StockCollectionStats]:
+        filter = (
+            {"open": {"$exists": 1}}
+            if kind == StockValueKind.OHLC
+            else {"open": {"$exists": 0}}
+        )
         ret = {
             grouped["_id"]: StockCollectionStats(
                 **{k: v for k, v in grouped.items() if k != "_id"}
             )
-            for grouped in self.collections[type_].aggregate(
+            for grouped in self.collections[StockValue].aggregate(
                 [
+                    {"$match": filter},
                     {
                         "$group": {
                             "_id": "$ticker",
@@ -225,7 +225,7 @@ class MongoDbStorage(Storage):
                             "oldest": {"$min": "$date"},
                             "count": {"$count": {}},
                         }
-                    }
+                    },
                 ]
             )
         }

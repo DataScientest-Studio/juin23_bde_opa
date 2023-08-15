@@ -6,9 +6,14 @@ from enum import Enum
 from pydantic import BaseModel
 
 
-class StockValueType(Enum):
-    HISTORICAL = "historical"
-    STREAMING = "streaming"
+class StockValueSerieGranularity(Enum):
+    FINE = "fine"
+    COARSE = "coarse"
+
+
+class StockValueKind(Enum):
+    SIMPLE = "simple"
+    OHLC = "ohlc"
 
 
 class StockValue(BaseModel):

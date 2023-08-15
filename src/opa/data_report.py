@@ -4,12 +4,12 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 
-from opa.core.financial_data import StockValueType
+from opa.core.financial_data import StockValueKind
 from opa.storage import opa_storage
 
 
-def get_dataframe(ticker: str, type_: StockValueType) -> pd.DataFrame | None:
-    data = [h.model_dump() for h in opa_storage.get_values(ticker, type_)]
+def get_dataframe(ticker: str, kind: StockValueKind) -> pd.DataFrame | None:
+    data = [h.model_dump() for h in opa_storage.get_values(ticker, kind)]
     return pd.DataFrame(data) if data else None
 
 
@@ -45,8 +45,8 @@ def set_transparent_background(figure):
     Input("type-selector", "value"),
 )
 def update_graph(ticker: str, type_str: str):
-    type_ = StockValueType(type_str)
-    df = get_dataframe(ticker, type_)
+    kind = StockValueKind(type_str)
+    df = get_dataframe(ticker, kind)
 
     if df is None:
         return (
@@ -56,11 +56,11 @@ def update_graph(ticker: str, type_str: str):
         )
 
     figure = None
-    match type_:
-        case StockValueType.HISTORICAL:
+    match kind:
+        case StockValueKind.SIMPLE:
             figure = px.line(df, x="date", y="close")
 
-        case StockValueType.STREAMING:
+        case StockValueKind.OHLC:
             figure = go.Figure(
                 go.Ohlc(
                     x=df.date,
@@ -73,7 +73,7 @@ def update_graph(ticker: str, type_str: str):
 
     return (
         set_transparent_background(
-            add_range_selectors(figure, type_ == StockValueType.STREAMING)
+            add_range_selectors(figure, kind == StockValueKind.OHLC)
         ),
         "",
         "",
@@ -136,8 +136,8 @@ if __name__ == "__main__":
             html.Div(id="company-info"),
             html.Button("Refresh tickers list", id="tickers-refresh"),
             dcc.Dropdown(
-                [t.value for t in StockValueType],
-                StockValueType.HISTORICAL.value,
+                [t.value for t in StockValueKind],
+                StockValueKind.SIMPLE.value,
                 id="type-selector",
             ),
             dcc.Graph(id="stock-evolution-graph", config={"scrollZoom": True}),

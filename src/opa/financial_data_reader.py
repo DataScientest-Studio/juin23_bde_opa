@@ -1,6 +1,10 @@
 from loguru import logger
 
-from opa.core import StockValueType, FinancialDataReader
+from opa.core import (
+    FinancialDataReader,
+    StockValueSerieGranularity,
+    StockValueKind,
+)
 from opa.providers import opa_provider
 from opa.storage import opa_storage
 
@@ -13,7 +17,15 @@ if __name__ == "__main__":
     reader = FinancialDataReader(opa_provider, opa_storage)
 
     reader.import_company_info(ALL_VALUES)
-    reader.import_stock_values(ALL_VALUES, StockValueType.HISTORICAL)
-    reader.import_stock_values(ALL_VALUES, StockValueType.STREAMING)
+    reader.import_stock_values(
+        ALL_VALUES,
+        StockValueKind.SIMPLE,
+        StockValueSerieGranularity.COARSE,
+    )
+    reader.import_stock_values(
+        ALL_VALUES,
+        StockValueKind.OHLC,
+        StockValueSerieGranularity.FINE,
+    )
 
     logger.info("Reader app done")

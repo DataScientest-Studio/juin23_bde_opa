@@ -18,14 +18,14 @@ def db_wipeout():
 
 @pytest.mark.usefixtures("db_wipeout")
 class TestIntegration:
-    def test_values_retrieval(self, ticker, stock_values_serie, stock_value_type):
+    def test_values_retrieval(self, ticker, stock_values_serie, stock_value_kind):
         """`get_values` should return all the values that were inserted via `insert_values`,
         sorted by most-recent first"""
-        opa_storage.insert_values(stock_values_serie, stock_value_type)
+        opa_storage.insert_values(stock_values_serie)
 
         expected = sorted(stock_values_serie, key=lambda v: v.date, reverse=True)
 
-        assert opa_storage.get_values(ticker, stock_value_type) == expected
+        assert opa_storage.get_values(ticker, stock_value_kind) == expected
 
     def test_company_info_retrieval(self, company_infos):
         opa_storage.insert_company_infos(company_infos)
@@ -45,9 +45,9 @@ class TestIntegration:
         all_tickers = opa_storage.get_all_tickers()
         assert sorted(all_tickers) == expected
 
-    def test_stats(self, ticker, stock_values_serie, stock_value_type):
+    def test_stats(self, ticker, stock_values_serie, stock_value_kind):
         """`get_stats` should return coherent stats on the input ticker"""
-        opa_storage.insert_values(stock_values_serie, stock_value_type)
+        opa_storage.insert_values(stock_values_serie)
 
         expected = {
             ticker: StockCollectionStats(
@@ -57,4 +57,4 @@ class TestIntegration:
             )
         }
 
-        assert opa_storage.get_stats(stock_value_type) == expected
+        assert opa_storage.get_stats(stock_value_kind) == expected

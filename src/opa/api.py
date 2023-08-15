@@ -1,7 +1,7 @@
 from loguru import logger
 from fastapi import FastAPI
 
-from opa.core.financial_data import StockValue, StockValueType
+from opa.core.financial_data import StockValue, StockValueKind
 from opa.storage import opa_storage
 
 
@@ -21,5 +21,5 @@ async def all_tickers() -> list[str]:
 
 
 @app.get("/{ticker}")
-async def get_stock_values(ticker: str, type: StockValueType) -> list[StockValue]:
-    return opa_storage.get_values(ticker, type)
+async def get_stock_values(ticker: str, kind: StockValueKind) -> list[StockValue]:
+    return opa_storage.get_values(ticker, kind)

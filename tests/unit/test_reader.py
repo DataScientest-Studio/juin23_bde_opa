@@ -92,10 +92,13 @@ class TestImportStockValues:
         provider_for_stock_values,
         storage_empty,
         reader,
-        stock_value_type,
+        stock_value_kind,
+        stock_value_serie_granularity,
         stock_values_serie,
     ):
-        reader.import_stock_values(tickers, stock_value_type)
+        reader.import_stock_values(
+            tickers, stock_value_kind, stock_value_serie_granularity
+        )
 
         provider_for_stock_values.get_stock_values.assert_called()
 
@@ -103,7 +106,7 @@ class TestImportStockValues:
         for args in provider_for_stock_values.get_stock_values.call_args_list:
             called_tickers.append(args.args[0])
             type_ = args.args[1]
-            assert type_ == stock_value_type
+            assert type_ == stock_value_kind
         assert sorted(tickers) == sorted(called_tickers)
 
         storage_empty.insert_values.assert_called_once()
@@ -117,9 +120,12 @@ class TestImportStockValues:
         provider_for_stock_values,
         storage_with_all_data,
         reader,
-        stock_value_type,
+        stock_value_kind,
+        stock_value_serie_granularity,
     ):
-        reader.import_stock_values(tickers, stock_value_type)
+        reader.import_stock_values(
+            tickers, stock_value_kind, stock_value_serie_granularity
+        )
 
         provider_for_stock_values.get_stock_values.assert_called()
 
@@ -127,7 +133,7 @@ class TestImportStockValues:
         for args in provider_for_stock_values.get_stock_values.call_args_list:
             called_tickers.append(args.args[0])
             type_ = args.args[1]
-            assert type_ == stock_value_type
+            assert type_ == stock_value_kind
         assert sorted(tickers) == sorted(called_tickers)
 
         storage_with_all_data.insert_values.assert_not_called()

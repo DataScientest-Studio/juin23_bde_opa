@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from opa.core.financial_data import (
     StockValue,
-    StockValueType,
+    StockValueKind,
     CompanyInfo,
     StockCollectionStats,
 )
@@ -10,12 +10,12 @@ from opa.core.financial_data import (
 
 class Storage(ABC):
     @abstractmethod
-    def insert_values(self, values: list[StockValue], type_: StockValueType):
+    def insert_values(self, values: list[StockValue]):
         ...
 
     @abstractmethod
     def get_values(
-        self, ticker: str, type_: StockValueType, limit: int = 500
+        self, ticker: str, kind: StockValueKind, limit: int = 500
     ) -> list[StockValue]:
         ...
 
@@ -32,5 +32,5 @@ class Storage(ABC):
         ...
 
     @abstractmethod
-    def get_stats(self, type_: StockValueType) -> dict[str, StockCollectionStats]:
+    def get_stats(self, kind: StockValueKind) -> dict[str, StockCollectionStats]:
         ...

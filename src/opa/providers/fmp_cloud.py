@@ -10,13 +10,14 @@ from opa.core.providers import StockMarketProvider
 from opa.core.financial_data import (
     StockValue,
     StockValueMixin,
-    StockValueType,
     CompanyInfo,
     CompanyInfoMixin,
+    StockValueSerieGranularity,
+    StockValueKind,
 )
 
 
-class FmpCloudHistoricalValue(BaseModel, StockValueMixin):
+class FmpCloudSimpleValue(BaseModel, StockValueMixin):
     date: date
     close: float
 
@@ -30,12 +31,12 @@ class FmpCloudHistoricalValue(BaseModel, StockValueMixin):
         )
 
 
-class FmpCloudHistoricalData(BaseModel):
+class FmpCloudSimpleData(BaseModel):
     symbol: str
-    historical: list[FmpCloudHistoricalValue]
+    historical: list[FmpCloudSimpleValue]
 
 
-class FmpCloudStreamingValue(BaseModel, StockValueMixin):
+class FmpCloudOhlcValue(BaseModel, StockValueMixin):
     date: datetime
     open: float
     close: float
@@ -90,45 +91,60 @@ class FmpCloud(StockMarketProvider):
     def __init__(self):
         self.access_key = settings.secrets.fmp_cloud_api_key
 
-    def get_stock_values(self, ticker: str, type_: StockValueType) -> list[StockValue]:
-        json = self.get_raw_stock_values(ticker, type_)
+    def get_stock_values(
+        self,
+        ticker: str,
+        kind: StockValueKind,
+        granularity: StockValueSerieGranularity,
+    ) -> list[StockValue]:
+        json = self.get_raw_stock_values(ticker, kind, granularity)
         ret = [
             v.as_stock_value(ticker=ticker)
-            for v in self._as_validated_list_of_values(json, type_)
+            for v in self._as_validated_list_of_values(json, kind, granularity)
         ]
 
         logger.info(
-            "Fetched {count} {type_} stock values", count=len(ret), type_=type_.value
+            "Fetched {count} {kind} {granularity}-grained stock values",
+            count=len(ret),
+            kind=kind.value,
+            granularity=granularity.value,
         )
         return ret
 
-    def get_raw_stock_values(self, ticker: str, type_: StockValueType) -> dict:
-        match type_:
-            case StockValueType.HISTORICAL:
+    def get_raw_stock_values(
+        self,
+        ticker: str,
+        kind: StockValueKind,
+        granularity: StockValueSerieGranularity,
+    ) -> dict:
+        match (kind, granularity):
+            case (StockValueKind.SIMPLE, StockValueSerieGranularity.COARSE):
                 return self._get_json_data(
                     f"/historical-price-full/{ticker}",
                     serietype="line",
                 )
 
-            case StockValueType.STREAMING:
+            case (StockValueKind.OHLC, StockValueSerieGranularity.FINE):
                 return self._get_json_data(f"/historical-chart/15min/{ticker}")
 
             case _:
-                raise TypeError(f"type should be a StockValueType, got {type_}")
+                raise TypeError(
+                    f"This provider cannot provide ({kind, granularity}) stock values"
+                )
 
     @staticmethod
     def _as_validated_list_of_values(
-        json, type_
-    ) -> list[FmpCloudHistoricalValue] | list[FmpCloudStreamingValue]:
-        match type_:
-            case StockValueType.HISTORICAL:
-                return FmpCloudHistoricalData(**json).historical
+        json, kind: StockValueKind, granularity: StockValueSerieGranularity
+    ) -> list[FmpCloudSimpleValue] | list[FmpCloudOhlcValue]:
+        match (kind, granularity):
+            case (StockValueKind.SIMPLE, StockValueSerieGranularity.COARSE):
+                return FmpCloudSimpleData(**json).historical
 
-            case StockValueType.STREAMING:
-                return [FmpCloudStreamingValue(**v) for v in json]
+            case (StockValueKind.OHLC, StockValueSerieGranularity.FINE):
+                return [FmpCloudOhlcValue(**v) for v in json]
 
             case _:
-                raise TypeError(f"type should be a StockValueType, got {type_}")
+                raise TypeError(f"cannot validate ({kind, granularity}) stock values")
 
     def get_company_info(self, tickers: list[str]) -> list[CompanyInfo]:
         # This part is sorted so that getting info for the same list of tickers always
