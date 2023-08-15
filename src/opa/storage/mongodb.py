@@ -186,12 +186,12 @@ class MongoDbStorage(Storage):
                 logger.error("{} documents had validation errors", validation_errors)
 
     def get_values(
-        self, ticker: str, type_: StockValueType, limit: int = 500
+        self, ticker: str, kind: StockValueKind, limit: int = 500
     ) -> list[StockValue]:
         collection = self.collections[STOCK_VALUES_COLLECTION]
         base_query = (
             {"open": {"$exists": 1}}
-            if type_ == StockValueType.STREAMING
+            if kind == StockValueKind.OHLC
             else {"open": {"$exists": 0}}
         )
         query = base_query | {"ticker": ticker}
@@ -201,9 +201,9 @@ class MongoDbStorage(Storage):
             for d in collection.find(query, limit=limit).sort("date", -1)
         ]
         logger.info(
-            "{count} {type_} stock values retrieved from storage",
+            "{count} {kind} stock values retrieved from storage",
             count=len(ret),
-            type_=type_.value,
+            kind=kind.value,
         )
 
         return ret
