@@ -27,8 +27,7 @@ class FinancialDataReader:
         kind: StockValueKind,
         granularity: StockValueSerieGranularity,
     ) -> list[StockValue]:
-        # During refactoring, just ignore the values that are already in the database
-        stats = {}
+        stats = self.storage.get_stats(kind)
 
         api_values = {
             ticker: self.provider.get_stock_values(ticker, kind, granularity)
