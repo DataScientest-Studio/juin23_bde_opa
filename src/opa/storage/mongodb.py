@@ -58,6 +58,17 @@ class MongoDbStorage(Storage):
     date_ticker_unique_index = {"date": 1, "ticker": 1}
 
     collection_args = {
+        STOCK_VALUES_COLLECTION: {
+            "name": STOCK_VALUES_COLLECTION,
+            "create_args": {
+                "validator": _get_json_schema_validator(
+                    "Stock values validation",
+                    stock_value_required_fields,
+                    stock_value_fields_types,
+                )
+            },
+            "unique_index": date_ticker_unique_index,
+        },
         StockValueType.HISTORICAL: {
             "name": STOCK_VALUES_COLLECTION,
             "create_args": {
