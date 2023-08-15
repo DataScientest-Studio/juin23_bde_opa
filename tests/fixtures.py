@@ -3,7 +3,7 @@ from datetime import timedelta
 import pytest
 from faker import Faker
 
-from opa.core import CompanyInfo, StockValue, StockValueType
+from opa.core import CompanyInfo, StockValue, StockValueKind
 
 fake = Faker()
 
@@ -16,8 +16,12 @@ def fake_value() -> float:
     return fake.pyfloat(right_digits=2, min_value=0.5, max_value=100.0)
 
 
-@pytest.fixture(params=StockValueType)
-def stock_value_type(request):
+def fake_volume() -> int:
+    return fake.pyint(min_value=1000)
+
+
+@pytest.fixture(params=StockValueKind)
+def stock_value_kind(request):
     return request.param
 
 
@@ -27,18 +31,27 @@ def ticker():
 
 
 @pytest.fixture
-def stock_values_serie(stock_value_type, ticker) -> list[StockValue]:
+def stock_values_serie(stock_value_kind, ticker) -> list[StockValue]:
     start = fake.date_time()
 
-    if stock_value_type == StockValueType.HISTORICAL:
+    if stock_value_kind == StockValueKind.OHLC:
         dates = [start + timedelta(days=n) for n in range(100)]
         interval = 15 * 60  # 15 minutes
-    elif stock_value_type == StockValueType.STREAMING:
+        kwargs_fn = lambda: {
+            "open": fake_value(),
+            "low": fake_value(),
+            "high": fake_value(),
+            "volume": fake_volume(),
+        }
+    elif stock_value_kind == StockValueKind.SIMPLE:
         dates = [start + timedelta(minutes=15 * n) for n in range(100)]
         interval = 24 * 60 * 60  # one day
+        kwargs_fn = lambda: {}
 
     return [
-        StockValue(ticker=ticker, date=d, interval=interval, close=fake_value())
+        StockValue(
+            ticker=ticker, date=d, interval=interval, close=fake_value(), **kwargs_fn()
+        )
         for d in dates
     ]
 
