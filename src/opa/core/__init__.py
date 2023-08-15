@@ -1,6 +1,5 @@
 from .financial_data import (
     StockValue,
-    StockValueType,
     StockValueMixin,
     CompanyInfo,
     StockCollectionStats,
