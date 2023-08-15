@@ -83,7 +83,8 @@ class MongoDbStorage(Storage):
     def insert_values(self, values: list[StockValue]):
         collection = self.collections[StockValue]
         insertable = [
-            {k: v for (k, v) in val.__dict__.items() if v is not None} for val in values
+            {k: v for (k, v) in val.model_dump().items() if v is not None}
+            for val in values
         ]
         try:
             # `ordered=False` ensures that at least some data will be inserted even if there are errors
