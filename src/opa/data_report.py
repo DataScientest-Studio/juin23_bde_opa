@@ -2,6 +2,7 @@ from loguru import logger
 from dash import Dash, html, dcc, callback, Output, Input, no_update
 import plotly.express as px
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 import pandas as pd
 
 from opa.core.financial_data import StockValueKind
@@ -19,7 +20,7 @@ def add_range_selectors(figure, hour_break=False):
         breaks += [dict(bounds=[16, 9.5], pattern="hour")]
 
     return figure.update_xaxes(
-        rangeslider_visible=True,
+        rangeslider_visible=False,
         rangeselector={
             "buttons": [
                 dict(label="1m", count=1, step="month", stepmode="backward"),
@@ -61,14 +62,28 @@ def update_graph(ticker: str, type_str: str):
             figure = px.line(df, x="date", y="close")
 
         case StockValueKind.OHLC:
-            figure = go.Figure(
+            figure = make_subplots(rows=2, cols=1, shared_xaxes=True)
+            figure.add_trace(
                 go.Ohlc(
                     x=df.date,
                     open=df["open"],
                     high=df["high"],
                     low=df["low"],
                     close=df["close"],
-                )
+                ),
+                row=1,
+                col=1,
+            )
+            figure.add_trace(
+                go.Bar(
+                    x=df.date,
+                    y=df.volume,
+                    marker_color=df.apply(
+                        lambda v: "green" if v.close >= v.open else "red", axis=1
+                    ),
+                ),
+                row=2,
+                col=1,
             )
 
     return (
