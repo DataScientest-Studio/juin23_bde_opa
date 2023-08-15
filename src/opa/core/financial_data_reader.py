@@ -52,7 +52,7 @@ class FinancialDataReader:
         # Flatten all the values
         all_new_values = [v for v_list in new_values.values() for v in v_list]
         if all_new_values:
-            self.storage.insert_values(all_new_values, type_)
+            self.storage.insert_values(all_new_values)
         else:
             logger.info(
                 (

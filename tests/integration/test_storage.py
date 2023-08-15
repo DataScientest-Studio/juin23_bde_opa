@@ -21,7 +21,7 @@ class TestIntegration:
     def test_values_retrieval(self, ticker, stock_values_serie, stock_value_type):
         """`get_values` should return all the values that were inserted via `insert_values`,
         sorted by most-recent first"""
-        opa_storage.insert_values(stock_values_serie, stock_value_type)
+        opa_storage.insert_values(stock_values_serie)
 
         expected = sorted(stock_values_serie, key=lambda v: v.date, reverse=True)
 
@@ -47,7 +47,7 @@ class TestIntegration:
 
     def test_stats(self, ticker, stock_values_serie, stock_value_type):
         """`get_stats` should return coherent stats on the input ticker"""
-        opa_storage.insert_values(stock_values_serie, stock_value_type)
+        opa_storage.insert_values(stock_values_serie)
 
         expected = {
             ticker: StockCollectionStats(

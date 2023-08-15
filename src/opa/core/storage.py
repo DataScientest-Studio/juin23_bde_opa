@@ -10,7 +10,7 @@ from opa.core.financial_data import (
 
 class Storage(ABC):
     @abstractmethod
-    def insert_values(self, values: list[StockValue], type_: StockValueType):
+    def insert_values(self, values: list[StockValue]):
         ...
 
     @abstractmethod

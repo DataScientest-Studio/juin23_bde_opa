@@ -94,7 +94,7 @@ class MongoDbStorage(Storage):
             for (key, coll) in self.collection_args.items()
         }
 
-    def insert_values(self, values: list[StockValue], type_: StockValueType):
+    def insert_values(self, values: list[StockValue]):
         collection = self.collections[STOCK_VALUES_COLLECTION]
         insertable = [
             {k: v for (k, v) in val.__dict__.items() if v is not None} for val in values
@@ -103,9 +103,8 @@ class MongoDbStorage(Storage):
             # `ordered=False` ensures that at least some data will be inserted even if there are errors
             ret = collection.insert_many(insertable, ordered=False)
             logger.info(
-                "Successfully inserted {count} new {type_} stock values",
+                "Successfully inserted {count} new stock values",
                 count=len(ret.inserted_ids),
-                type_=type_.value,
             )
 
             return ret
