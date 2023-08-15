@@ -1,6 +1,6 @@
 [project]
 name = "opa"
-version = "0.1"
+version = "0.1.0"
 description = ""
 authors = [
     {name = "jherve", email = "julien.jev.herve@gmail.com"},
@@ -48,7 +48,28 @@ dev = [
     "types-requests>=2.31.0.2",
     "pandas-stubs>=2.0.2.230605",
     "pytest>=7.4.0",
+    "tbump>=6.10.0",
 ]
 
 [tool.pytest.ini_options]
 testpaths = "tests"
+
+[tool.tbump]
+github_url = "https://github.com/DataScientest-Studio/juin23_bde_opa"
+
+[tool.tbump.version]
+current = "0.1.0"
+regex = '''
+  (?P<major>\d+)
+  \.
+  (?P<minor>\d+)
+  \.
+  (?P<patch>\d+)
+  '''
+
+[tool.tbump.git]
+message_template = "[chore] Bump to {new_version}"
+tag_template = "v{new_version}"
+
+[[tool.tbump.file]]
+src = "pyproject.toml"
