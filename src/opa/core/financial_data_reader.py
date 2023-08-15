@@ -24,7 +24,6 @@ class FinancialDataReader:
     def import_stock_values(
         self,
         tickers: list[str],
-        type_: StockValueType,
         kind: StockValueKind,
         granularity: StockValueSerieGranularity,
     ) -> list[StockValue]:
@@ -56,11 +55,12 @@ class FinancialDataReader:
         else:
             logger.info(
                 (
-                    "{nb} '{type}' values fetched by the reader were discarded because "
+                    "{nb} '{kind}' {granularity}-grained values fetched by the reader were discarded because "
                     "they cover a timespan already present in the storage"
                 ),
                 nb=len([v for v_list in api_values.values() for v in v_list]),
-                type=type_.value,
+                kind=kind.value,
+                granularity=granularity.value,
             )
 
         return all_new_values
