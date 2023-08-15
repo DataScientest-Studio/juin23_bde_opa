@@ -93,9 +93,12 @@ class TestImportStockValues:
         storage_empty,
         reader,
         stock_value_kind,
+        stock_value_serie_granularity,
         stock_values_serie,
     ):
-        reader.import_stock_values(tickers, stock_value_kind)
+        reader.import_stock_values(
+            tickers, stock_value_kind, stock_value_serie_granularity
+        )
 
         provider_for_stock_values.get_stock_values.assert_called()
 
@@ -118,8 +121,11 @@ class TestImportStockValues:
         storage_with_all_data,
         reader,
         stock_value_kind,
+        stock_value_serie_granularity,
     ):
-        reader.import_stock_values(tickers, stock_value_kind)
+        reader.import_stock_values(
+            tickers, stock_value_kind, stock_value_serie_granularity
+        )
 
         provider_for_stock_values.get_stock_values.assert_called()
 

@@ -3,7 +3,7 @@ from datetime import timedelta
 import pytest
 from faker import Faker
 
-from opa.core import CompanyInfo, StockValue, StockValueKind
+from opa.core import CompanyInfo, StockValue, StockValueKind, StockValueSerieGranularity
 
 fake = Faker()
 
@@ -25,18 +25,23 @@ def stock_value_kind(request):
     return request.param
 
 
+@pytest.fixture(params=StockValueSerieGranularity)
+def stock_value_serie_granularity(request):
+    return request.param
+
+
 @pytest.fixture
 def ticker():
     return fake_ticker()
 
 
 @pytest.fixture
-def stock_values_serie(stock_value_kind, ticker) -> list[StockValue]:
+def stock_values_serie(
+    stock_value_kind, stock_value_serie_granularity, ticker
+) -> list[StockValue]:
     start = fake.date_time()
 
     if stock_value_kind == StockValueKind.OHLC:
-        dates = [start + timedelta(days=n) for n in range(100)]
-        interval = 15 * 60  # 15 minutes
         kwargs_fn = lambda: {
             "open": fake_value(),
             "low": fake_value(),
@@ -44,9 +49,14 @@ def stock_values_serie(stock_value_kind, ticker) -> list[StockValue]:
             "volume": fake_volume(),
         }
     elif stock_value_kind == StockValueKind.SIMPLE:
+        kwargs_fn = lambda: {}
+
+    if stock_value_serie_granularity == StockValueSerieGranularity.COARSE:
         dates = [start + timedelta(minutes=15 * n) for n in range(100)]
         interval = 24 * 60 * 60  # one day
-        kwargs_fn = lambda: {}
+    elif stock_value_serie_granularity == StockValueSerieGranularity.FINE:
+        dates = [start + timedelta(days=n) for n in range(100)]
+        interval = 15 * 60  # 15 minutes
 
     return [
         StockValue(
