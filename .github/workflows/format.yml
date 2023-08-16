@@ -1,6 +1,9 @@
 name: Code formatting
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   black:
