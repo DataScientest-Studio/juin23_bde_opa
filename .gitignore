@@ -162,8 +162,8 @@ cython_debug/
 #.idea/
 
 # All the following directories must exist for the app to start but their content is not versioned.
-app_data/db/*
-!/app_data/db/.gitkeep
+app_data/db/data/*
+!/app_data/db/data/.gitkeep
 
 app_data/http_cache/*
 !/app_data/http_cache/.gitkeep
