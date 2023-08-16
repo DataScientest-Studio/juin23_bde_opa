@@ -1,4 +1,9 @@
-venv/
+.venv/
 app_data/
 docs/
 notebooks/
+__pycache__/
+.mypy_cache/
+.pytest_cache/
+build/
+opa.egg-info/
