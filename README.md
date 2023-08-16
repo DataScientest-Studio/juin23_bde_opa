@@ -1,5 +1,7 @@
 # OPA Project
 
+[![unit tests](https://github.com/DataScientest-Studio/juin23_bde_opa/actions/workflows/tests_unit.yml/badge.svg)](https://github.com/DataScientest-Studio/juin23_bde_opa/actions/workflows/tests_unit.yml) [![formatting](https://github.com/DataScientest-Studio/juin23_bde_opa/actions/workflows/format.yml/badge.svg)](https://github.com/DataScientest-Studio/juin23_bde_opa/actions/workflows/format.yml)
+
 ## Run with Docker Compose
 
 Once the secrets are installed (see next paragraph), services can be started using a simple : `docker compose up -d`.
