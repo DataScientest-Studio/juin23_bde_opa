@@ -3,6 +3,7 @@ use_http_cache = false
 secrets_dir = "app_data/secrets"
 http_cache_dir = "app_data/http_cache"
 mongo_host = "localhost"
+mongo_port = 27117
 mongo_database = "stock_market-dev"
 api_host = "localhost"
 data_report_host = "localhost"
