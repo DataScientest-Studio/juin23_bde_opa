@@ -8,6 +8,8 @@ x-environment: &environment
   OPA_MONGO_HOST: database
   OPA_MONGO_DATABASE: ${OPA_MONGO_DATABASE:-stock_market-dev}
   OPA_API_HOST: internal_api
+  OPA_DATA_REPORT_HOST: 0.0.0.0
+  OPA_DATA_REPORT_PORT: 8050
 
 services:
   financial_data_reader:
@@ -62,9 +64,7 @@ services:
     command: [ "python", "-m", "opa.data_report" ]
     ports:
       - 8050:8050
-    environment:
-      <<: *environment
-      HOST: 0.0.0.0
+    environment: *environment
     depends_on:
       - database
     secrets:

@@ -4,6 +4,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 
+from opa import settings
 from opa.core.financial_data import StockValueKind
 from opa.storage import opa_storage
 
@@ -144,5 +145,7 @@ if __name__ == "__main__":
             html.Div(id="errors"),
         ]
     )
-    dash_app.run(debug=True)
+    dash_app.run(
+        host=settings.data_report_host, port=settings.data_report_port, debug=True
+    )
     logger.warning("Data report app finishing")
