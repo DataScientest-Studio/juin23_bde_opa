@@ -17,9 +17,21 @@ def get_dataframe(ticker: str, kind: StockValueKind) -> pd.DataFrame | None:
 def add_range_selectors(figure, hour_break=False):
     breaks = [dict(bounds=["sat", "mon"])]
     if hour_break:
-        breaks += [dict(bounds=[16, 9.5], pattern="hour")]
+        # Seems like the first bound is exclusive and the
+        # second one is inclusive, so we use 16.01 in order to display the stock
+        # value at market close (16:00). It's not bulletproof though because
+        # with that setting, the values at 16h00 and at 9h30 are almost superposed
+        # on the X-axis of the graph.
+        #
+        # (this behaviour does not seem to be documented :
+        # https://plotly.com/python/reference/layout/xaxis/#layout-xaxis-rangebreaks)
+        breaks += [dict(bounds=[16.01, 9.5], pattern="hour")]
 
     return figure.update_xaxes(
+        # Having the range slider visible makes it impossible to zoom along the y-axis,
+        # which makes the plot very "flat" if the plotted value has a high amplitude overall
+        # but locally fluctuates around a high value (e.g. a stock that started around 5$
+        # and now values at around $100).
         rangeslider_visible=True,
         rangeselector={
             "buttons": [
@@ -30,6 +42,7 @@ def add_range_selectors(figure, hour_break=False):
                 dict(step="all"),
             ]
         },
+        # Rangebreaks seem to not work properly with very long series.
         rangebreaks=breaks,
     )
 
@@ -71,6 +84,9 @@ def update_graph(ticker: str, type_str: str):
                     close=df["close"],
                 )
             )
+            # Range slider is enabled by default for OHLC graphs even if the global
+            # setting is set to False (see https://plotly.com/python/ohlc-charts/#ohlc-chart-without-rangeslider)
+            figure.update(layout_xaxis_rangeslider_visible=False)
 
     return (
         set_transparent_background(
