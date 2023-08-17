@@ -52,7 +52,7 @@ class MongoDbStorage(Storage):
         "volume": "int",
     }
     stock_value_required_fields = ["_id", "date", "close", "ticker", "interval"]
-    date_ticker_unique_index = {"date": 1, "ticker": 1}
+    date_ticker_interval_unique_index = {"date": 1, "ticker": 1, "interval": 1}
 
     collection_args = {
         StockValue: {
@@ -64,7 +64,7 @@ class MongoDbStorage(Storage):
                     stock_value_fields_types,
                 )
             },
-            "unique_index": date_ticker_unique_index,
+            "unique_index": date_ticker_interval_unique_index,
         },
         CompanyInfo: {"name": "company_info", "unique_index": {"symbol": 1}},
     }
