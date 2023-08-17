@@ -31,13 +31,13 @@ class FmpCloudSimpleValue(BaseModel, StockValueMixin):
         )
 
 
-class FmpCloudSimpleData(BaseModel):
+class FmpCloudSimpleCoarseData(BaseModel):
     symbol: str
     historical: list[FmpCloudSimpleValue]
 
 
 class FmpCloudOhlcValue(BaseModel, StockValueMixin):
-    date: datetime
+    date: datetime | date
     open: float
     close: float
     low: float
@@ -46,9 +46,17 @@ class FmpCloudOhlcValue(BaseModel, StockValueMixin):
 
     def as_stock_value(self, **kwargs) -> StockValue:
         ticker = kwargs.pop("ticker")
+
+        if isinstance(self.date, datetime):
+            date_ = self.date
+        elif isinstance(self.date, date):
+            date_ = datetime.combine(self.date, time.min)
+        else:
+            raise TypeError()
+
         return StockValue(
             ticker=ticker,
-            date=self.date,
+            date=date_,
             close=self.close,
             open=self.open,
             low=self.low,
@@ -56,6 +64,11 @@ class FmpCloudOhlcValue(BaseModel, StockValueMixin):
             volume=self.volume,
             interval=15 * 60,
         )
+
+
+class FmpCloudOhlcCoarseData(BaseModel):
+    symbol: str
+    historical: list[FmpCloudOhlcValue]
 
 
 class FmpCloudCompanyInfo(BaseModel, CompanyInfoMixin):
@@ -124,6 +137,9 @@ class FmpCloud(StockMarketProvider):
                     serietype="line",
                 )
 
+            case (StockValueKind.OHLC, StockValueSerieGranularity.COARSE):
+                return self._get_json_data(f"/historical-price-full/{ticker}")
+
             case (StockValueKind.OHLC, StockValueSerieGranularity.FINE):
                 return self._get_json_data(f"/historical-chart/15min/{ticker}")
 
@@ -138,7 +154,10 @@ class FmpCloud(StockMarketProvider):
     ) -> list[FmpCloudSimpleValue] | list[FmpCloudOhlcValue]:
         match (kind, granularity):
             case (StockValueKind.SIMPLE, StockValueSerieGranularity.COARSE):
-                return FmpCloudSimpleData(**json).historical
+                return FmpCloudSimpleCoarseData(**json).historical
+
+            case (StockValueKind.OHLC, StockValueSerieGranularity.COARSE):
+                return FmpCloudOhlcCoarseData(**json).historical
 
             case (StockValueKind.OHLC, StockValueSerieGranularity.FINE):
                 return [FmpCloudOhlcValue(**v) for v in json]
