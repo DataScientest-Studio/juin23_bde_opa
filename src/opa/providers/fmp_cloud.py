@@ -17,6 +17,11 @@ from opa.core.financial_data import (
 )
 
 
+def into_datetime(date_: date):
+    # 16:00 is the hour at which US stock exchange market closes
+    return datetime.combine(date_, time(16))
+
+
 class FmpCloudSimpleValue(BaseModel, StockValueMixin):
     date: date
     close: float
@@ -25,7 +30,7 @@ class FmpCloudSimpleValue(BaseModel, StockValueMixin):
         ticker = kwargs.pop("ticker")
         return StockValue(
             ticker=ticker,
-            date=datetime.combine(self.date, time.min),
+            date=into_datetime(self.date),
             close=self.close,
             interval=24 * 60 * 60,
         )
@@ -50,7 +55,7 @@ class FmpCloudOhlcValue(BaseModel, StockValueMixin):
         if isinstance(self.date, datetime):
             date_ = self.date
         elif isinstance(self.date, date):
-            date_ = datetime.combine(self.date, time.min)
+            date_ = into_datetime(self.date)
         else:
             raise TypeError()
 
