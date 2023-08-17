@@ -27,5 +27,12 @@ if __name__ == "__main__":
         StockValueKind.OHLC,
         StockValueSerieGranularity.FINE,
     )
+    # Coarse-grained values are imported AFTER fine-grained values so that
+    # fine-grained values are always stored in priority.
+    reader.import_stock_values(
+        ALL_VALUES,
+        StockValueKind.OHLC,
+        StockValueSerieGranularity.COARSE,
+    )
 
     logger.info("Reader app done")

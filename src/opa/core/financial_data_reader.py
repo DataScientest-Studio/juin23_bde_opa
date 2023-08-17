@@ -26,6 +26,8 @@ class FinancialDataReader:
         kind: StockValueKind,
         granularity: StockValueSerieGranularity,
     ) -> list[StockValue]:
+        # TODO: `storage.get_stats` should evolve to not make stats on data that has granularity
+        # difference (ie take "interval" into account).
         stats = self.storage.get_stats(kind)
 
         api_values = {
