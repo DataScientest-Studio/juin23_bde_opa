@@ -1,4 +1,5 @@
-from flask import Flask
+from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
 
 import altair as alt
 from vega_datasets import data
@@ -18,46 +19,72 @@ from opa.storage import opa_storage
 # source = data.ohlc()
 
 
-def get_graph(ticker):
-    source = pd.DataFrame(
-        [v.model_dump() for v in opa_storage.get_values(ticker, StockValueKind.OHLC)]
-    )
-
-    open_close_color = alt.condition(
-        "datum.open <= datum.close", alt.value("#06982d"), alt.value("#ae1325")
-    )
-
-    base = (
-        alt.Chart(source)
-        .encode(
-            alt.X("yearmonthdatehoursminutes(date):O")
-            .axis(format="%m/%d", labelAngle=-45)
-            .title("Date in 2009"),
-            color=open_close_color,
+def get_graph(ticker: str, kind: StockValueKind):
+    if kind == StockValueKind.OHLC:
+        source = pd.DataFrame(
+            [
+                v.model_dump()
+                for v in opa_storage.get_values(ticker, StockValueKind.OHLC)
+            ]
         )
-        .properties(width=1000, height=500)
-        .interactive(bind_y=False, bind_x=True)
-    )
 
-    rule = base.mark_rule().encode(
-        alt.Y("low:Q").title("Price").scale(zero=False), alt.Y2("high:Q")
-    )
+        open_close_color = alt.condition(
+            "datum.open <= datum.close", alt.value("#06982d"), alt.value("#ae1325")
+        )
 
-    bar = base.mark_bar().encode(
-        alt.Y("open:Q"),
-        alt.Y2("close:Q"),
-        tooltip=["yearmonthdatehoursminutes(date):T", "close:Q"],
-    )
+        base = (
+            alt.Chart(source)
+            .encode(
+                alt.X("yearmonthdatehoursminutes(date):O")
+                .axis(format="%m/%d", labelAngle=-45)
+                .title("Date in 2009"),
+                color=open_close_color,
+            )
+            .properties(width=1000, height=500)
+            .interactive(bind_y=False, bind_x=True)
+        )
 
-    return rule + bar
+        rule = base.mark_rule().encode(
+            alt.Y("low:Q").title("Price").scale(zero=False), alt.Y2("high:Q")
+        )
+
+        bar = base.mark_bar().encode(
+            alt.Y("open:Q"),
+            alt.Y2("close:Q"),
+            tooltip=["yearmonthdatehoursminutes(date):T", "close:Q"],
+        )
+
+        return rule + bar
+    elif kind == StockValueKind.SIMPLE:
+        source = pd.DataFrame(
+            [v.model_dump() for v in opa_storage.get_values(ticker, kind, 5000)]
+        )
+
+        base = (
+            alt.Chart(source)
+            .encode(
+                alt.X("yearmonthdatehoursminutes(date):O")
+                .axis(format="%m/%d", labelAngle=-45)
+                .title("Date in 2009")
+            )
+            .properties(width=1000, height=500)
+            .interactive(bind_y=False, bind_x=True)
+        )
+        line = base.mark_line().encode(
+            alt.Y("close:Q"), tooltip=["yearmonthdatehoursminutes(date):T", "close:Q"]
+        )
+        return line
 
 
-app = Flask(__name__)
+app = FastAPI()
+from typing import Optional
 
 
-@app.route("/<ticker>")
-def stock_graph(ticker: str):
-    return f"""
+@app.get("/{ticker}")
+async def stock_graph(ticker: str, kind: StockValueKind = StockValueKind.OHLC):
+    graph = get_graph(ticker, kind)
+    return HTMLResponse(
+        content=f"""
 
 <!DOCTYPE html>
 <html>
@@ -73,7 +100,7 @@ def stock_graph(ticker: str):
 <div id="vis"></div>
 
 <script type="text/javascript">
-  var spec = {get_graph(ticker).to_json()};
+  var spec = {graph.to_json()};
   vegaEmbed('#vis', spec).then(function(result) {{
     // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
   }}).catch(console.error);
@@ -81,3 +108,4 @@ def stock_graph(ticker: str):
 </body>
 </html>
 """
+    )
