@@ -83,6 +83,11 @@ from typing import Optional
 @app.get("/{ticker}")
 async def stock_graph(ticker: str, kind: StockValueKind = StockValueKind.OHLC):
     graph = get_graph(ticker, kind)
+    tickers = opa_storage.get_all_tickers()
+
+    def to_ticker_url(ticker):
+        return f"/{ticker}?kind={kind.value}"
+
     return HTMLResponse(
         content=f"""
 
@@ -98,12 +103,29 @@ async def stock_graph(ticker: str, kind: StockValueKind = StockValueKind.OHLC):
 <body>
 
 <div id="vis"></div>
+<label for="ticker-select">Choose a ticker:</label>
+
+<select name="pets" id="ticker-select">
+  <option value="">--Please choose an option--</option>
+  <option value="{to_ticker_url("AAPL")}">AAPL</option>
+  <option value="{to_ticker_url("MSFT")}">MSFT</option>
+  <option value="{to_ticker_url("META")}">META</option>
+</select>
 
 <script type="text/javascript">
   var spec = {graph.to_json()};
   vegaEmbed('#vis', spec).then(function(result) {{
     // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
   }}).catch(console.error);
+</script>
+<script type="text/javascript">
+  var selects = Array.from(document.getElementsByTagName("select"));
+  selects.forEach((s) => {{
+      s.addEventListener("change", (e) => {{
+        console.log(e.target.value);
+        window.location.assign(e.target.value);
+      }});
+  }})
 </script>
 </body>
 </html>
