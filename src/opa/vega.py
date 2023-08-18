@@ -16,44 +16,47 @@ from opa.storage import opa_storage
 # Vega embed : https://github.com/vega/vega-embed#directly-in-the-browser
 
 # source = data.ohlc()
-source = pd.DataFrame(
-    [v.model_dump() for v in opa_storage.get_values("AAPL", StockValueKind.OHLC)]
-)
 
-open_close_color = alt.condition(
-    "datum.open <= datum.close", alt.value("#06982d"), alt.value("#ae1325")
-)
 
-base = (
-    alt.Chart(source)
-    .encode(
-        alt.X("yearmonthdatehoursminutes(date):O")
-        .axis(format="%m/%d", labelAngle=-45)
-        .title("Date in 2009"),
-        color=open_close_color,
+def get_graph(ticker):
+    source = pd.DataFrame(
+        [v.model_dump() for v in opa_storage.get_values(ticker, StockValueKind.OHLC)]
     )
-    .properties(width=1000, height=500)
-    .interactive(bind_y=False, bind_x=True)
-)
 
-rule = base.mark_rule().encode(
-    alt.Y("low:Q").title("Price").scale(zero=False), alt.Y2("high:Q")
-)
+    open_close_color = alt.condition(
+        "datum.open <= datum.close", alt.value("#06982d"), alt.value("#ae1325")
+    )
 
-bar = base.mark_bar().encode(
-    alt.Y("open:Q"),
-    alt.Y2("close:Q"),
-    tooltip=["yearmonthdatehoursminutes(date):T", "close:Q"],
-)
+    base = (
+        alt.Chart(source)
+        .encode(
+            alt.X("yearmonthdatehoursminutes(date):O")
+            .axis(format="%m/%d", labelAngle=-45)
+            .title("Date in 2009"),
+            color=open_close_color,
+        )
+        .properties(width=1000, height=500)
+        .interactive(bind_y=False, bind_x=True)
+    )
 
-graph = rule + bar
+    rule = base.mark_rule().encode(
+        alt.Y("low:Q").title("Price").scale(zero=False), alt.Y2("high:Q")
+    )
+
+    bar = base.mark_bar().encode(
+        alt.Y("open:Q"),
+        alt.Y2("close:Q"),
+        tooltip=["yearmonthdatehoursminutes(date):T", "close:Q"],
+    )
+
+    return rule + bar
 
 
 app = Flask(__name__)
 
 
-@app.route("/")
-def hello_world():
+@app.route("/<ticker>")
+def stock_graph(ticker: str):
     return f"""
 
 <!DOCTYPE html>
@@ -70,7 +73,7 @@ def hello_world():
 <div id="vis"></div>
 
 <script type="text/javascript">
-  var spec = {graph.to_json()};
+  var spec = {get_graph(ticker).to_json()};
   vegaEmbed('#vis', spec).then(function(result) {{
     // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
   }}).catch(console.error);
