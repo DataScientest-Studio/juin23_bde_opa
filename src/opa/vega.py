@@ -16,11 +16,16 @@ open_close_color = alt.condition(
     "datum.open <= datum.close", alt.value("#06982d"), alt.value("#ae1325")
 )
 
-base = alt.Chart(source).encode(
-    alt.X("yearmonthdatehours(date):O")
-    .axis(format="%m/%d", labelAngle=-45)
-    .title("Date in 2009"),
-    color=open_close_color,
+base = (
+    alt.Chart(source)
+    .encode(
+        alt.X("yearmonthdatehoursminutes(date):O")
+        .axis(format="%m/%d", labelAngle=-45)
+        .title("Date in 2009"),
+        color=open_close_color,
+    )
+    .properties(width=1000, height=500)
+    .interactive(bind_y=False, bind_x=True)
 )
 
 rule = base.mark_rule().encode(
@@ -28,7 +33,9 @@ rule = base.mark_rule().encode(
 )
 
 bar = base.mark_bar().encode(
-    alt.Y("open:Q"), alt.Y2("close:Q"), tooltip=["date:T", "close:Q"]
+    alt.Y("open:Q"),
+    alt.Y2("close:Q"),
+    tooltip=["yearmonthdatehoursminutes(date):T", "close:Q"],
 )
 
 graph = rule + bar
