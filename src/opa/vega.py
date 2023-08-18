@@ -80,13 +80,54 @@ app = FastAPI()
 from typing import Optional
 
 
+@app.get("/json/{ticker}")
+async def stock_graph_json(ticker: str, kind: StockValueKind = StockValueKind.OHLC):
+    graph = get_graph(ticker, kind)
+    return graph.to_dict()
+
+
 @app.get("/{ticker}")
 async def stock_graph(ticker: str, kind: StockValueKind = StockValueKind.OHLC):
     graph = get_graph(ticker, kind)
     tickers = opa_storage.get_all_tickers()
 
     def to_ticker_url(ticker):
-        return f"/{ticker}?kind={kind.value}"
+        return f"/json/{ticker}?kind={kind.value}"
+
+    script = """
+        fetch("/json/%(ticker)s?kind=%(kind)s").then(resp => {
+            resp.json().then(json => {
+                vegaEmbed('#vis', json).then(function(result) {
+                    // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
+                    var view = result.view
+                    var currentName = json.data.name
+                    console.log(view.getState())
+                    var selects = Array.from(document.getElementsByTagName("select"));
+                    selects.forEach((s) => {
+                        s.addEventListener("change", (e) => {
+                            const url = e.target.value;
+                            console.log(e.target.value);
+                            fetch(url).then(resp => {
+                                resp.json().then(json => {
+                                var changeSet = vega
+                                    .changeset()
+                                    .insert(json)
+                                    .remove(function (t) {
+                                        return true;
+                                    });
+                                    result.view.change(currentName, changeSet).run();
+                                })
+
+                            })
+                        });
+                    })
+                }).catch(console.error);
+            });
+        });
+    """ % {
+        "ticker": ticker,
+        "kind": kind.value,
+    }
 
     return HTMLResponse(
         content=f"""
@@ -113,19 +154,9 @@ async def stock_graph(ticker: str, kind: StockValueKind = StockValueKind.OHLC):
 </select>
 
 <script type="text/javascript">
-  var spec = {graph.to_json()};
-  vegaEmbed('#vis', spec).then(function(result) {{
-    // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
-  }}).catch(console.error);
+  {script}
 </script>
 <script type="text/javascript">
-  var selects = Array.from(document.getElementsByTagName("select"));
-  selects.forEach((s) => {{
-      s.addEventListener("change", (e) => {{
-        console.log(e.target.value);
-        window.location.assign(e.target.value);
-      }});
-  }})
 </script>
 </body>
 </html>
