@@ -7,6 +7,14 @@ import pandas as pd
 from opa.core import StockValueKind
 from opa.storage import opa_storage
 
+# Candlestick charts : https://altair-viz.github.io/gallery/candlestick_chart.html
+# Ensure no breaks in graph from weekends/closing hours/... : https://stackoverflow.com/a/64312556
+# A way to do "interval selection" (zoom onto the main graph by using a thumbnail)
+# https://altair-viz.github.io/gallery/interval_selection.html
+
+# Export chart to json : https://altair-viz.github.io/user_guide/saving_charts.html#json-format
+# Vega embed : https://github.com/vega/vega-embed#directly-in-the-browser
+
 # source = data.ohlc()
 source = pd.DataFrame(
     [v.model_dump() for v in opa_storage.get_values("AAPL", StockValueKind.OHLC)]
