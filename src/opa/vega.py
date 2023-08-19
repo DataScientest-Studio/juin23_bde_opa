@@ -98,28 +98,17 @@ async def stock_graph(ticker: str, kind: StockValueKind = StockValueKind.OHLC):
         fetch("/json/%(ticker)s?kind=%(kind)s").then(resp => {
             resp.json().then(json => {
                 vegaEmbed('#vis', json).then(function(result) {
-                    // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
                     var view = result.view
-                    window.view = view;
                     var currentName = json.data.name
-                    console.log(view.getState())
-                    console.log(currentName)
                     var selects = Array.from(document.getElementsByTagName("select"));
                     selects.forEach((s) => {
                         s.addEventListener("change", (e) => {
                             const url = e.target.value;
-                            console.log(e.target.value);
                             fetch(url).then(resp => {
                                 resp.json().then(json => {
-                                console.log("new data :");
-                                console.log(json.data.name);
-                                console.log(json);
-                                var changeSet = vega.changeset().remove(currentName, () => true).insert(json.data.name, json);
-                                console.log(changeSet);
-                                result.view.remove(currentName, () => true).run();
-                                result.view.insert(currentName, json.datasets[json.data.name]).run();
+                                    var changeSet = vega.changeset().remove(() => true).insert(json.datasets[json.data.name]);
+                                    result.view.change(currentName, changeSet).run();
                                 })
-
                             })
                         });
                     })
