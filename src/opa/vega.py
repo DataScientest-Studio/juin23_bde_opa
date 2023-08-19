@@ -136,10 +136,10 @@ async def stock_graph(ticker: str, kind: StockValueKind = StockValueKind.OHLC):
 <html>
 <head>
   <!-- Import Vega & Vega-Lite (does not have to be from CDN) -->
-  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5/build/vega.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5/build/vega-lite.js"></script>
   <!-- Import vega-embed -->
-  <script src="https://cdn.jsdelivr.net/npm/vega-embed@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@5/build/vega-embed.js"></script>
 </head>
 <body>
 
