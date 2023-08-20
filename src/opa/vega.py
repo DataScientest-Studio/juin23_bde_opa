@@ -97,21 +97,49 @@ async def stock_graph(ticker: str, kind: StockValueKind = StockValueKind.OHLC):
         return f"/json/{ticker}?kind={kind.value}"
 
     script = """
+        function replaceVegaGraph(vegaView, name, dataUrl) {
+            fetch(dataUrl).then(resp => {
+                resp.json().then(json => {
+                    delete window.view;
+                    vegaEmbed('#vis', json).then(function(result) {
+                        console.log("updated")
+                        window.view = result.view
+                    }).catch(console.error);
+                })
+            })
+        }
+
+        function updateVegaData(vegaView, name, dataUrl) {
+            fetch(dataUrl).then(resp => {
+                resp.json().then(json => {
+                    var changeSet = vega.changeset().remove(() => true).insert(json.datasets[json.data.name]);
+                    vegaView.change(name, changeSet).run();
+                })
+            })
+        }
+
+        function getSelectedValues() {
+            return new Map(
+                Array.from(document.getElementsByTagName("select"),
+                (e) => [e.name, e.selectedOptions[0].value]
+                )
+            )
+        }
+
+        function getNewUrl() {
+            const values = getSelectedValues()
+            return `/json/${values.get("tickers")}?kind=${values.get("kinds")}`
+        }
+
         fetch("/json/%(ticker)s?kind=%(kind)s").then(resp => {
             resp.json().then(json => {
                 vegaEmbed('#vis', json).then(function(result) {
-                    var view = result.view
+                    window.view = result.view
                     var currentName = json.data.name
                     var selects = Array.from(document.getElementsByTagName("select"));
                     selects.forEach((s) => {
                         s.addEventListener("change", (e) => {
-                            const url = e.target.value;
-                            fetch(url).then(resp => {
-                                resp.json().then(json => {
-                                    var changeSet = vega.changeset().remove(() => true).insert(json.datasets[json.data.name]);
-                                    result.view.change(currentName, changeSet).run();
-                                })
-                            })
+                            replaceVegaGraph(result.view, currentName, getNewUrl());
                         });
                     })
                 }).catch(console.error);
@@ -140,10 +168,15 @@ async def stock_graph(ticker: str, kind: StockValueKind = StockValueKind.OHLC):
 <label for="ticker-select">Choose a ticker:</label>
 
 <select name="tickers" id="ticker-select">
-  <option value="">--Please choose an option--</option>
-  <option value="{to_ticker_url("AAPL")}">AAPL</option>
-  <option value="{to_ticker_url("MSFT")}">MSFT</option>
-  <option value="{to_ticker_url("META")}">META</option>
+  <option value="AAPL">AAPL</option>
+  <option value="MSFT">MSFT</option>
+  <option value="META">META</option>
+</select>
+
+<label for="kind-select">Choose a data kind:</label>
+<select name="kinds" id="kind-select">
+  <option value="{StockValueKind.OHLC.value}">OHLC</option>
+  <option value="{StockValueKind.SIMPLE.value}">simple</option>
 </select>
 
 <script type="text/javascript">
