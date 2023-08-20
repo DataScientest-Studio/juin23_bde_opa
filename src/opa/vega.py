@@ -16,6 +16,8 @@ from opa.storage import opa_storage
 # Export chart to json : https://altair-viz.github.io/user_guide/saving_charts.html#json-format
 # Vega embed : https://github.com/vega/vega-embed#directly-in-the-browser
 
+# Live update of the dataset : https://vega.github.io/vega/docs/api/view/#data-and-scales
+
 # source = data.ohlc()
 
 
@@ -91,7 +93,7 @@ async def stock_graph(ticker: str, kind: StockValueKind = StockValueKind.OHLC):
     graph = get_graph(ticker, kind)
     tickers = opa_storage.get_all_tickers()
 
-    def to_ticker_url(ticker):
+    def to_ticker_url(ticker, kind=kind):
         return f"/json/{ticker}?kind={kind.value}"
 
     script = """
@@ -137,7 +139,7 @@ async def stock_graph(ticker: str, kind: StockValueKind = StockValueKind.OHLC):
 <div id="vis"></div>
 <label for="ticker-select">Choose a ticker:</label>
 
-<select name="pets" id="ticker-select">
+<select name="tickers" id="ticker-select">
   <option value="">--Please choose an option--</option>
   <option value="{to_ticker_url("AAPL")}">AAPL</option>
   <option value="{to_ticker_url("MSFT")}">MSFT</option>
