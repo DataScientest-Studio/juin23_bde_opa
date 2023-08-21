@@ -150,6 +150,58 @@ async def stock_graph(ticker: str, kind: StockValueKind = StockValueKind.OHLC):
         "kind": kind.value,
     }
 
+    lit_script = """
+import {html, css, LitElement} from 'https://cdn.jsdelivr.net/gh/lit/dist@2/core/lit-core.min.js';
+
+export class VegaGraph extends LitElement {
+    static properties = {
+      _kind: {type: String, state: true},
+      _ticker: {type: String, state: true},
+      _tickers: {state: true},
+      _kinds: {state: true},
+    };
+
+    constructor() {
+      super();
+      this._kind = "ohlc";
+      this._ticker = "AAPL";
+      this._tickers = ["AAPL", "MSFT", "META"];
+      this._kinds = ["ohlc", "simple"];
+    }
+
+    _changeTicker(e) {
+      this._ticker = e.target.value;
+    }
+
+    _changeKind(e) {
+      this._kind = e.target.value;
+    }
+
+    render() {
+      return html`
+      <p>current > ${this._ticker} <, > ${this._kind} <</p>
+
+      <label for="ticker-select">Choose a ticker:</label>
+
+      <select name="tickers" id="select-ticker" @change="${this._changeTicker}">
+        ${this._tickers.map((t) =>
+            html`<option value="${t}" ?selected=${this._ticker == t}>${t}</option>`
+        )}
+      </select>
+
+      <label for="kind-select">Choose a data kind:</label>
+
+      <select name="kinds" id="select-kind" @change="${this._changeKind}">
+        ${this._kinds.map((k) =>
+            html`<option value="${k}" ?selected=${this._kind == k}>${k}</option>`
+        )}
+      </select>
+      `;
+    }
+}
+customElements.define('vega-graph', VegaGraph);
+"""
+
     return HTMLResponse(
         content=f"""
 
@@ -163,7 +215,7 @@ async def stock_graph(ticker: str, kind: StockValueKind = StockValueKind.OHLC):
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@5/build/vega-embed.js"></script>
 </head>
 <body>
-
+<vega-graph/>
 <div id="vis"></div>
 <label for="ticker-select">Choose a ticker:</label>
 
@@ -183,6 +235,9 @@ async def stock_graph(ticker: str, kind: StockValueKind = StockValueKind.OHLC):
   {script}
 </script>
 <script type="text/javascript">
+</script>
+<script type="module">
+    {lit_script}
 </script>
 </body>
 </html>
