@@ -21,6 +21,10 @@ export class VegaGraph extends LitElement {
         this.replaceGraph();
     }
 
+    createRenderRoot() {
+        return this;
+    }
+
     dataUrl() {
         return `/json/${this._ticker}?kind=${this._kind}`
     }
