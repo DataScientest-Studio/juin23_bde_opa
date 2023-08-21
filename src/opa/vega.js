@@ -1,22 +1,21 @@
 import { html, css, LitElement } from 'https://cdn.jsdelivr.net/gh/lit/dist@2/core/lit-core.min.js';
 export class VegaGraph extends LitElement {
     static properties = {
+        tickers: { type: Array },
+        kinds: { type: Array },
         _kind: { type: String, state: true },
         _ticker: { type: String, state: true },
-        _tickers: { state: true },
-        _kinds: { state: true },
         _dataSetName: { state: true },
         _view: { state: true }
     };
 
     constructor() {
         super();
+        this.tickers = JSON.parse(this.getAttribute("tickers"));
+        this._ticker = this.tickers[0];
 
-        this._tickers = ["AAPL", "MSFT", "META"];
-        this._ticker = this._tickers[0];
-
-        this._kinds = ["ohlc", "simple"];
-        this._kind = this._kinds[0];
+        this.kinds = JSON.parse(this.getAttribute("kinds"));
+        this._kind = this.kinds[0];
 
         this.replaceGraph();
     }
@@ -66,7 +65,7 @@ export class VegaGraph extends LitElement {
       <label for="select-ticker">Choose a ticker:</label>
   
       <select name="tickers" id="select-ticker" @change="${this._changeTicker}">
-        ${this._tickers.map((t) =>
+        ${this.tickers.map((t) =>
             html`<option value="${t}" ?selected=${this._ticker == t}>${t}</option>`
         )}
       </select>
@@ -74,7 +73,7 @@ export class VegaGraph extends LitElement {
       <label for="select-kind">Choose a data kind:</label>
   
       <select name="kinds" id="select-kind" @change="${this._changeKind}">
-        ${this._kinds.map((k) =>
+        ${this.kinds.map((k) =>
             html`<option value="${k}" ?selected=${this._kind == k}>${k}</option>`
         )}
       </select>

@@ -78,6 +78,8 @@ def get_graph(ticker: str, kind: StockValueKind):
         return line
 
 
+import json
+
 app = FastAPI()
 
 
@@ -106,7 +108,7 @@ async def stock_graph(ticker: str, kind: StockValueKind = StockValueKind.OHLC):
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@5/build/vega-embed.js"></script>
 </head>
 <body>
-<vega-graph></vega-graph>
+<vega-graph tickers='{json.dumps(tickers)}' kinds='["ohlc", "simple"]'></vega-graph>
 
 <script type="module">
     {lit_script}
