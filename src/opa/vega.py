@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, ORJSONResponse
 
 import altair as alt
 from vega_datasets import data
@@ -79,24 +79,22 @@ def get_graph(ticker: str, kind: StockValueKind):
 
 
 app = FastAPI()
-from typing import Optional
 
 
-@app.get("/json/{ticker}")
+@app.get("/json/{ticker}", response_class=ORJSONResponse)
 async def stock_graph_json(ticker: str, kind: StockValueKind = StockValueKind.OHLC):
     graph = get_graph(ticker, kind)
     return graph.to_dict()
 
 
-@app.get("/{ticker}")
+@app.get("/{ticker}", response_class=HTMLResponse)
 async def stock_graph(ticker: str, kind: StockValueKind = StockValueKind.OHLC):
     graph = get_graph(ticker, kind)
     tickers = opa_storage.get_all_tickers()
 
     with open("src/opa/vega.js") as f:
         lit_script = f.read()
-    return HTMLResponse(
-        content=f"""
+    return f"""
 
 <!DOCTYPE html>
 <html>
@@ -116,4 +114,3 @@ async def stock_graph(ticker: str, kind: StockValueKind = StockValueKind.OHLC):
 </body>
 </html>
 """
-    )
