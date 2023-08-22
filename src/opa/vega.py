@@ -37,9 +37,9 @@ def get_graph(ticker: str, kind: StockValueKind):
         base = (
             alt.Chart(source)
             .encode(
-                alt.X("yearmonthdatehoursminutes(date):O")
-                .axis(format="%m/%d", labelAngle=-45)
-                .title("Date in 2009"),
+                alt.X("yearmonthdatehoursminutes(date):O").axis(
+                    format="%m/%d/%y", labelAngle=-45
+                ),
                 color=open_close_color,
             )
             .properties(width=1000, height=500)
@@ -53,7 +53,13 @@ def get_graph(ticker: str, kind: StockValueKind):
         bar = base.mark_bar().encode(
             alt.Y("open:Q"),
             alt.Y2("close:Q"),
-            tooltip=["yearmonthdatehoursminutes(date):T", "close:Q"],
+            tooltip=[
+                "yearmonthdatehoursminutes(date):Q",
+                "high:Q",
+                "close:Q",
+                "open:Q",
+                "low:Q",
+            ],
         )
 
         return rule + bar
