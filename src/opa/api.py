@@ -1,7 +1,9 @@
-from loguru import logger
-from fastapi import FastAPI
+from typing import Annotated
 
-from opa.core.financial_data import StockValue, StockValueKind
+from loguru import logger
+from fastapi import FastAPI, Query
+
+from opa.core.financial_data import StockValue, StockValueKind, CompanyInfo
 from opa.storage import opa_storage
 
 
@@ -18,6 +20,20 @@ async def root():
 @app.get("/tickers")
 async def all_tickers() -> list[str]:
     return opa_storage.get_all_tickers()
+
+
+@app.get("/company_infos/{ticker}")
+async def get_company_info(ticker: str) -> CompanyInfo:
+    """Get information from one specific company"""
+    return opa_storage.get_company_infos([ticker])[ticker]
+
+
+@app.get("/company_infos")
+async def get_company_infos(
+    tickers: Annotated[list[str], Query()]
+) -> dict[str, CompanyInfo]:
+    """Get information from a list of companies"""
+    return opa_storage.get_company_infos(tickers)
 
 
 @app.get("/{ticker}")
