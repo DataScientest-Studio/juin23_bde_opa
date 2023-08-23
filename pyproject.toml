@@ -80,6 +80,8 @@ src = "pyproject.toml"
 module = [
     "dash",
     "plotly",
+    "plotly.express",
+    "plotly.graph_objects",
     "dynaconf"
 ]
 ignore_missing_imports = true
