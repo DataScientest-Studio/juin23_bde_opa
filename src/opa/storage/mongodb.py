@@ -65,6 +65,7 @@ class MongoDbStorage(Storage):
                 )
             },
             "unique_index": date_ticker_interval_unique_index,
+            "index": {"ticker": 1},
         },
         CompanyInfo: {"name": "company_info", "unique_index": {"symbol": 1}},
     }
@@ -255,3 +256,8 @@ class MongoDbStorage(Storage):
             if unique_index:
                 # create_index is invariant and won't raise if the index already exists
                 self.db[name].create_index(unique_index.items(), unique=True)
+
+            index = coll.get("index")
+            if index:
+                # create_index is invariant and won't raise if the index already exists
+                self.db[name].create_index(index.items())
