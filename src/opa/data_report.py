@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+
 from loguru import logger
 from dash import Dash, html, dcc, callback, Output, Input, no_update
 import plotly.express as px
@@ -6,11 +8,37 @@ import pandas as pd
 
 from opa import settings
 from opa.core.financial_data import StockValueKind
-from opa.storage import opa_storage
+from opa.http_methods import get_json_data
+
+
+@dataclass
+class Api:
+    host: str
+    port: int
+
+    def get_stock_values(self, ticker: str, kind: StockValueKind) -> list[dict]:
+        return get_json_data(self.endpoint(ticker), params=dict(kind=kind.value))
+
+    def all_tickers(self) -> list[str]:
+        return get_json_data(self.endpoint("tickers"))
+
+    def get_company_info(self, ticker: str) -> dict:
+        return get_json_data(self.endpoint(f"company_infos/{ticker}"))
+
+    def get_company_infos(self, tickers: list[str]) -> list[dict]:
+        return get_json_data(
+            self.endpoint("company_infos"), params=[("tickers", t) for t in tickers]
+        )
+
+    def endpoint(self, path: str) -> str:
+        return f"http://{self.host}:{self.port}/{path}"
+
+
+api = Api(settings.api_host, settings.api_port)
 
 
 def get_dataframe(ticker: str, kind: StockValueKind) -> pd.DataFrame | None:
-    data = [h.model_dump() for h in opa_storage.get_values(ticker, kind)]
+    data = api.get_stock_values(ticker, kind)
     return pd.DataFrame(data) if data else None
 
 
@@ -104,21 +132,21 @@ def update_graph(ticker: str, type_str: str):
     Input("ticker-selector", "value"),
 )
 def refresh_tickers_list(n, current_ticker):
-    tickers = opa_storage.get_all_tickers()
-    infos = opa_storage.get_company_infos(tickers)
+    tickers = api.all_tickers()
+    infos = api.get_company_infos(tickers)
 
     options = [
         {
-            "value": i.symbol,
+            "value": i["symbol"],
             "label": html.Span(
                 [
-                    html.Img(src=i.image),
-                    html.Span(i.name),
+                    html.Img(src=i["image"]),
+                    html.Span(i["name"]),
                 ],
                 className="dropdown-option",
             ),
         }
-        for i in sorted(infos.values(), key=lambda i: i.name)
+        for i in sorted(infos.values(), key=lambda i: i["name"])
     ]
 
     new_selected_value = None
@@ -135,11 +163,11 @@ def refresh_tickers_list(n, current_ticker):
     Input("ticker-selector", "value"),
 )
 def update_company_info(ticker: str):
-    info = opa_storage.get_company_infos([ticker])[ticker]
+    info = api.get_company_info(ticker)
     return [
-        html.H2(info.name),
-        html.Img(src=info.image),
-        html.P(info.description),
+        html.H2(info["name"]),
+        html.Img(src=info["image"]),
+        html.P(info["description"]),
     ]
 
 

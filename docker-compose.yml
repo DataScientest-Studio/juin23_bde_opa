@@ -9,6 +9,7 @@ x-environment: &environment
   OPA_MONGO_PORT: 27017
   OPA_MONGO_DATABASE: ${OPA_MONGO_DATABASE:-stock_market-dev}
   OPA_API_HOST: internal_api
+  OPA_API_PORT: 8000
   OPA_DATA_REPORT_HOST: 0.0.0.0
   OPA_DATA_REPORT_PORT: 8050
 
