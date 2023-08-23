@@ -70,7 +70,7 @@ services:
       - 8050:8050
     environment: *environment
     depends_on:
-      - database
+      - internal_api
     secrets:
       - mongodb_username
       - mongodb_password
