@@ -16,8 +16,14 @@ class Api:
     host: str
     port: int
 
-    def get_stock_values(self, ticker: str, kind: StockValueKind) -> list[dict]:
-        return get_json_data(self.endpoint(ticker), params=dict(kind=kind.value))
+    def get_stock_values(
+        self, ticker: str, kind: StockValueKind, limit: int = None
+    ) -> list[dict]:
+        params = dict(kind=kind.value)
+        if limit is not None:
+            params |= dict(limit=limit)
+
+        return get_json_data(self.endpoint(ticker), params=params)
 
     def all_tickers(self) -> list[str]:
         return get_json_data(self.endpoint("tickers"))
@@ -38,7 +44,15 @@ api = Api(settings.api_host, settings.api_port)
 
 
 def get_dataframe(ticker: str, kind: StockValueKind) -> pd.DataFrame | None:
-    data = api.get_stock_values(ticker, kind)
+    if kind == StockValueKind.SIMPLE:
+        # In the current setting, Dash does not display anything if more than 1000
+        # values are displayed and the rangebreaks are enabled.
+        limit = 1000
+    elif kind == StockValueKind.OHLC:
+        # Load as much values as possible
+        limit = 0
+
+    data = api.get_stock_values(ticker, kind, limit)
     return pd.DataFrame(data) if data else None
 
 

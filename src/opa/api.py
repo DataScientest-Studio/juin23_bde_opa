@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Optional
 
 from loguru import logger
 from fastapi import FastAPI, Query
@@ -37,5 +37,11 @@ async def get_company_infos(
 
 
 @app.get("/{ticker}")
-async def get_stock_values(ticker: str, kind: StockValueKind) -> list[StockValue]:
-    return opa_storage.get_values(ticker, kind)
+async def get_stock_values(
+    ticker: str, kind: StockValueKind, limit: Optional[int] = None
+) -> list[StockValue]:
+    kwargs = {}
+    if limit is not None:
+        kwargs |= dict(limit=limit)
+
+    return opa_storage.get_values(ticker, kind, **kwargs)
