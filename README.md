@@ -2,95 +2,90 @@
 
 [![unit tests](https://github.com/DataScientest-Studio/juin23_bde_opa/actions/workflows/tests_unit.yml/badge.svg)](https://github.com/DataScientest-Studio/juin23_bde_opa/actions/workflows/tests_unit.yml) [![formatting](https://github.com/DataScientest-Studio/juin23_bde_opa/actions/workflows/format.yml/badge.svg)](https://github.com/DataScientest-Studio/juin23_bde_opa/actions/workflows/format.yml)
 
-## Run with Docker Compose
+## Running the project
 
-Once the secrets are installed (see next paragraph), services can be started using a simple : `docker compose up -d`.
+1. Use helper script `./secrets.sh` to fill the `app_data/secrets` with the application's secrets. By the end it should have the following structure :
 
-The dashboard will be available on http://localhost:8050
+    ```
+    app_data/secrets
+    ├── fmp_cloud_api_key
+    ├── mongodb_root_username
+    ├── mongodb_root_password
+    ├── mongodb_username
+    └── mongodb_password
+    ```
 
-The API documentation will be available on http://localhost:8000/docs
+1. Run `docker compose up -d`
 
-## Secrets
+On a cold start (especially if the database needs to be created), some services might timeout. In this case, simply executing step 2 again should solve the issue.
 
-The app secrets are kept within a `app_data/secrets` directory whose content is not versioned for obvious reasons.
+You will get :
 
-It should contain the following files :
-
-```
-app_data/secrets
-├── fmp_cloud_api_key
-├── mongodb_root_username
-├── mongodb_root_password
-├── mongodb_username
-└── mongodb_password
-```
-
-Strong passwords can be generated using e.g. `openssl rand -base64 20`
-
-## Environment variables
-
-`OPA_MONGO_DATABASE` can be used to tweak the name of the MongoDB database to use (defaults to "stock_market-dev").
+* A stock values dashboard on : http://localhost:8050
+* A JSON API to retrieve stock values on : http://localhost:8000/ (with docs on : http://localhost:8000/docs)
+* A MongoDB server accessible via mongodb://{mongodb_username}:{mongodb_password}@localhost:27117
 
 ## Development commands
 
-### Run locally
+For convenience during development, a commodity script `run_local.sh` can execute the following parts of the application directly on the local machine : 
 
-For development convenience, some parts of the application can be run on the local machine.
+* `financial_data_reader` (the part in charge of reading the external API)
+* `data_report` (the dashboard)
+* `internal_api` (the local API)
 
-#### Using pip
+It can also execute those common tasks :
 
-For this, please run the following steps in your favorite shell :
+* `format` (to format the code)
+* `static_analysis` (for type checking with mypy)
+* `shell` (a IPython shell to run some parts of the application)
+* `mongosh` (to run a shell on the database)
+
+It can also run tests (see next paragraph).
+
+From the root directory of the project, simply run `./run_local.sh` for help.
+
+Please not that it relies on the [pdm](https://pdm.fming.dev/) Python package and dependency manager for execution.
+
+### Local installation using `pdm`
+
+The `opa` package can simply be installed using `pdm install`
+
+### Local installation within a virtual environment
+
+Please run the following steps in your favorite shell :
 
 ```
 python -m venv ${LOCAL_VENV}
 source ${LOCAL_VENV}/bin/activate
 
 pip install --upgrade pip
-pip install .[storage,data_report,financial_reader,api]
+pip install -e .[storage,data_report,financial_reader,api]
 ```
 
-The financial data reader can be run with `python -m opa.financial_data_reader`.
+Local commands can now be executed. Please check the source of `./run_local.sh` to see the various commands available (and copy the commands as-is by deleting `pdm run`).
 
-The dashboard can be run with `python -m opa.data_report`.
+## Running tests
 
-#### Using pdm
-
-The `opa` package can be installed with `pdm install`.
-
-The financial data reader can be run with `pdm run python -m opa.financial_data_reader`.
-
-The dashboard can be run with `pdm run python -m opa.data_report`.
-
-### Running tests
-
-Several types of tests can be run either locally or within a dedicated Docker container :
+Several types of tests have been implemented (not to a 100% test coverage) :
 
 1. functional (run against a live version of the application)
 1. integration (run against a live test database)
 1. unit (run in isolation with mock components)
 
-They can be run either via docker-compose : `docker compose up --profile test` or locally :
+### Via Docker containers
 
-* `pdm run pytest tests/functional`
-* `pdm run pytest tests/integration`
-* `pdm run pytest tests/unit`
+Simply run `docker compose up --profile test`
 
-### Miscellaneous
+### On the local machine
 
-#### Interactive shell
+Tests can be run using `run_local.sh` script :
 
-An interactive shell can be started with `pdm run python -m opa.shell`
+* `./run_local.sh test_unit`
+* `./run_local.sh test_integration`
+* `./run_local.sh test_functional`
 
-#### Run commands on the database
+## Miscellaneous
 
-MongoDB shell can be accessed via : `docker compose run -it --rm database mongosh mongodb://username@password:database`
+### Force rebuild of docker images
 
-#### Static type analysis
-
-... can be run with `mypy opa`.
-
-#### Force rebuild of docker images
-
-By default the docker compose doesn't rebuild the images even though the code may have changed.
-
-`docker compose up --force-recreate --build`
+The docker compose doesn't rebuild the images even though the code may have changed. This command can be a lifesaver in situations that are unexpected : `docker compose up --force-recreate --build`
