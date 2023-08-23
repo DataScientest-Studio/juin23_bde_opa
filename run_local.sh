@@ -59,6 +59,10 @@ format)
     pdm run black src tests
     ;;
 
+make_report)
+    asciidoctor-web-pdf docs/opa.adoc
+    ;;
+
 test_unit)
     pdm run pytest tests/unit
     ;;

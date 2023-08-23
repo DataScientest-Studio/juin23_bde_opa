@@ -39,6 +39,7 @@ It can also execute those common tasks :
 * `static_analysis` (for type checking with mypy)
 * `shell` (a IPython shell to run some parts of the application)
 * `mongosh` (to run a shell on the database)
+* `make_report` (to generate PDF/html reports)
 
 It can also run tests (see next paragraph).
 
