@@ -19,7 +19,7 @@ We have seen that the financial data we aim to retrieve is always shaped basical
 [,python]
 // This should display the definition of StockValue class
 ----
-include::../src/opa/core/financial_data.py[lines=14..21]
+include::../src/opa/core/financial_data.py[lines=19..27]
 ----
 
 Though they is no numerical ID, short strings named "tickers" or "symbols" in stock market jargon are used to identify a given stock on a stock marketfootnote:[https://en.wikipedia.org/wiki/Ticker_symbol] ; they are unique by design and can therefore be safely used to identify a given company.
@@ -63,7 +63,7 @@ Should we change our mind regarding the database choice, we'll keep some flexibi
 [,python]
 // This should display the definition of Storage class
 ----
-include::../src/opa/core/storage.py[lines=6..27]
+include::../src/opa/core/storage.py[lines=11..36]
 ----
 
 The layout of the MongoDB database itself will be setup using the approach recommended of the MongoDB Docker image's pagefootnote:["Initializing a fresh instance" paragraph on https://hub.docker.com/_/mongo], via a `mongo-init.js` file executed on the first startup.
@@ -74,24 +74,41 @@ Each of these collections has a unique index to ensure that no data is duplicate
 
 [#definition-of-unique-indexes]
 .Definition of unique indexes
-[,js]
-// This should display the calls do db.collection.createIndex(...)
+[,python]
 ----
-include::../mongo-init.js[lines=60..61]
+db["stock_values"].create_index({"date": 1, "ticker": 1, "interval": 1}, unique=True)
 ----
 
 We also leverage MongoDB's schema validation feature to ensure that the inserted data always matches a well-defined set of rules defined from the data format exposed in <<stock-value-record-fields>>. Those rules include ensuring that some fields are ALWAYS present (`ticker`, `date` and `close` values) ; and that fields should have the expected type (mostly `double`, with some `date` or `int`).
 
 [#definition-of-constraints]
 .Definition of constraints
-[,js]
-// This should display the json-schema used for validation of historical values
+[,python]
 ----
-include::../mongo-init.js[lines=17..27]
-                ...
-include::../mongo-init.js[lines=32..35]
-                ...
-include::../mongo-init.js[lines=48..55]
+db.create_collection(
+  "stock_values",
+  {
+    "validator": {
+      "$jsonSchema": {
+        "bsonType": "object",
+        "title": "Stock values validation",
+        "required": ["_id", "date", "close", "ticker", "interval"],
+        "properties": {
+          "_id": {"bsonType": "objectId", "description": "'_id' must be a objectId"},
+          "date": {"bsonType": "date", "description": "'date' must be a date"},
+          "ticker": {"bsonType": "string", "description": "'ticker' must be a string"},
+          "interval": {"bsonType": "int", "description": "'interval' must be a int"},
+          "close": {"bsonType": "double", "description": "'close' must be a double"},
+          "open": {"bsonType": "double", "description": "'open' must be a double"},
+          "low": {"bsonType": "double", "description": "'low' must be a double"},
+          "high": {"bsonType": "double", "description": "'high' must be a double"},
+          "volume": {"bsonType": "int","description": "'volume' must be a int"},
+        },
+        "additionalProperties": False,
+      }
+    }
+  },
+)
 ----
 
 ////
