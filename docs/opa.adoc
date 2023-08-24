@@ -22,3 +22,7 @@ include::data_report.adoc[]
 <<<
 
 include::http_api.adoc[]
+
+<<<
+
+include::deploying.adoc[]
