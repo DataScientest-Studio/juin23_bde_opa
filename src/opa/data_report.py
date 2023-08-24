@@ -4,6 +4,7 @@ from loguru import logger
 from dash import Dash, html, dcc, callback, Output, Input, no_update
 import plotly.express as px
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 import pandas as pd
 
 from opa import settings
@@ -117,17 +118,33 @@ def update_graph(ticker: str, type_str: str):
             figure = px.line(df, x="date", y="close")
 
         case StockValueKind.OHLC:
-            figure = go.Figure(
-                go.Ohlc(
+            figure = make_subplots(specs=[[{"secondary_y": True}]])
+            figure.add_trace(
+                go.Candlestick(
                     x=df.date,
                     open=df["open"],
                     high=df["high"],
                     low=df["low"],
                     close=df["close"],
+                    name="Stock value",
                 )
             )
-            # Range slider is enabled by default for OHLC graphs even if the global
-            # setting is set to False (see https://plotly.com/python/ohlc-charts/#ohlc-chart-without-rangeslider)
+
+            figure.add_trace(
+                go.Bar(
+                    x=df["date"],
+                    y=df["volume"],
+                    name="Volume",
+                    marker_opacity=0.3,
+                    marker_color=df.apply(
+                        lambda v: "green" if v.close >= v.open else "red", axis=1
+                    ),
+                ),
+                secondary_y=True,
+            )
+
+            # Range slider is enabled by default for OHLC/Candlestick graphs even if the global
+            # setting is set to False (see https://plotly.com/python/candlestick-charts/#candlestick-without-rangeslider)
             figure.update(layout_xaxis_rangeslider_visible=False)
 
     return (
