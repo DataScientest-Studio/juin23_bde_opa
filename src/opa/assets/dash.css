@@ -1,14 +1,18 @@
 body {
     background-color: #ddd;
+    height: 95vh;
+    overflow-y: hidden;
 }
 
 /* Layout of the whole page */
 main {
     display: grid;
     grid-template-areas: 
-    "tickers company-info"
-    "graph graph";
-    grid-template-columns: 1fr 2fr;
+    "tickers company-description company-image"
+    "graph graph graph";
+    grid-template-columns: 1fr 1fr auto;
+    column-gap: 2em;
+    row-gap: 1em;
 }
 
 #ticker-selector {
@@ -26,11 +30,17 @@ main {
     align-self: center;
 }
 
-#company-info {
-    grid-area: company-info;
+#company-image {
+    grid-area: company-image;
+    max-height: 20vh;
+}
+
+#company-description {
+    grid-area: company-description;
     max-height: 20vh;
     overflow-y: auto;
-    background-color: #ddd;
+    margin: 0;
+    text-align: justify;
 }
 
 #stock-evolution-graph {

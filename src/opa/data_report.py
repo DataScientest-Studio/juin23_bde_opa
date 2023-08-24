@@ -197,16 +197,13 @@ def refresh_tickers_list(n, current_ticker):
 
 
 @callback(
-    Output("company-info", "children"),
+    Output("company-image", "src"),
+    Output("company-description", "children"),
     Input("ticker-selector", "value"),
 )
 def update_company_info(ticker: str):
     info = api.get_company_info(ticker)
-    return [
-        html.H2(info["name"]),
-        html.Img(src=info["image"]),
-        html.P(info["description"]),
-    ]
+    return info["image"], info["description"]
 
 
 if __name__ == "__main__":
@@ -216,7 +213,8 @@ if __name__ == "__main__":
     dash_app.layout = html.Main(
         [
             dcc.Dropdown([], id="ticker-selector"),
-            html.Div(id="company-info"),
+            html.Img(id="company-image"),
+            html.P(id="company-description"),
             html.Button("Refresh tickers list", id="tickers-refresh"),
             dcc.Dropdown(
                 [t.value for t in StockValueKind],
