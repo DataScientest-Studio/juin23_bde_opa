@@ -16,6 +16,26 @@ class FinancialDataReader:
     provider: StockMarketProvider
     storage: Storage
 
+    def run(self, tickers):
+        self.import_company_info(tickers)
+        self.import_stock_values(
+            tickers,
+            StockValueKind.SIMPLE,
+            StockValueSerieGranularity.COARSE,
+        )
+        self.import_stock_values(
+            tickers,
+            StockValueKind.OHLC,
+            StockValueSerieGranularity.FINE,
+        )
+        # Coarse-grained values are imported AFTER fine-grained values so that
+        # fine-grained values are always stored in priority.
+        self.import_stock_values(
+            tickers,
+            StockValueKind.OHLC,
+            StockValueSerieGranularity.COARSE,
+        )
+
     def import_company_info(self, tickers: list[str]):
         infos = self.provider.get_company_info(tickers)
         return self.storage.insert_company_infos(infos)
