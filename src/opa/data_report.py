@@ -60,15 +60,22 @@ def get_dataframe(ticker: str, kind: StockValueKind) -> pd.DataFrame | None:
 def add_range_selectors(figure, hour_break=False):
     breaks = [dict(bounds=["sat", "mon"])]
     if hour_break:
-        # Seems like the first bound is exclusive and the
-        # second one is inclusive, so we use 16.01 in order to display the stock
-        # value at market close (16:00). It's not bulletproof though because
-        # with that setting, the values at 16h00 and at 9h30 are almost superposed
-        # on the X-axis of the graph.
+        # The behaviour of this setting is really not well documented
+        # (see https://plotly.com/python/time-series/#hiding-nonbusiness-hours
+        # or https://plotly.com/python/reference/layout/xaxis/#layout-xaxis-rangebreaks)
         #
-        # (this behaviour does not seem to be documented :
-        # https://plotly.com/python/reference/layout/xaxis/#layout-xaxis-rangebreaks)
-        breaks += [dict(bounds=[16.01, 9.5], pattern="hour")]
+        # The natural setting to use seems to be [16, 9.5], but.. Using that setting
+        # hides the value produced at 16:00 every day (while the value produced at
+        # 9:30 is properly displayed) ; it seems like the first bound is exclusive, and
+        # the second is inclusive.
+        #
+        # Something like `[16.5, 9.5]`` produces a visible gap between the last value of
+        # a day, and the first value of the next day. `[16.01, 9.5]`` displays both values
+        # but they are almost superposed.
+        #
+        # Even though completely unlogical, `[16.01, 9.25]` kinda does the trick, and
+        # displays both values without a noticeable gap in-between them.
+        breaks += [dict(bounds=[16.01, 9.25], pattern="hour")]
 
     return figure.update_xaxes(
         # Having the range slider visible makes it impossible to zoom along the y-axis,
