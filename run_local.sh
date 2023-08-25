@@ -63,6 +63,10 @@ make_report)
     asciidoctor-web-pdf docs/opa.adoc
     ;;
 
+make_report_css)
+    asciidoctor-web-pdf docs/opa.adoc -a stylesheet="+./opa.css"
+    ;;
+
 test_unit)
     pdm run pytest tests/unit
     ;;
