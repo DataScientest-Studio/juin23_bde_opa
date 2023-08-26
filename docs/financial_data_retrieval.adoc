@@ -200,7 +200,7 @@ Below are 4 examples of data mainly retrieved from FMP Cloud, retaining only som
 ]
 ----
 
-[#streaming-alpha]
+[#streaming-alphavantage]
 .Alphavantage streaming datafootnote:[Retrieved from: {url_alphavantage_streaming}]
 [,json]
 ----
