@@ -5,9 +5,7 @@
 
 <<<
 
-== Context
-
-The project's goals are detailed with a Google Documentfootnote:[https://docs.google.com/document/d/1UEL9wexhETO2MXpxvIPwVRE4WLfLOOi3YF43Zn8L5sk]
+include::scope.adoc[]
 
 <<<
 

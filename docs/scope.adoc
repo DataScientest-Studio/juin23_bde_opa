@@ -1,0 +1,13 @@
+== Project scope
+
+This project aims at setting up a full data pipeline that covers the following aspects :
+
+* retrieving data from an external API
+* storing that data locally
+* ensure it is accessible to potential internal consumers
+* consume that data to train a Machine Learning model or display it in a meaningful way
+* package and containerise all the code produced to make it reusable and extensible
+
+The data used will be stock market values from various companies.
+
+The project's expected milestones and goals are detailed within a Google Documentfootnote:[https://docs.google.com/document/d/1UEL9wexhETO2MXpxvIPwVRE4WLfLOOi3YF43Zn8L5sk]
