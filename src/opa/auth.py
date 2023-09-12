@@ -2,27 +2,49 @@ import secrets
 import json
 import base64
 from hashlib import scrypt
-
-
-def encrypt_pass(password):
-    c = scrypt(password, n=2, r=3, p=5, salt=b"salt")
-    return base64.b64encode(c).decode("ascii")
+from loguru import logger
 
 
 creds_file = "app_data/secrets/creds.json"
 
 
-def read_creds():
+def encrypt_pass(password: bytes):
+    c = scrypt(password, n=2**14, r=8, p=1, salt=b"salt")
+    return base64.b64encode(c).decode("ascii")
+
+
+def read_credentials() -> dict:
     with open(creds_file) as f:
         return json.load(f)
 
 
-def auth_user(username, password):
-    all_users = {"bob": encrypt_pass(b"pouet")}
+def write_credentials(credentials: dict) -> None:
     with open(creds_file, "w") as f:
-        json.dump(all_users, f)
+        json.dump(credentials, f, indent=4)
 
-    expected_password = all_users.get(username)
+
+def add_user(username: str, password: str) -> bool:
+    credentials = read_credentials()
+    if credentials.get(username):
+        logger.error("User {} already exists", username)
+        return False
+    else:
+        credentials[username] = encrypt_pass(password.encode())
+        write_credentials(credentials)
+        logger.info("User {} successfully added", username)
+        return True
+
+
+def remove_user(username: str):
+    credentials = read_credentials()
+    del credentials[username]
+    write_credentials(credentials)
+
+
+def auth_user(username, password):
+    credentials = read_credentials()
+
+    expected_password = credentials.get(username)
     if expected_password is None:
         return False
     else:
