@@ -5,7 +5,7 @@ from hashlib import scrypt
 from typing import Annotated, Optional
 
 from loguru import logger
-from fastapi import FastAPI, Query, Depends
+from fastapi import FastAPI, Query, Depends, HTTPException
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
 from opa.core.financial_data import StockValue, StockValueKind, CompanyInfo
@@ -31,23 +31,28 @@ def read_creds():
         return json.load(f)
 
 
-def check_credentials(credentials: HTTPBasicCredentials):
+def auth_user(username, password):
     all_users = {"bob": encrypt_pass(b"pouet")}
     with open(creds_file, "w") as f:
         json.dump(all_users, f)
-    expected_password = all_users.get(credentials.username)
+
+    expected_password = all_users.get(username)
     if expected_password:
-        if secrets.compare_digest(
-            expected_password, encrypt_pass(credentials.password.encode())
-        ):
+        if secrets.compare_digest(expected_password, encrypt_pass(password.encode())):
             return True
+
     print("Bad credentials")
     return False
 
 
+def check_user(credentials: HTTPBasicCredentials):
+    if not auth_user(credentials.username, credentials.password):
+        raise HTTPException(401, "Bad credentials")
+
+
 @app.get("/")
 async def root(credentials: Annotated[HTTPBasicCredentials, Depends(security)]):
-    print("creds:", check_credentials(credentials))
+    check_user(credentials)
     return {"message": "Hello World"}
 
 
