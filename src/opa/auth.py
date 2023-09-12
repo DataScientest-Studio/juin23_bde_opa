@@ -38,4 +38,4 @@ class JsonCredentialsStorage(CredentialsStorage):
             json.dump(str_credentials, f, indent=4)
 
 
-auth = Authenticator(JsonCredentialsStorage("app_data/secrets/creds.json"))
+opa_auth = Authenticator(JsonCredentialsStorage("app_data/secrets/creds.json"))

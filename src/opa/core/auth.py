@@ -36,10 +36,11 @@ class Authenticator:
             logger.info("User {} successfully added", username)
             return True
 
-    def remove_user(self, username: str):
+    def remove_user(self, username: str) -> None:
         self.credentials_storage.remove(username)
+        logger.info("User {} successfully removed", username)
 
-    def auth_user(self, username, password):
+    def auth_user(self, username, password) -> bool:
         expected_password = self.credentials_storage.read_hashed_password(username)
         if expected_password is None:
             return False
