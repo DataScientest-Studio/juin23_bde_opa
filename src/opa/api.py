@@ -6,7 +6,7 @@ from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
 from opa.core.financial_data import StockValue, StockValueKind, CompanyInfo
 from opa.storage import opa_storage
-from opa.auth import auth
+from opa.auth import opa_auth
 
 
 logger.info("API app starting up...")
@@ -16,7 +16,7 @@ security = HTTPBasic()
 
 
 def check_user(credentials: HTTPBasicCredentials):
-    if not auth.auth_user(credentials.username, credentials.password):
+    if not opa_auth.auth_user(credentials.username, credentials.password):
         raise HTTPException(401, "Bad credentials")
 
 
