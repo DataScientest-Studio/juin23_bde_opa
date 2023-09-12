@@ -1,6 +1,8 @@
+import sys
 import json
 import base64
 from pathlib import Path
+from getpass import getpass
 
 from opa.core.auth import Authenticator, CredentialsStorage
 from opa.config import settings
@@ -44,3 +46,20 @@ class JsonCredentialsStorage(CredentialsStorage):
 
 
 opa_auth = Authenticator(JsonCredentialsStorage())
+
+
+# The file is made executable so that users can be added/removed using a (very basic) CLI
+if __name__ == "__main__":
+    try:
+        if sys.argv[1] == "add":
+            username = input("username to add? ")
+            password = getpass("password of the new user? ")
+            opa_auth.add_user(username, password)
+
+        elif sys.argv[1] == "remove":
+            username = input("username to remove? ")
+            opa_auth.remove_user(username)
+
+    except IndexError:
+        print("This script must be called with either `add` or `remove` argument")
+        exit(1)
