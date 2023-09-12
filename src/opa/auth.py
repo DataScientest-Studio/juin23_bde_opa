@@ -12,14 +12,27 @@ def encrypt_pass(password: bytes):
 class Authenticator:
     creds_file = "app_data/secrets/creds.json"
 
-    def read_credentials(self) -> dict:
+    def read_hashed_password(self, username: str) -> bytes | None:
+        return self._read_credentials_file().get(username)
+
+    def write_credentials(self, username: str, password: str):
+        credentials = self._read_credentials_file()
+        credentials[username] = encrypt_pass(password.encode())
+        self._write_credentials_file(credentials)
+
+    def remove_credentials(self, username: str):
+        credentials = self._read_credentials_file()
+        del credentials[username]
+        self._write_credentials_file(credentials)
+
+    def _read_credentials_file(self) -> dict:
         with open(self.creds_file) as f:
             return {
                 username: base64.b64decode(hash.encode("ascii"))
                 for username, hash in json.load(f).items()
             }
 
-    def write_credentials(self, credentials: dict) -> None:
+    def _write_credentials_file(self, credentials: dict) -> None:
         str_credentials = {
             username: base64.b64encode(c).decode("ascii")
             for username, c in credentials.items()
@@ -29,25 +42,19 @@ class Authenticator:
             json.dump(str_credentials, f, indent=4)
 
     def add_user(self, username: str, password: str) -> bool:
-        credentials = self.read_credentials()
-        if credentials.get(username):
+        if self.read_hashed_password(username):
             logger.error("User {} already exists", username)
             return False
         else:
-            credentials[username] = encrypt_pass(password.encode())
-            self.write_credentials(credentials)
+            self.write_credentials(username, password)
             logger.info("User {} successfully added", username)
             return True
 
     def remove_user(self, username: str):
-        credentials = self.read_credentials()
-        del credentials[username]
-        self.write_credentials(credentials)
+        self.remove_credentials(username)
 
     def auth_user(self, username, password):
-        credentials = self.read_credentials()
-
-        expected_password = credentials.get(username)
+        expected_password = self.read_hashed_password(username)
         if expected_password is None:
             return False
         else:
