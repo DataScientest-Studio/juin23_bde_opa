@@ -23,9 +23,9 @@ def auth_user(username, password):
         json.dump(all_users, f)
 
     expected_password = all_users.get(username)
-    if expected_password:
-        if secrets.compare_digest(expected_password, encrypt_pass(password.encode())):
-            return True
-
-    print("Bad credentials")
-    return False
+    if expected_password is None:
+        return False
+    else:
+        return secrets.compare_digest(
+            expected_password, encrypt_pass(password.encode())
+        )
