@@ -9,18 +9,25 @@ creds_file = "app_data/secrets/creds.json"
 
 
 def encrypt_pass(password: bytes):
-    c = scrypt(password, n=2**14, r=8, p=1, salt=b"salt")
-    return base64.b64encode(c).decode("ascii")
+    return scrypt(password, n=2**14, r=8, p=1, salt=b"salt")
 
 
 def read_credentials() -> dict:
     with open(creds_file) as f:
-        return json.load(f)
+        return {
+            username: base64.b64decode(hash.encode("ascii"))
+            for username, hash in json.load(f).items()
+        }
 
 
 def write_credentials(credentials: dict) -> None:
+    str_credentials = {
+        username: base64.b64encode(c).decode("ascii")
+        for username, c in credentials.items()
+    }
+
     with open(creds_file, "w") as f:
-        json.dump(credentials, f, indent=4)
+        json.dump(str_credentials, f, indent=4)
 
 
 def add_user(username: str, password: str) -> bool:
