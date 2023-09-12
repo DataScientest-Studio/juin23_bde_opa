@@ -1,12 +1,14 @@
 import json
 import base64
+from pathlib import Path
 
 from opa.core.auth import Authenticator, CredentialsStorage
+from opa.config import settings
 
 
 class JsonCredentialsStorage(CredentialsStorage):
-    def __init__(self, file) -> None:
-        self.creds_file = file
+    def __init__(self) -> None:
+        self.storage_path = Path(settings.secrets_dir) / "credentials.json"
 
     def read_hashed_password(self, username: str) -> bytes | None:
         return self._read_credentials_file().get(username)
@@ -22,11 +24,14 @@ class JsonCredentialsStorage(CredentialsStorage):
         self._write_credentials_file(credentials)
 
     def _read_credentials_file(self) -> dict:
-        with open(self.creds_file) as f:
-            return {
-                username: base64.b64decode(hash.encode("ascii"))
-                for username, hash in json.load(f).items()
-            }
+        try:
+            with open(self.storage_path) as f:
+                return {
+                    username: base64.b64decode(hash.encode("ascii"))
+                    for username, hash in json.load(f).items()
+                }
+        except FileNotFoundError:
+            return {}
 
     def _write_credentials_file(self, credentials: dict) -> None:
         str_credentials = {
@@ -34,8 +39,8 @@ class JsonCredentialsStorage(CredentialsStorage):
             for username, c in credentials.items()
         }
 
-        with open(self.creds_file, "w") as f:
+        with open(self.storage_path, "w") as f:
             json.dump(str_credentials, f, indent=4)
 
 
-opa_auth = Authenticator(JsonCredentialsStorage("app_data/secrets/creds.json"))
+opa_auth = Authenticator(JsonCredentialsStorage())

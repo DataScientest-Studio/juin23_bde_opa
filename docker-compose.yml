@@ -91,6 +91,7 @@ services:
     secrets:
       - mongodb_username
       - mongodb_password
+      - credentials.json
 
   test_unit:
     image: opa/test_unit
@@ -152,6 +153,8 @@ secrets:
     file: app_data/secrets/mongodb_username
   mongodb_password:
     file: app_data/secrets/mongodb_password
+  credentials.json:
+    file: app_data/secrets/credentials.json
 
 volumes:
   db-data:
