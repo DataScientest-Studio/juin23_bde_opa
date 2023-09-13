@@ -1,6 +1,6 @@
 [project]
 name = "opa"
-version = "0.2.0"
+version = "0.3.0"
 description = ""
 authors = [
     {name = "jherve", email = "julien.jev.herve@gmail.com"},
@@ -58,7 +58,7 @@ testpaths = "tests"
 github_url = "https://github.com/DataScientest-Studio/juin23_bde_opa"
 
 [tool.tbump.version]
-current = "0.2.0"
+current = "0.3.0"
 regex = '''
   (?P<major>\d+)
   \.
