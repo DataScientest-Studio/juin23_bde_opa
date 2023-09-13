@@ -24,21 +24,20 @@ class Api:
         if limit is not None:
             params |= dict(limit=limit)
 
-        return get_json_data(self.endpoint(ticker), params=params)
+        return self._do_request(ticker, params)
 
     def all_tickers(self) -> list[str]:
-        return get_json_data(self.endpoint("tickers"))
+        return self._do_request("tickers")
 
     def get_company_info(self, ticker: str) -> dict:
-        return get_json_data(self.endpoint(f"company_infos/{ticker}"))
+        return self._do_request(f"company_infos/{ticker}")
 
     def get_company_infos(self, tickers: list[str]) -> list[dict]:
-        return get_json_data(
-            self.endpoint("company_infos"), params=[("tickers", t) for t in tickers]
-        )
+        return self._do_request("company_infos", [("tickers", t) for t in tickers])
 
-    def endpoint(self, path: str) -> str:
-        return f"http://{self.host}:{self.port}/{path}"
+    def _do_request(self, path: str, params: list | dict = []):
+        endpoint = f"http://{self.host}:{self.port}/{path}"
+        return get_json_data(endpoint, params=params)
 
 
 api = Api(settings.api_host, settings.api_port)
