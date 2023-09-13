@@ -72,8 +72,6 @@ services:
     depends_on:
       - internal_api
     secrets:
-      - mongodb_username
-      - mongodb_password
       - data_report_api_username
       - data_report_api_password
 
