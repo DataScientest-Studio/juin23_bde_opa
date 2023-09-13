@@ -5,18 +5,18 @@ source ./secrets.sh
 usage() {
     echo "Command-line helper to run the most common commands in the local environment"
     echo
-    echo "Usage: $0 <command>"
+    echo "Usage: $0 <command> [commands_specific_args]"
     echo "<command> is either a service, a utility, or a test command"
     echo
     echo "  * Services  : internal_api | data_report | financial_data_reader"
-    echo "  * Utilities : shell | mongosh | static_analysis | format | add_user | remove_user"
+    echo "  * Utilities : shell | mongosh | static_analysis | format | add_user | remove_user | bump_version [version_number]"
     echo "  * Tests     : test_unit | test_integration | test_functional"
     echo
     echo "For example : '${0} static_analysis'"
 }
 
 # Check the number of arguments
-if [ $# -ne 1 ]; then
+if [ $# -lt 1 ]; then
     usage
     exit 1
 fi
@@ -57,6 +57,15 @@ static_analysis)
 
 format)
     pdm run black src tests
+    ;;
+
+bump_version)
+    if [ $# -ne 1 ]; then
+        echo "A version number should be provided"
+        exit 1
+    fi
+
+    pdm run tbump $1
     ;;
 
 add_user)
