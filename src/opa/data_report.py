@@ -16,6 +16,8 @@ from opa.http_methods import get_json_data
 class Api:
     host: str
     port: int
+    username: str
+    password: str
 
     def get_stock_values(
         self, ticker: str, kind: StockValueKind, limit: int = None
@@ -24,24 +26,30 @@ class Api:
         if limit is not None:
             params |= dict(limit=limit)
 
-        return get_json_data(self.endpoint(ticker), params=params)
+        return self._do_request(ticker, params)
 
     def all_tickers(self) -> list[str]:
-        return get_json_data(self.endpoint("tickers"))
+        return self._do_request("tickers")
 
     def get_company_info(self, ticker: str) -> dict:
-        return get_json_data(self.endpoint(f"company_infos/{ticker}"))
+        return self._do_request(f"company_infos/{ticker}")
 
     def get_company_infos(self, tickers: list[str]) -> list[dict]:
+        return self._do_request("company_infos", [("tickers", t) for t in tickers])
+
+    def _do_request(self, path: str, params: list | dict = []):
+        endpoint = f"http://{self.host}:{self.port}/{path}"
         return get_json_data(
-            self.endpoint("company_infos"), params=[("tickers", t) for t in tickers]
+            endpoint, params=params, auth=(self.username, self.password)
         )
 
-    def endpoint(self, path: str) -> str:
-        return f"http://{self.host}:{self.port}/{path}"
 
-
-api = Api(settings.api_host, settings.api_port)
+api = Api(
+    settings.api_host,
+    settings.api_port,
+    settings.secrets.data_report_api_username,
+    settings.secrets.data_report_api_password,
+)
 
 
 def get_dataframe(ticker: str, kind: StockValueKind) -> pd.DataFrame | None:

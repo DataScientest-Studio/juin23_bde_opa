@@ -1,36 +1,46 @@
 from typing import Annotated, Optional
 
 from loguru import logger
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, Depends, HTTPException
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
 from opa.core.financial_data import StockValue, StockValueKind, CompanyInfo
 from opa.storage import opa_storage
+from opa.auth import opa_auth
 
 
 logger.info("API app starting up...")
 
 app = FastAPI()
+security = HTTPBasic()
+CredentialsType = Annotated[HTTPBasicCredentials, Depends(security)]
+
+
+def check_user(credentials: HTTPBasicCredentials):
+    if not opa_auth.auth_user(credentials.username, credentials.password):
+        raise HTTPException(401, "Bad credentials")
 
 
 @app.get("/")
-async def root():
+async def root(credentials: CredentialsType):
+    check_user(credentials)
     return {"message": "Hello World"}
 
 
 @app.get("/tickers")
-async def all_tickers() -> list[str]:
+async def all_tickers(credentials: CredentialsType) -> list[str]:
     return opa_storage.get_all_tickers()
 
 
 @app.get("/company_infos/{ticker}")
-async def get_company_info(ticker: str) -> CompanyInfo:
+async def get_company_info(ticker: str, credentials: CredentialsType) -> CompanyInfo:
     """Get information from one specific company"""
     return opa_storage.get_company_infos([ticker])[ticker]
 
 
 @app.get("/company_infos")
 async def get_company_infos(
-    tickers: Annotated[list[str], Query()]
+    tickers: Annotated[list[str], Query()], credentials: CredentialsType
 ) -> dict[str, CompanyInfo]:
     """Get information from a list of companies"""
     return opa_storage.get_company_infos(tickers)
@@ -38,7 +48,10 @@ async def get_company_infos(
 
 @app.get("/{ticker}")
 async def get_stock_values(
-    ticker: str, kind: StockValueKind, limit: Optional[int] = None
+    ticker: str,
+    kind: StockValueKind,
+    credentials: CredentialsType,
+    limit: Optional[int] = None,
 ) -> list[StockValue]:
     kwargs = {}
     if limit is not None:

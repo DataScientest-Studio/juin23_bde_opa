@@ -74,6 +74,8 @@ services:
     secrets:
       - mongodb_username
       - mongodb_password
+      - data_report_api_username
+      - data_report_api_password
 
   internal_api:
     image: opa/api
@@ -91,6 +93,7 @@ services:
     secrets:
       - mongodb_username
       - mongodb_password
+      - credentials.json
 
   test_unit:
     image: opa/test_unit
@@ -152,6 +155,12 @@ secrets:
     file: app_data/secrets/mongodb_username
   mongodb_password:
     file: app_data/secrets/mongodb_password
+  data_report_api_username:
+    file: app_data/secrets/data_report_api_username
+  data_report_api_password:
+    file: app_data/secrets/data_report_api_password
+  credentials.json:
+    file: app_data/secrets/credentials.json
 
 volumes:
   db-data:

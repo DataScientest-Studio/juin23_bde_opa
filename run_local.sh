@@ -9,7 +9,7 @@ usage() {
     echo "<command> is either a service, a utility, or a test command"
     echo
     echo "  * Services  : internal_api | data_report | financial_data_reader"
-    echo "  * Utilities : shell | mongosh | static_analysis | format"
+    echo "  * Utilities : shell | mongosh | static_analysis | format | add_user | remove_user"
     echo "  * Tests     : test_unit | test_integration | test_functional"
     echo
     echo "For example : '${0} static_analysis'"
@@ -57,6 +57,14 @@ static_analysis)
 
 format)
     pdm run black src tests
+    ;;
+
+add_user)
+    pdm run python -m opa.auth add
+    ;;
+
+remove_user)
+    pdm run python -m opa.auth remove
     ;;
 
 make_report)
