@@ -44,7 +44,12 @@ class Api:
         )
 
 
-api = Api(settings.api_host, settings.api_port, "dash", "dash")
+api = Api(
+    settings.api_host,
+    settings.api_port,
+    settings.secrets.data_report_api_username,
+    settings.secrets.data_report_api_password,
+)
 
 
 def get_dataframe(ticker: str, kind: StockValueKind) -> pd.DataFrame | None:

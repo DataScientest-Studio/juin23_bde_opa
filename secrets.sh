@@ -19,6 +19,8 @@ check_all_secrets_exist() {
         ["mongodb_root_password"]="a password for mongo DB root (Strong passwords can be generated using e.g. 'openssl rand -base64 20')"
         ["mongodb_username"]="an username for mongo DB user"
         ["mongodb_password"]="a password for mongo DB user (Strong passwords can be generated using e.g. 'openssl rand -base64 20')"
+        ["data_report_api_username"]="an username to authorize API access to data report"
+        ["data_report_api_password"]="a password to authorize API access to data report"
     )
 
     # Check that all secrets are present
