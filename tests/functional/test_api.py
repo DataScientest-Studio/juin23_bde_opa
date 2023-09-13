@@ -20,7 +20,7 @@ def wait_for_server_availability(api_host):
     yield None
 
 
-class TestApi:
+class TestDocs:
     def test_get(self, api_host):
         r = requests.get(f"http://{api_host}:8000/docs")
         assert r.status_code == 200

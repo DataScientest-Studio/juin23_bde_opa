@@ -21,12 +21,6 @@ def check_user(credentials: HTTPBasicCredentials):
         raise HTTPException(401, "Bad credentials")
 
 
-@app.get("/")
-async def root(credentials: CredentialsType):
-    check_user(credentials)
-    return {"message": "Hello World"}
-
-
 @app.get("/tickers")
 async def all_tickers(credentials: CredentialsType) -> list[str]:
     return opa_storage.get_all_tickers()
