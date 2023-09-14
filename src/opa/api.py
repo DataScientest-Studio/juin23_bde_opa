@@ -23,12 +23,14 @@ def check_user(credentials: HTTPBasicCredentials):
 
 @app.get("/tickers")
 async def all_tickers(credentials: CredentialsType) -> list[str]:
+    check_user(credentials)
     return opa_storage.get_all_tickers()
 
 
 @app.get("/company_infos/{ticker}")
 async def get_company_info(ticker: str, credentials: CredentialsType) -> CompanyInfo:
     """Get information from one specific company"""
+    check_user(credentials)
     return opa_storage.get_company_infos([ticker])[ticker]
 
 
@@ -37,6 +39,7 @@ async def get_company_infos(
     tickers: Annotated[list[str], Query()], credentials: CredentialsType
 ) -> dict[str, CompanyInfo]:
     """Get information from a list of companies"""
+    check_user(credentials)
     return opa_storage.get_company_infos(tickers)
 
 
@@ -47,6 +50,8 @@ async def get_stock_values(
     credentials: CredentialsType,
     limit: Optional[int] = None,
 ) -> list[StockValue]:
+    check_user(credentials)
+
     kwargs = {}
     if limit is not None:
         kwargs |= dict(limit=limit)
