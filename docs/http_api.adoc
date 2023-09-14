@@ -1,0 +1,45 @@
+== HTTP API
+
+=== Scope
+
+The data we gather within this project will be more useful if it is easily accessible to various stakeholders : data scientists that might want to do some machine learning and model training on the data, automated code that would take some investment decisions, data reports, and so on. 
+
+This data is obviously already available directly from the MongoDB database and can be accessed in this way by anyone with the proper credentials and in any programming language that has a MongoDB driver. The very code of this project uses the `MongoDbStorage` class, an implementation of the `Storage` abstract class (seen in <<_data_storage>> section), which abstracts away the kind of database used.
+
+However, we might want to extend this access to other languages and/or keep the option to opt out from MongoDB. Or open the access e.g. to external clients.
+
+In this context, a classic JSON API accessible via HTTP is the ideal solution.
+
+=== Implementation
+
+There is not much to say about the implementation ; the HTTP API is basically a mirror of the API defined in the `Storage` abstract class ; therefore its implementation is very straightforward, using the FastAPI frameworkfootnote:[https://fastapi.tiangolo.com/]. In the most complex cases it only involves converting some parameters in another format or making them optional, as exemplified below :
+
+
+[#http-api-get-stock-values]
+.Implementation of the stock values endpoint
+[,python]
+// This should display the definition of /{ticker} API endpoint
+----
+include::../src/opa/api.py[lines=43..54]
+----
+
+==== Securisation
+
+Most of the work on this module has been focused on restricting access to our API only to legitimate users. We will use user authentication for that, but in a context where all the API calls are made by well-defined users which operate from an internal network (e.g. the dashboard application, datascientists within the same company, ...), the API could simply NOT be exposed on the Internet, which could very well be achieved with a proper setup of the IP tables and the web server on the API hosting machine.
+
+We have opted for a simple username/password scheme using HTTP Basic Authenticationfootnote:[https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#basic_authentication_scheme]. It's important to note that this approach is nowhere near safe in the absence of HTTPS, since the credentials are transmitted in clear text.
+
+On every request to any endpoint of the API, the credentials are checked against a list of valid users/passwords, which (for simplicity) is stored in a plain JSON file. The passwords are obviously never stored in clear text, and the recommandations of the Open Web Application Security Projectfootnote:[https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html] have been followed for password storage. The recommended hashing algorithm (Argon2idfootnote:[https://www.password-hashing.net/#argon2]) is resistant to both side-channel timing attacks and GPU attacks ; it has a well-maintained Python libraryfootnote:[https://pypi.org/project/argon2-cffi/].
+
+
+[#credentials-file]
+.Example of user credentials file
+[,json]
+----
+{
+    "alice": "$argon2id$v=19$m=65536,t=3,p=4$GxP3IeCBqV2sMizXXeqzwQ$2I1DOwlzvFKZAV7VYXMlhXrpss2/C79bczf80UoT+q0",
+    "bob": "$argon2id$v=19$m=65536,t=3,p=4$StFQXOIkcEyHzo92VoddyA$BxzQZmRTDdwCT9TjLBZh6NU3hkSGASHMFuQouVnWguw",
+    "charlie": "$argon2id$v=19$m=65536,t=3,p=4$ekWgEzumCgKfjmuicEJ+GQ$zbWaOxn0U4XiWsXKRbm46ohIKEpLoYK/Uld/P8Lhe9I",
+    "julien": "$argon2id$v=19$m=65536,t=3,p=4$+6b6zy6RZ3GMClCiH723zg$K0OPOhz3+a9sPP8a1m5sQh5QbK9zk/xU+5wmnWipsSc"
+}
+----
