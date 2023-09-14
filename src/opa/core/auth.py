@@ -1,21 +1,18 @@
 from abc import ABC, abstractmethod
-import secrets
-from hashlib import scrypt
 from loguru import logger
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
-
-def encrypt_pass(password: bytes):
-    return scrypt(password, n=2**14, r=8, p=1, salt=b"salt")
+from argon2 import PasswordHasher
+from argon2.exceptions import VerifyMismatchError
 
 
 class CredentialsStorage(ABC):
     @abstractmethod
-    def read_hashed_password(self, username: str) -> bytes | None:
+    def read_hashed_password(self, username: str) -> str | None:
         ...
 
     @abstractmethod
-    def write(self, username: str, password: bytes):
+    def write(self, username: str, password: str):
         ...
 
     @abstractmethod
@@ -26,13 +23,15 @@ class CredentialsStorage(ABC):
 @dataclass
 class Authenticator:
     credentials_storage: CredentialsStorage
+    hasher: PasswordHasher = field(default_factory=PasswordHasher)
 
     def add_user(self, username: str, password: str) -> bool:
         if self.credentials_storage.read_hashed_password(username):
             logger.error("User {} already exists", username)
             return False
         else:
-            self.credentials_storage.write(username, encrypt_pass(password.encode()))
+            hashed = self.hasher.hash(password)
+            self.credentials_storage.write(username, hashed)
             logger.info("User {} successfully added", username)
             return True
 
@@ -45,6 +44,8 @@ class Authenticator:
         if expected_password is None:
             return False
         else:
-            return secrets.compare_digest(
-                expected_password, encrypt_pass(password.encode())
-            )
+            try:
+                self.hasher.verify(expected_password, password)
+                return True
+            except VerifyMismatchError:
+                return False

@@ -28,6 +28,7 @@ financial_reader = [
 ]
 api = [
     "fastapi[all]>=0.100.1",
+    "argon2-cffi>=23.1.0",
 ]
 tests_functional = [
     "requests>=2.31.0",
