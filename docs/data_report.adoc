@@ -61,4 +61,21 @@ Care has been taken to display the data in a visually pleasant way, using e.g. r
 .Dashboard without rangebreaks
 image::images/dashboard_gaps.png[]
 
-=== Alternative solutions
+=== Limitations and alternative solutions
+
+Though quite intuitive and easy to use with its callback system, Dash was found to be extremely slow when it comes to rendering and displaying graphs with a large number of points ; especially OHLC charts that display a long period of time take full seconds to render (of which only about 0.5 second is taken to update the JSON data).
+
+Some solutions to those performance issues are proposed within the documentation, the only relevant one in our case being switching render engine from SVG to WebGLfootnote:[https://dash.plotly.com/performance#graphs], which uses the GPU to render graphics. This proved impractical, unfortunately, as the range breaks are not supported in WebGL modefootnote:[See documentation : https://plotly.com/python/webgl-vs-svg/ or this 3-year-old issue : https://github.com/plotly/plotly.js/issues/4630].
+
+An alternative solution was explored using FastAPI and the visualization library Vega-Altairfootnote:[https://altair-viz.github.io/], which makes use of the Javascript Vega-Lite libraryfootnote:[https://vega.github.io/vega-lite/]. This library is radically different from Dash / plotly / matplotlib / seaborn and uses a powerful declarative syntax to describe graphs.
+
+Compared to those obtained with Dash, the graphs produced were (subjectively) more visually-pleasing, easy to tweak, and fast to render even with a large values (that Dash could not even render). However, since Vega is dedicated to graph rendering only, the page totally lacked interactivity, e.g. switching from one stock value to another from an option in a dropdown menu. It would have required development of a full (but rather simple) web application in order to achieve the level of interactivity that is available out-of-the-box with Dash. A proof-of-concept using the Javascript frontend library Litfootnote:[https://lit.dev/] was produced but overall it was a bit too much work within the scope of this project, especially considering that the solution with Dash was already functional. The results of the experiment have been kept on the `vega` development branchfootnote:[See the backend : 
+https://github.com/DataScientest-Studio/juin23_bde_opa/blob/vega/src/opa/vega.py and the JS part : https://github.com/DataScientest-Studio/juin23_bde_opa/blob/vega/src/opa/vega.js]
+
+
+.Graph rendering using Vega
+[cols="a,a"]
+|===
+| image::images/vega_simple_view.png[]
+| image::images/vega_ohlc_graph.png[]
+|===
