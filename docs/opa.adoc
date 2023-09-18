@@ -1,7 +1,14 @@
-= OPA Project
+= OPA Project technical report
+Julien Hervé
 :source-highlighter: highlight.js
+:toc: macro
 
-:toc:
+// https://xkcd.com/1570/
+image:images/xkcd_engineer_syllogism_2x.png[]
+
+<<<
+
+toc::[]
 
 <<<
 
