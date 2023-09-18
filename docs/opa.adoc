@@ -25,4 +25,4 @@ include::http_api.adoc[]
 
 <<<
 
-include::deploying.adoc[]
+include::dev+deployment.adoc[]
