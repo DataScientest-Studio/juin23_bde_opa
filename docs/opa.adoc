@@ -28,6 +28,10 @@ include::data_report.adoc[]
 
 <<<
 
+include::machine_learning.adoc[]
+
+<<<
+
 include::http_api.adoc[]
 
 <<<

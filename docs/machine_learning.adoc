@@ -1,0 +1,15 @@
+== Machine Learning
+
+One way to consume data suggested by the project presentation is by implementing some machine learning models to predict the evolution of the stock market. This is obviously quite a difficult topic, and I have very little know-how in Machine Learning. Therefore I set the lowest priority on this task, but still had time to review it once the other parts of the project were reasonably complete.
+
+Being totally ignorant of the subject, I stumbled upon a very thorough literature review of "Machine learning techniques and data for stock market forecasting"footnote:[https://www.sciencedirect.com/science/article/pii/S0957417422001452] from 2022. This article analyses more than 100 articles published on the subject over 20 years, and is a perfect starting point to get some insights on what can be achieved in this domain, and how :
+
+* the kind of data used as an input,
+* the models used
+* the predictions that can be made
+
+I only focused on those that take as an input the closing value of a given stock, and aim at predicting its future value without relying on a complex mix of ML models. Even those simpler approaches, though, require techniques and tools that were not studied within the courses ; e.g. the paper "A hybrid ARIMA and support vector machines model in stock price forecasting"footnote:[https://www.sciencedirect.com/science/article/abs/pii/S0305048304001082, freely available on Sci-Hub: https://sci-hub.live/https://doi.org/10.1016/j.omega.2004.07.024] makes uses of the ARIMA modelfootnote:[https://datascientest.com/arima-series-temporelles (in French)], a very popular model in this field.
+
+Those models are not available in "classic" libraries like Scikit-learn, and one should turn to e.g. statsmodelsfootnote:[https://www.statsmodels.org/stable/index.html] to implement them ; Spark also needs an external libraryfootnote:[https://github.com/twosigma/flint] to deal with time-series. Choosing the correct parameters is quite a difficult task without much know-how in the field. The model evaluation in itself is quite different from non-time-series data, as well as is the simple split between training and test data (which should not be random).
+
+I played around a bit with those concepts using the superb Orange data mining desktop applicationfootnote:[https://orangedatamining.com/] but eventually realized it would be way too much work to implement even a simple prediction model in a more reusable form (e.g. a Jupyter notebook) just for the sake of it ; therefore it went out of scope of this project.
