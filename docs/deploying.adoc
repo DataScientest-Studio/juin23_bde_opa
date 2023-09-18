@@ -1,4 +1,4 @@
-== Deploying the project
+== Project development and deployment
 
 The project has been developed following principles that make for easy iterative development and deployment.
 
@@ -7,6 +7,41 @@ It is split into 3 main sub-parts that run independently from each other, follow
 * the financial data reader (which reads data from the external API and saves it into the database)
 * the HTTP API (which reads data from the database and makes it available to other components)
 * the dashboard (which reads from the API and presents it via a graphical UI)
+
+=== Software development
+
+The code is versioned-controlled using `git`, with a central repository available on GitHubfootnote:[https://github.com/DataScientest-Studio/juin23_bde_opa]. As of the writing of the report section, the `main` branch has over 200 commits with meaningful messages. GitHub issuesfootnote:[https://github.com/DataScientest-Studio/juin23_bde_opa/issues] have been used.
+
+[#commit-log]
+.Commit log of the project (as of 18/09/2023 - showing only the latest 10 entries)
+----
+f486fbb Write report section on API
+fd01200 Add report section on data dashboard
+23f52ea Detail project scope in a new file
+60f996d Fix typo in schema name in report
+d1433c4 Use argon2 for password hashing instead of scrypt
+7bc8485 Create some documentation on the demo run
+c668c8e [chore] Bump to 0.3.0
+43d15ad Add bump_version command
+59b0511 Extend project compatibility to Python >= 3.9 instead of 3.11
+515d93d Rename pdm.Dockerfile simply to "Dockerfile"
+----
+
+The software itself is written using sensible practices : clear and consistent naming, short and readable functions, type annotations, consistent formatting (using `black`),… Following the principle that the best documentation is no documentation (since documentation and code quickly get out-of-sync), code was written with readability as a primary concern. Documentation was only added in places which do not read well enough or feature non-obvious design choices, or to serve as documentation of external features that are not very well-documented.
+
+[#hour-break-dash-comment]
+.Documenting hard-coded values
+[,python]
+// This should display the long comment about "hour-break"
+----
+include::../src/opa/data_report.py[lines=70..86]
+----
+
+GitHub actionsfootnote:[https://github.com/DataScientest-Studio/juin23_bde_opa/actions] have been leveraged to provide _Continuous Integration_, e.g. by ensuring that the code is properly formatted or that unit tests keep on passing.
+
+.GitHub badges
+image::images/github_badges.png[]
+
 
 === Packaging the project
 
