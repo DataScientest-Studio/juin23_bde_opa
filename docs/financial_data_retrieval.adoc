@@ -4,13 +4,13 @@
 
 Within this project, we will be looking at the evolution of stock market values of several companies.
 
-In an ideal world, the ultimate goal would be to store as much fine-grained data  for as large a period of time as possible ; this would allow for much finer tuning of any Machine Learning model we would train. But this is costly both in terms of data storage and CPU usage and is considered out of scope.
+In an ideal world, the ultimate goal would be to store as much fine-grained data for as large a period of time as possible ; this would allow for much finer tuning of any Machine Learning model we would train. But this is costly both in terms of data storage and CPU usage and is considered out of scope.
 
 We will therefore restrain our focus on two kinds of data within this project :
 
 "historical" data::
     * spans long periods of time
-    * adjusted and corrected afterwardsfootnote:[https://www.investopedia.com/terms/a/adjusted_closing_price.asp]
+    * adjusted and corrected afterwards
     * quite coarsed-grained (one data point every few hours / every day)
 "streaming" data::
     * very recent (can be retrieved almost in real time)
