@@ -20,7 +20,7 @@ There is not much to say about the implementation ; the HTTP API is basically a 
 [,python]
 // This should display the definition of /{ticker} API endpoint
 ----
-include::../src/opa/api.py[lines=43..54]
+include::../src/opa/api.py[lines=46..59]
 ----
 
 ==== Securisation
