@@ -3,8 +3,15 @@ Julien Hervé
 :source-highlighter: highlight.js
 :toc: macro
 
-// https://xkcd.com/1570/
+[#cover]
+--
+[#cover-image]
+.https://xkcd.com/1570/
 image:images/xkcd_engineer_syllogism_2x.png[]
+
+[#author]
+{author}
+--
 
 <<<
 
