@@ -331,6 +331,6 @@ Validation of the server's response can now be done by simply instantiating one 
 
 ==== Handling of secret API keys
 
-The API keys are confidential and extra-care must be taken to not leak them into version control or hardcode them.
+The API keys are confidential and extra-care has been taken to not leak them into version control or hardcode them.
 
-A `get_secret` function has been added in a link:../opa/env.py[env.py] module to handle those secrets. It relies either on the existence of a `./secrets` directory at the root of the projet (that should be created on the local clone of the repo) or a `/secrets` directory created by Docker Secrets.
+Those secrets are handled via project configuration, and relies either on the existence of a `app_data/secrets` directory at the root of the projet or a `/secrets` directory (when the project is run via Docker Compose with Docker Secrets).
