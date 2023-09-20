@@ -1,11 +1,13 @@
 #cover .content {
     display: grid;
-    grid-template-rows: 1fr auto;
-    height: 25cm;
+    grid-template-rows: auto 2fr 1fr auto;
+    height: 26.2cm;
 }
 
 #cover-image {
     align-self: center;
+    max-width: 80%;
+    justify-self: center;
 }
 
 #cover-image .title {
@@ -15,4 +17,20 @@
 #author {
     align-self: end;
     justify-self: end;
+}
+
+#context {
+    align-self: end;
+    justify-self: end;
+    font-style: italic;
+}
+
+#title {
+    align-self: center;
+    justify-self: center;
+}
+
+#title p {
+    font-size: 3em;
+    font-weight: bolder;
 }

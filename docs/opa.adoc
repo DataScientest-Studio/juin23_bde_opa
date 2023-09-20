@@ -1,10 +1,18 @@
 = OPA Project technical report
 Julien Hervé
+:showtitle!:
+:context: Data Engineering bootcamp (June 2023)
 :source-highlighter: highlight.js
 :toc: macro
 
 [#cover]
 --
+[#context]
+{context}
+
+[#title]
+{doctitle}
+
 [#cover-image]
 .https://xkcd.com/1570/
 image:images/xkcd_engineer_syllogism_2x.png[]
@@ -12,6 +20,14 @@ image:images/xkcd_engineer_syllogism_2x.png[]
 [#author]
 {author}
 --
+
+// Remove document title (https://github.com/ggrossetie/asciidoctor-web-pdf/issues/547#issuecomment-1483789359)
+++++
+<script>
+    var titlePageElement = document.getElementsByClassName("title-document")[0];
+    titlePageElement?.parentNode.removeChild(titlePageElement);
+</script>
+++++
 
 <<<
 
