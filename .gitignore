@@ -172,4 +172,3 @@ app_data/secrets/*
 !/app_data/secrets/.gitkeep
 
 docs/**.html
-docs/**.pdf
