@@ -317,7 +317,7 @@ include::../src/opa/core/providers.py[lines=11..31]
 
 The implementation of the class that gets data from FMP Cloud provider can be found in link:../opa/providers/fmp_cloud.py[fmp_cloud.py].
 
-==== Data validation
+=== Data validation
 
 To ensure that the data we get from the APIs is in a format that we expect, we use the `pydantic` libraryfootnote:[https://docs.pydantic.dev/2.0/] to define some models of the data.
 
@@ -329,7 +329,7 @@ include::../src/opa/providers/fmp_cloud.py[lines=25..27;38..41;43..50;73..76]
 
 Validation of the server's response can now be done by simply instantiating one of those classes with e.g. [,python]`FmpCloudHistoricalData(**json)`.
 
-==== Handling of secret API keys
+=== Handling of secret API keys
 
 The API keys are confidential and extra-care has been taken to not leak them into version control or hardcode them.
 
