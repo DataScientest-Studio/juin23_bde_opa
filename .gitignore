@@ -171,4 +171,4 @@ app_data/http_cache/*
 app_data/secrets/*
 !/app_data/secrets/.gitkeep
 
-docs/**.html
+docs/report/**.html

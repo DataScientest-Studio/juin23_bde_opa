@@ -19,7 +19,7 @@ We have seen that the financial data we aim to retrieve is always shaped basical
 [,python]
 // This should display the definition of StockValue class
 ----
-include::../src/opa/core/financial_data.py[lines=19..27]
+include::../../src/opa/core/financial_data.py[lines=19..27]
 ----
 
 Though they is no numerical ID, short strings named "tickers" or "symbols" in stock market jargon are used to identify a given stock on a stock marketfootnote:[https://en.wikipedia.org/wiki/Ticker_symbol] ; they are unique by design and can therefore be safely used to identify a given company.
@@ -63,7 +63,7 @@ Should we change our mind regarding the database choice, we'll keep some flexibi
 [,python]
 // This should display the definition of Storage class
 ----
-include::../src/opa/core/storage.py[lines=11..36]
+include::../../src/opa/core/storage.py[lines=11..36]
 ----
 
 The layout of the MongoDB database itself will be setup using the approach recommended of the MongoDB Docker image's pagefootnote:["Initializing a fresh instance" paragraph on https://hub.docker.com/_/mongo], via a `mongo-init.js` file executed on the first startup.

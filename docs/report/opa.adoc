@@ -4,7 +4,7 @@ Julien Hervé
 :context: Data Engineering bootcamp (June 2023)
 :source-highlighter: highlight.js
 :toc: macro
-:imagesdir: images/
+:imagesdir: ../images/
 
 [#cover]
 --

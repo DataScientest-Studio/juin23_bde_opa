@@ -34,7 +34,7 @@ The software itself is written using sensible practices : clear and consistent n
 [,python]
 // This should display the long comment about "hour-break"
 ----
-include::../src/opa/data_report.py[lines=70..86]
+include::../../src/opa/data_report.py[lines=70..86]
 ----
 
 GitHub actionsfootnote:[https://github.com/DataScientest-Studio/juin23_bde_opa/actions] have been leveraged to provide _Continuous Integration_, e.g. by ensuring that the code is properly formatted or that unit tests keep on passing.

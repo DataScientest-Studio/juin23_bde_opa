@@ -77,11 +77,11 @@ remove_user)
     ;;
 
 make_report)
-    asciidoctor-web-pdf docs/opa.adoc
+    asciidoctor-web-pdf docs/report/opa.adoc
     ;;
 
 make_report_css)
-    asciidoctor-web-pdf docs/opa.adoc -a stylesheet="+./opa.css"
+    asciidoctor-web-pdf docs/report/opa.adoc -a stylesheet="+./opa.css"
     ;;
 
 test_unit)
