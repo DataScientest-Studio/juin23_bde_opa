@@ -2,6 +2,20 @@
 
 [![unit tests](https://github.com/DataScientest-Studio/juin23_bde_opa/actions/workflows/tests_unit.yml/badge.svg)](https://github.com/DataScientest-Studio/juin23_bde_opa/actions/workflows/tests_unit.yml) [![formatting](https://github.com/DataScientest-Studio/juin23_bde_opa/actions/workflows/format.yml/badge.svg)](https://github.com/DataScientest-Studio/juin23_bde_opa/actions/workflows/format.yml)
 
+## What is this ?
+
+This project was developed as part of my [3-month Data Engineer course at Datascientest](https://datascientest.com/formation-data-engineer), in parallel to the pedagogical cursus (which covers topics from Machine Learning essentials to Kubernetes, via SQL, MongoDB, Scala, Spark,...).
+
+It basically consists of :
+
+* Retrieving stock market data at regular intervals,
+* Storing it in a local database,
+* Making it available through an HTTP API,
+* Displaying the data in a dashboard,
+* Putting all that in production, microservices-style
+
+See a full report (aimed at the pedagogical team) [here](docs/report/opa.pdf).
+
 ## Running the project
 
 1. Use helper script `./secrets.sh` to fill the `app_data/secrets` with the application's secrets. By the end it should have the following structure :
