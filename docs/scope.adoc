@@ -1,6 +1,8 @@
 == Project scope
 
-This project aims at setting up a full data pipeline that covers the following aspects :
+The expected milestones and goals have been specified in a Google Document written by the Datascientest teamfootnote:[https://docs.google.com/document/d/1UEL9wexhETO2MXpxvIPwVRE4WLfLOOi3YF43Zn8L5sk].
+
+Basically the project aims at setting up a full data pipeline that covers the following aspects :
 
 * retrieving data from an external API
 * storing that data locally
@@ -10,4 +12,7 @@ This project aims at setting up a full data pipeline that covers the following a
 
 The data used will be stock market values from various companies.
 
-The project's expected milestones and goals are detailed within a Google Documentfootnote:[https://docs.google.com/document/d/1UEL9wexhETO2MXpxvIPwVRE4WLfLOOi3YF43Zn8L5sk]
+The overall architecture is outlined in the diagram below ; the yellow blocks within the "OPA Inc." group are to be built within the course of the project and will be presented in the remaining sections.
+
+.Project architectural overview
+image:graphs/architecture.png[]
