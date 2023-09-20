@@ -4,6 +4,7 @@ Julien Hervé
 :context: Data Engineering bootcamp (June 2023)
 :source-highlighter: highlight.js
 :toc: macro
+:imagesdir: images/
 
 [#cover]
 --
@@ -15,7 +16,7 @@ Julien Hervé
 
 [#cover-image]
 .https://xkcd.com/1570/
-image:images/xkcd_engineer_syllogism_2x.png[]
+image:xkcd_engineer_syllogism_2x.png[]
 
 [#author]
 {author}

@@ -40,7 +40,7 @@ include::../src/opa/data_report.py[lines=70..86]
 GitHub actionsfootnote:[https://github.com/DataScientest-Studio/juin23_bde_opa/actions] have been leveraged to provide _Continuous Integration_, e.g. by ensuring that the code is properly formatted or that unit tests keep on passing.
 
 .GitHub badges
-image::images/github_badges.png[]
+image::github_badges.png[]
 
 
 === Packaging the project
