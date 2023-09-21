@@ -11,6 +11,7 @@ usage() {
     echo "  * Services  : internal_api | data_report | financial_data_reader"
     echo "  * Utilities : shell | mongosh | static_analysis | format | add_user | remove_user | bump_version [version_number]"
     echo "  * Tests     : test_unit | test_integration | test_functional"
+    echo "  * Reports   : make_slides"
     echo
     echo "For example : '${0} static_analysis'"
 }
@@ -82,6 +83,10 @@ make_report)
 
 make_report_css)
     asciidoctor-web-pdf docs/report/opa.adoc -a stylesheet="+./opa.css"
+    ;;
+
+make_slides)
+    pandoc -t revealjs -s -o docs/presentation/index.html -V revealjs-url=https://unpkg.com/reveal.js/ --include-in-header=docs/presentation/slides.css  -V theme=serif --slide-level=2 docs/presentation/slides.md
     ;;
 
 test_unit)
