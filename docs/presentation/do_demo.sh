@@ -29,25 +29,25 @@ function pe_http {
     url=$1
     opts=${2-}
     params=${3-}
-    pe "http -b $opts $url $params"
+    pe "http -b --pretty=all $opts $url $params 2>/dev/null | less -R"
 }
 
 function pe_fmp {
     path=$1
     ticker=$2
     params=${3-}
-    pe "http -b https://fmpcloud.io/api/v3/$path/$ticker apikey==${FMP_CLOUD_API_KEY} $params"
+    pe_http "https://fmpcloud.io/api/v3/$path/$ticker" "" "apikey==${FMP_CLOUD_API_KEY} $params"
 }
 
 function pe_api_anonymous {
     path=$1
-    pe "http -b http://${API_HOST}:${API_PORT}/$path"
+    pe_http "http://${API_HOST}:${API_PORT}/$path"
 }
 
 function pe_api_logged {
     path=$1
     params=${2-}
-    pe "http -b --auth ${API_USERNAME}:${API_PASSWORD} --auth-type basic http://${API_HOST}:${API_PORT}/$path $params"
+    pe_http "http://${API_HOST}:${API_PORT}/$path" "--auth ${API_USERNAME}:${API_PASSWORD} --auth-type basic" "$params"
 }
 
 # Demo functions
