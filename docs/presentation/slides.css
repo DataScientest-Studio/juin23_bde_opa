@@ -25,4 +25,12 @@ figcaption {
 .date {
     font-size: 0.75em !important;
 }
+
+.demo {
+    font-size: var(--r-heading2-size);
+}
+
+.demo::before {
+    content: "demo time ! 🧑‍💻";
+}
 </style>
