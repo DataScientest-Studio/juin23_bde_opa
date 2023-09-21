@@ -97,7 +97,7 @@ services:
       dockerfile: ./tests.Dockerfile
       args:
         - OPTIONAL_DEPENDENCIES_GROUPS=test
-    command: [ "pdm", "run", "pytest", "-rfE", "tests/unit" ]
+    command: [ "pdm", "run", "pytest", "-v", "tests/unit" ]
     environment: *environment
     profiles:
       - test
@@ -109,7 +109,7 @@ services:
       dockerfile: ./tests.Dockerfile
       args:
         - OPTIONAL_DEPENDENCIES_GROUPS=test,tests_functional
-    command: [ "pdm", "run", "pytest", "-rfE", "tests/functional" ]
+    command: [ "pdm", "run", "pytest", "-v", "tests/functional" ]
     environment: *environment
     depends_on:
       - internal_api
@@ -123,7 +123,7 @@ services:
       dockerfile: ./tests.Dockerfile
       args:
         - OPTIONAL_DEPENDENCIES_GROUPS=test,storage
-    command: [ "pdm", "run", "pytest", "-rfE", "tests/integration" ]
+    command: [ "pdm", "run", "pytest", "-v", "tests/integration" ]
     environment:
       <<: *environment
       OPA_MONGO_DATABASE: stock_market-test
