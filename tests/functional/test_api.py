@@ -9,6 +9,14 @@ def api_host():
     return settings.api_host
 
 
+@pytest.fixture(scope="session")
+def credentials():
+    return (
+        settings.secrets.data_report_api_username,
+        settings.secrets.data_report_api_password,
+    )
+
+
 @pytest.fixture(scope="session", autouse=True)
 def wait_for_server_availability(api_host):
     timeout = 5
@@ -27,6 +35,11 @@ class TestDocs:
 
 
 class TestTickers:
-    def test_is_list(self, api_host):
+    def test_not_auth(self, api_host):
         r = requests.get(f"http://{api_host}:8000/tickers")
+        assert r.status_code == 401
+
+    def test_auth(self, api_host, credentials):
+        r = requests.get(f"http://{api_host}:8000/tickers", auth=credentials)
+        assert r.status_code == 200
         assert isinstance(r.json(), list)
