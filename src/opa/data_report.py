@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from enum import Enum
 
 from loguru import logger
 from dash import Dash, html, dcc, callback, Output, Input, no_update
@@ -10,6 +11,17 @@ import pandas as pd
 from opa import settings
 from opa.core.financial_data import StockValueKind
 from opa.http_methods import get_json_data
+
+
+class CheckBoxValue(Enum):
+    DISPLAY_SLIDER = "DISPLAY_SLIDER"
+
+    @staticmethod
+    def all_checked(checked_values: str | None):
+        if checked_values is None:
+            return []
+        else:
+            return [CheckBoxValue(v) for v in checked_values]
 
 
 @dataclass
@@ -65,7 +77,7 @@ def get_dataframe(ticker: str, kind: StockValueKind) -> pd.DataFrame | None:
     return pd.DataFrame(data) if data else None
 
 
-def add_range_selectors(figure, hour_break=False):
+def add_range_selectors(figure, display_slider, hour_break=False):
     breaks = [dict(bounds=["sat", "mon"])]
     if hour_break:
         # The behaviour of this setting is really not well documented
@@ -90,7 +102,7 @@ def add_range_selectors(figure, hour_break=False):
         # which makes the plot very "flat" if the plotted value has a high amplitude overall
         # but locally fluctuates around a high value (e.g. a stock that started around 5$
         # and now values at around $100).
-        rangeslider_visible=True,
+        rangeslider_visible=display_slider,
         rangeselector={
             "buttons": [
                 dict(label="1m", count=1, step="month", stepmode="backward"),
@@ -115,8 +127,12 @@ def set_transparent_background(figure):
     Output("errors", "className"),
     Input("ticker-selector", "value"),
     Input("type-selector", "value"),
+    Input("ui-display-check", "value"),
 )
-def update_graph(ticker: str, type_str: str):
+def update_graph(ticker: str, type_str: str, checked: list | None):
+    checked = CheckBoxValue.all_checked(checked)
+    display_slider = CheckBoxValue.DISPLAY_SLIDER in checked
+
     kind = StockValueKind(type_str)
     df = get_dataframe(ticker, kind)
 
@@ -164,7 +180,7 @@ def update_graph(ticker: str, type_str: str):
 
     return (
         set_transparent_background(
-            add_range_selectors(figure, kind == StockValueKind.OHLC)
+            add_range_selectors(figure, display_slider, kind == StockValueKind.OHLC)
         ),
         "",
         "",
@@ -221,6 +237,12 @@ if __name__ == "__main__":
     dash_app.layout = html.Main(
         [
             dcc.Dropdown([], id="ticker-selector"),
+            dcc.Checklist(
+                options=[
+                    {"label": "Display slider", "value": CheckBoxValue.DISPLAY_SLIDER}
+                ],
+                id="ui-display-check",
+            ),
             html.Img(id="company-image"),
             html.P(id="company-description"),
             html.Button("Refresh tickers list", id="tickers-refresh"),

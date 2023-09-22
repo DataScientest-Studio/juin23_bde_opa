@@ -30,6 +30,11 @@ main {
     align-self: center;
 }
 
+#ui-display-check {
+    grid-area: tickers;
+    align-self: end;
+}
+
 #company-image {
     grid-area: company-image;
     max-height: 20vh;
