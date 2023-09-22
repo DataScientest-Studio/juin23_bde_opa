@@ -18,6 +18,7 @@ nb_points_choices = [200, 500, 1_000, 2000, 5000, 10000, 0]
 
 class CheckBoxValue(Enum):
     DISPLAY_SLIDER = "DISPLAY_SLIDER"
+    ENABLE_BREAKS = "ENABLE_BREAKS"
 
     @staticmethod
     def all_checked(checked_values: str | None):
@@ -74,7 +75,7 @@ def get_dataframe(
     return pd.DataFrame(data) if data else None
 
 
-def add_range_selectors(figure, display_slider, hour_break=False):
+def add_range_selectors(figure, display_slider, enable_range_breaks, hour_break=False):
     breaks = [dict(bounds=["sat", "mon"])]
     if hour_break:
         # The behaviour of this setting is really not well documented
@@ -110,7 +111,7 @@ def add_range_selectors(figure, display_slider, hour_break=False):
             ]
         },
         # Rangebreaks seem to not work properly with very long series.
-        rangebreaks=breaks,
+        rangebreaks=breaks if enable_range_breaks else [],
     )
 
 
@@ -132,6 +133,7 @@ def update_graph(
 ):
     checked = CheckBoxValue.all_checked(checked)
     display_slider = CheckBoxValue.DISPLAY_SLIDER in checked
+    enable_breaks = CheckBoxValue.ENABLE_BREAKS in checked
 
     kind = StockValueKind(type_str)
 
@@ -184,7 +186,9 @@ def update_graph(
 
     return (
         set_transparent_background(
-            add_range_selectors(figure, display_slider, kind == StockValueKind.OHLC)
+            add_range_selectors(
+                figure, display_slider, enable_breaks, kind == StockValueKind.OHLC
+            )
         ),
         "",
         "",
@@ -243,8 +247,11 @@ if __name__ == "__main__":
             dcc.Dropdown([], id="ticker-selector"),
             dcc.Checklist(
                 options=[
-                    {"label": "Display slider", "value": CheckBoxValue.DISPLAY_SLIDER}
+                    {"label": "Display slider", "value": CheckBoxValue.DISPLAY_SLIDER},
+                    {"label": "Enable breaks", "value": CheckBoxValue.ENABLE_BREAKS},
                 ],
+                value=[CheckBoxValue.ENABLE_BREAKS],
+                inline=True,
                 id="ui-display-check",
             ),
             dcc.Slider(
