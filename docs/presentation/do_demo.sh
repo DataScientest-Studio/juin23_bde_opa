@@ -94,6 +94,17 @@ function demo_dashboard {
     pe "docker compose up -d data_report"
 }
 
+function demo_tests {
+    p "docker compose --profile=test up test_unit"
+    docker compose --profile=test up test_unit --force-recreate
+
+    p "docker compose --profile=test up test_integration"
+    docker compose --profile=test up test_integration --force-recreate
+
+    p "docker compose --profile=test up test_functional"
+    docker compose --profile=test up test_functional --force-recreate
+}
+
 clear
 
 demo_ext_api
@@ -101,3 +112,4 @@ demo_empty_db
 demo_reader
 demo_internal_api
 demo_dashboard
+demo_tests
