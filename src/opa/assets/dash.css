@@ -37,6 +37,11 @@ main {
     align-self: end;
 }
 
+#nb-points-slider {
+    grid-area: tickers;
+    align-self: center;
+}
+
 #company-image {
     grid-area: company-image;
     max-height: 20vh;

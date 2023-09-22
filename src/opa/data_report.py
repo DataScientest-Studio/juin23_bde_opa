@@ -13,6 +13,9 @@ from opa.core.financial_data import StockValueKind
 from opa.http_methods import get_json_data
 
 
+nb_points_choices = [200, 500, 1_000, 2000, 5000, 10000, 0]
+
+
 class CheckBoxValue(Enum):
     DISPLAY_SLIDER = "DISPLAY_SLIDER"
 
@@ -64,16 +67,10 @@ api = Api(
 )
 
 
-def get_dataframe(ticker: str, kind: StockValueKind) -> pd.DataFrame | None:
-    if kind == StockValueKind.SIMPLE:
-        # In the current setting, Dash does not display anything if more than 1000
-        # values are displayed and the rangebreaks are enabled.
-        limit = 1000
-    elif kind == StockValueKind.OHLC:
-        # Load as much values as possible
-        limit = 0
-
-    data = api.get_stock_values(ticker, kind, limit)
+def get_dataframe(
+    ticker: str, kind: StockValueKind, nb_points: int
+) -> pd.DataFrame | None:
+    data = api.get_stock_values(ticker, kind, nb_points)
     return pd.DataFrame(data) if data else None
 
 
@@ -128,13 +125,20 @@ def set_transparent_background(figure):
     Input("ticker-selector", "value"),
     Input("type-selector", "value"),
     Input("ui-display-check", "value"),
+    Input("nb-points-slider", "value"),
 )
-def update_graph(ticker: str, type_str: str, checked: list | None):
+def update_graph(
+    ticker: str, type_str: str, checked: list | None, nb_points_value: int
+):
     checked = CheckBoxValue.all_checked(checked)
     display_slider = CheckBoxValue.DISPLAY_SLIDER in checked
 
     kind = StockValueKind(type_str)
-    df = get_dataframe(ticker, kind)
+
+    # For some reason, Dash will not display anything if more than 1000
+    # values are displayed with "SIMPLE" values and the rangebreaks are enabled.
+    # So choose those UI settings wisely.
+    df = get_dataframe(ticker, kind, nb_points_choices[nb_points_value])
 
     if df is None:
         return (
@@ -242,6 +246,12 @@ if __name__ == "__main__":
                     {"label": "Display slider", "value": CheckBoxValue.DISPLAY_SLIDER}
                 ],
                 id="ui-display-check",
+            ),
+            dcc.Slider(
+                id="nb-points-slider",
+                marks={idx: str(v) for idx, v in enumerate(nb_points_choices)},
+                value=1,
+                step=None,
             ),
             html.Img(id="company-image"),
             html.P(id="company-description"),
