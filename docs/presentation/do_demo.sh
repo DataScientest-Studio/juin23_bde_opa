@@ -1,14 +1,14 @@
 #!/bin/bash
 set -u
 
-MONGO_USER=`head app_data/secrets/mongodb_username`
-MONGO_PASSWORD=`head app_data/secrets/mongodb_password`
+MONGO_USER=$(head app_data/secrets/mongodb_username)
+MONGO_PASSWORD=$(head app_data/secrets/mongodb_password)
 MONGO_HOST=localhost
 MONGO_PORT=27117
 MONGO_DATABASE=stock_market-dev
 MONGO_URL=mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}/${MONGO_DATABASE}
 
-FMP_CLOUD_API_KEY=`head app_data/secrets/fmp_cloud_api_key`
+FMP_CLOUD_API_KEY=$(head app_data/secrets/fmp_cloud_api_key)
 
 API_HOST=localhost
 API_PORT=8000
@@ -114,7 +114,7 @@ function demo_tests {
 
 check_dependencies
 
-. `dirname $0`/demo-magic.sh
+. $(dirname $0)/demo-magic.sh
 TYPE_SPEED=100
 
 clear
