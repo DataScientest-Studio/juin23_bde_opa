@@ -15,11 +15,18 @@ API_PORT=8000
 API_USERNAME="julien"
 API_PASSWORD="julien"
 
-. `dirname $0`/demo-magic.sh
-
-TYPE_SPEED=100
-
 # Utility functions
+
+function not_installed {
+    echo "$1 is not installed"
+    exit 1
+}
+
+function check_dependencies {
+    which http >/dev/null || not_installed httpie
+    which mongosh >/dev/null || not_installed mongosh
+    which pv >/dev/null || not_installed pv
+}
 
 function pe_mongosh {
     pe "mongosh ${MONGO_URL} --authenticationDatabase admin --eval '$1' --quiet"
@@ -104,6 +111,11 @@ function demo_tests {
     p "docker compose --profile=test up test_functional"
     docker compose --profile=test up test_functional --force-recreate
 }
+
+check_dependencies
+
+. `dirname $0`/demo-magic.sh
+TYPE_SPEED=100
 
 clear
 
