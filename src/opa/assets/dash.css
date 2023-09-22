@@ -17,6 +17,7 @@ main {
 
 #ticker-selector {
     grid-area: tickers;
+    width: 50%;
 }
 
 #tickers-refresh {
@@ -27,7 +28,8 @@ main {
 
 #type-selector {
     grid-area: tickers;
-    align-self: center;
+    justify-self: end;
+    width: 45%;
 }
 
 #ui-display-check {
