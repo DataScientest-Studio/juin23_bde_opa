@@ -1,0 +1,23 @@
+name: Static analysis
+
+on:
+  push:
+    branches:
+      - actions
+
+jobs:
+  mypy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
+      - name: Set up Python
+        uses: actions/setup-python@master
+        with:
+          python-version: "3.10"
+      - name: Install mypy
+        run: pip install .[dev]
+      - name: Run mypy
+        uses: jpetrucciani/mypy-check@master
+        with:
+          mypy_flags: '--config-file pyproject.toml'
