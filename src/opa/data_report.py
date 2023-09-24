@@ -21,7 +21,7 @@ class CheckBoxValue(Enum):
     ENABLE_BREAKS = "ENABLE_BREAKS"
 
     @staticmethod
-    def all_checked(checked_values: str | None):
+    def all_checked(checked_values: list[str] | None) -> list:
         if checked_values is None:
             return []
         else:
@@ -36,11 +36,11 @@ class Api:
     password: str
 
     def get_stock_values(
-        self, ticker: str, kind: StockValueKind, limit: int = None
+        self, ticker: str, kind: StockValueKind, limit: int | None = None
     ) -> list[dict]:
         params = dict(kind=kind.value)
         if limit is not None:
-            params |= dict(limit=limit)
+            params |= dict(limit=str(limit))
 
         return self._do_request(ticker, params)
 

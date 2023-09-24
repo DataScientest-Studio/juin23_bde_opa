@@ -52,7 +52,7 @@ async def get_stock_values(
 ) -> list[StockValue]:
     check_user(credentials)
 
-    kwargs = {}
+    kwargs: dict[str, int] = {}
     if limit is not None:
         kwargs |= dict(limit=limit)
 

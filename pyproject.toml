@@ -84,6 +84,7 @@ module = [
     "plotly",
     "plotly.express",
     "plotly.graph_objects",
+    "plotly.subplots",
     "dynaconf"
 ]
 ignore_missing_imports = true
