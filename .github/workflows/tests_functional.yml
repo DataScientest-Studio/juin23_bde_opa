@@ -1,0 +1,24 @@
+name: Unit tests
+
+on:
+  push:
+    branches:
+      - actions
+
+jobs:
+  unit_test:
+    name: Run unit tests
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v1
+
+    - name: Start containers
+      run: docker compose up -d --build
+
+    - name: Install package in test mode
+      run: pip install .[test]
+
+    - name: Run tests
+      run: |
+        pytest tests/functional
