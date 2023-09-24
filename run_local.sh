@@ -97,7 +97,7 @@ make_report_css)
     ;;
 
 make_slides)
-    pandoc -t revealjs -s -o docs/presentation/index.html -V revealjs-url=https://unpkg.com/reveal.js/ --include-in-header=docs/presentation/slides.css  -V theme=serif --slide-level=2 docs/presentation/slides.md
+    pandoc -t revealjs -s -o docs/presentation/index.html -V revealjs-url=https://unpkg.com/reveal.js/ --include-in-header=docs/presentation/slides.css -V theme=serif --slide-level=2 docs/presentation/slides.md
     ;;
 
 test_unit)
