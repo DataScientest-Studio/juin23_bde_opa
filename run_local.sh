@@ -9,7 +9,7 @@ usage() {
     echo "<command> is either a service, a utility, or a test command"
     echo
     echo "  * Services  : internal_api | data_report | financial_data_reader"
-    echo "  * Utilities : shell | mongosh | static_analysis | format | add_user | remove_user | bump_version [version_number]"
+    echo "  * Utilities : shell | mongosh | static_analysis | format | add_user | remove_user | bump_version [version_number] | setup_git_hooks"
     echo "  * Tests     : test_unit | test_integration | test_functional"
     echo "  * Reports   : make_slides"
     echo
@@ -67,6 +67,17 @@ bump_version)
     fi
 
     pdm run tbump $1
+    ;;
+
+setup_git_hooks)
+    cat >.git/hooks/pre-commit <<EOF
+#!/bin/sh
+
+# Run formatter
+pdm run black --check src tests
+EOF
+
+    chmod +x .git/hooks/pre-commit
     ;;
 
 add_user)
