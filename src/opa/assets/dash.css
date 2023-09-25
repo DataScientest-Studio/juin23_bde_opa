@@ -57,7 +57,7 @@ main {
 
 #stock-evolution-graph {
     grid-area: graph;
-    height: 80vh;
+    height: 75vh;
 }
 
 #errors {
@@ -73,6 +73,13 @@ main {
 #errors.active {
     padding: 0.5em;
     border: 1px solid black;
+}
+
+#version {
+    grid-area: graph;
+    font-size: 0.5em;
+    align-self: end;
+    justify-self: end;
 }
 
 /* Layout of company information card */

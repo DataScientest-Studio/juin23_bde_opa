@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
+from importlib.metadata import version
 
 from loguru import logger
 from dash import Dash, html, dcc, callback, Output, Input, no_update
@@ -270,6 +271,7 @@ if __name__ == "__main__":
             ),
             dcc.Graph(id="stock-evolution-graph", config={"scrollZoom": True}),
             html.Div(id="errors"),
+            html.Div(f"v{version('opa')}", id="version"),
         ]
     )
     dash_app.run(
