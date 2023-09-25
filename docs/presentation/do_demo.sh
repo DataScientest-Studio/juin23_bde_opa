@@ -61,8 +61,12 @@ function pe_api_logged {
 
 function demo_ext_api {
     # Get data from external API
-    pe_fmp "historical-price-full" "AAPL"
+
+    # Simple daily data, with a long range
     pe_fmp "historical-price-full" "AAPL" "serietype==line"
+    # OHLC coarse-grained range
+    pe_fmp "historical-price-full" "AAPL"
+    # OHLC fine-grained
     pe_fmp "historical-chart/15min" "AAPL"
 }
 
