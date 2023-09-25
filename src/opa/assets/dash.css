@@ -24,6 +24,7 @@ main {
     grid-area: tickers;
     align-self: end;
     justify-self: end;
+    z-index: 2;
 }
 
 #type-selector {
