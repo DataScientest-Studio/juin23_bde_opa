@@ -125,6 +125,16 @@ date: September 26, 2023
 
 [connect to [http://63.35.39.206:8050/](http://63.35.39.206:8050)]
 
+
+## Wait !
+
+What if we want to add a new value ?
+
+* Nvidia
+* Pepsi
+* Adobe
+* Netflix
+
 # Thanks for your attention !
 
 # Extras
