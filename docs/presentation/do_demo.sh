@@ -66,15 +66,9 @@ function demo_ext_api {
     pe_fmp "historical-chart/15min" "AAPL"
 }
 
-function demo_empty_db {
+function demo_reader {
     # Start the database
     pe "docker compose up -d database"
-
-    # Show there are no values
-    pe_mongosh "db.stock_values.findOne()"
-}
-
-function demo_reader {
     pe "docker compose up financial_data_reader"
 
     # Now there are some values
@@ -120,7 +114,6 @@ TYPE_SPEED=100
 clear
 
 demo_ext_api
-demo_empty_db
 demo_reader
 demo_internal_api
 demo_dashboard
