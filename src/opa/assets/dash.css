@@ -125,3 +125,15 @@ main {
     height: 20px;
     align-self: center;
 }
+
+@media only screen and (max-width: 768px) {
+    main {
+        column-gap: 0;
+        row-gap: 0;
+        grid-template-columns: 1fr 0 auto;
+    }
+
+    #company-image {
+        max-height: 4vh;
+    }
+}
