@@ -116,6 +116,9 @@ services:
       - internal_api
     profiles:
       - test
+    secrets:
+      - data_report_api_username
+      - data_report_api_password
 
   test_integration:
     image: opa/test_integration
