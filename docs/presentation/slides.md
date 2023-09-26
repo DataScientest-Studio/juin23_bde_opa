@@ -153,3 +153,12 @@ What if we want to add a new value ?
 
 ::: demo
 :::
+
+## Interactive shell
+
+Very useful for development and quick debugging !
+
+##
+
+::: demo
+:::

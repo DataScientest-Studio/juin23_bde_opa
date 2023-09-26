@@ -124,6 +124,10 @@ function demo_tests {
     docker compose --profile=test up test_functional --force-recreate
 }
 
+function demo_shell {
+    pe "./run_local shell"
+}
+
 check_dependencies
 
 . $(dirname $0)/demo-magic.sh
@@ -137,3 +141,4 @@ demo_internal_api
 demo_dashboard
 demo_add_all_data
 demo_tests
+demo_shell

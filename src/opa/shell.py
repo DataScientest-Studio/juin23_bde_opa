@@ -16,6 +16,7 @@ c.InteractiveShellApp.exec_lines = [
     "from opa.http_methods import get_json_data",
     "from opa.providers import opa_provider",
     "from opa.storage import opa_storage",
+    "from opa.auth import opa_auth",
     "from opa.data_report import api",
 ]
 c.InteractiveShell.confirm_exit = False
