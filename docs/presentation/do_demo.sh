@@ -64,6 +64,12 @@ function pe_api_logged {
     pe_http "http://${API_HOST}:${API_PORT}/$path" "--auth ${API_USERNAME}:${API_PASSWORD} --auth-type basic" "$params"
 }
 
+function pe_api_bad_log {
+    path=$1
+    params=${2-}
+    pe_http "http://${API_HOST}:${API_PORT}/$path" "--auth evil_hacker:password --auth-type basic" "$params"
+}
+
 # Demo functions
 
 function demo_ext_api {
@@ -101,6 +107,7 @@ function demo_internal_api {
 
     # This works
     pe_api_logged "tickers"
+    pe_api_bad_log "tickers"
     pe_api_logged "MSFT" "kind==simple limit==10"
     pe_api_logged "AMZN" "kind==ohlc limit==10"
 }

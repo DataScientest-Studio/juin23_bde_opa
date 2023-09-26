@@ -14,6 +14,31 @@ date: September 26, 2023
 
 ![Profit !](../images/graphs/architecture.png)
 
+# Before we start ...
+
+## Interactivity (1)
+
+Parts of the demo can be run in your browser 🧑‍💻
+
+* The links are on [https://jherve.github.io/](https://jherve.github.io/)
+    * Internal API
+    * Dashboard
+* Use your first name as username/password, or "guest"
+
+## Interactivity (2)
+
+While we are at it..
+
+* Choose a company within this list :
+    * Google/Alphabet [GOOG]
+    * Facebook/Meta [META]
+    * Nvidia [NVDA]
+    * Pepsi [PEP]
+    * Adobe [ADBE]
+    * Netflix [NFLX]
+    * Tesla [TSLA]
+* Vote in comments ! 🗳️
+
 ## Some vocabulary
 
 ::: incremental
@@ -128,12 +153,18 @@ date: September 26, 2023
 
 ## Wait !
 
-What if we want to add a new value ?
+::: incremental
 
-* Nvidia
-* Pepsi
-* Adobe
-* Netflix
+* 3 companies aren't that much to analyse the market
+* What if we want to add new companies ?
+* Let's check the votes !
+
+:::
+
+##
+
+::: demo
+:::
 
 # Thanks for your attention !
 
