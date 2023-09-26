@@ -39,21 +39,35 @@ While we are at it..
     * Tesla [TSLA]
 * Vote in comments ! 🗳️
 
-## Some vocabulary
-
-::: incremental
+## Some concepts (1)
 
 * **ticker** / **symbol**
     * a unique short identifer for a company stock
     * AAPL => Apple, MSFT => Microsoft, META => Meta
+
+## Some concepts (2)
+
+::: incremental
+
 * **OHLC** :
     * "open", "high", "low", "close"
-    * as opposed to "simple" (*my own wording*)
+    * characterizes the volatility of a given stock
+    * in simple cases, only the "close" value
+
+:::
+
+![OHLC graph](../images/AAPL_candles.png)
+
+## Some concepts (3)
+
+::: incremental
+
 * **volume** :
     * the number of stock values exchanged
     * characterizes the activity on a given stock
 
 :::
+![volume graph](../images/AAPL_candles.png)
 
 # The external API
 
