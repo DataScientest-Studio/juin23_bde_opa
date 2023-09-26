@@ -117,7 +117,7 @@ function demo_dashboard {
 }
 
 function demo_add_all_data {
-    pe "OPA_TICKERS_LIST=\"['AAPL', 'MSFT', 'AMZN', 'GOOG', 'META', 'NVDA', 'TLSA', 'COST', 'PEP', 'ADBE', 'AVGO', 'CSCO', 'CMCSA', 'NFLX']\" docker compose up financial_data_reader"
+    pe "OPA_TICKERS_LIST=\"['AAPL', 'MSFT', 'AMZN', 'GOOG', 'META', 'NVDA', 'TSLA', 'COST', 'PEP', 'ADBE', 'AVGO', 'CSCO', 'CMCSA', 'NFLX']\" docker compose up financial_data_reader"
 }
 
 function demo_tests {
@@ -129,10 +129,6 @@ function demo_tests {
 
     p "docker compose --profile=test up test_functional"
     docker compose --profile=test up test_functional --force-recreate
-}
-
-function demo_shell {
-    pe "./run_local shell"
 }
 
 check_dependencies
@@ -148,4 +144,3 @@ demo_internal_api
 demo_dashboard
 demo_add_all_data
 demo_tests
-demo_shell
