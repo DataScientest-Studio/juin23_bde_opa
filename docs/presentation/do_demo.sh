@@ -36,6 +36,13 @@ function pe_http {
     url=$1
     opts=${2-}
     params=${3-}
+    pe "http -b --pretty=all $opts $url $params 2>/dev/null"
+}
+
+function pe_http_less {
+    url=$1
+    opts=${2-}
+    params=${3-}
     pe "http -b --pretty=all $opts $url $params 2>/dev/null | less -R"
 }
 
@@ -43,7 +50,7 @@ function pe_fmp {
     path=$1
     ticker=$2
     params=${3-}
-    pe_http "https://fmpcloud.io/api/v3/$path/$ticker" "" "apikey==${FMP_CLOUD_API_KEY} $params"
+    pe_http_less "https://fmpcloud.io/api/v3/$path/$ticker" "" "apikey==${FMP_CLOUD_API_KEY} $params"
 }
 
 function pe_api_anonymous {
