@@ -84,7 +84,7 @@ function demo_reader {
 
     # Now there are some values
     pe_mongosh "db.stock_values.find({ticker: \"MSFT\", open: {\$exists: 0}}, {}, {limit: 5})"
-    pe_mongosh "db.stock_values.find({ticker: \"META\", open: {\$exists: 1}}, {}, {limit: 5})"
+    pe_mongosh "db.stock_values.find({ticker: \"AMZN\", open: {\$exists: 1}}, {}, {limit: 5})"
 
     # Can make some other queries
     pe_mongosh "db.stock_values.find({ date: {\$gt: new Date(\"2023-09-20\")} }, {}, {limit: 5})"
@@ -96,14 +96,21 @@ function demo_internal_api {
     # This will not work
     pe_api_anonymous "tickers"
 
+    # Show the list of users/password
+    pe "cat app_data/secrets/credentials.json | jq"
+
     # This works
     pe_api_logged "tickers"
     pe_api_logged "MSFT" "kind==simple limit==10"
-    pe_api_logged "META" "kind==ohlc limit==10"
+    pe_api_logged "AMZN" "kind==ohlc limit==10"
 }
 
 function demo_dashboard {
     pe "docker compose up -d data_report"
+}
+
+function demo_add_all_data {
+    pe "OPA_TICKERS_LIST=\"['AAPL', 'MSFT', 'AMZN', 'GOOG', 'META', 'NVDA', 'TLSA', 'COST', 'PEP', 'ADBE', 'AVGO', 'CSCO', 'CMCSA', 'NFLX']\" docker compose up financial_data_reader"
 }
 
 function demo_tests {
@@ -128,4 +135,5 @@ demo_ext_api
 demo_reader
 demo_internal_api
 demo_dashboard
+demo_add_all_data
 demo_tests

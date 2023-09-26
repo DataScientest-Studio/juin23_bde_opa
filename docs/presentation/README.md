@@ -23,6 +23,11 @@ Go to e.g. https://learn.datascientest.com/lesson/243/715 and start the VM.
 
 Run `docs/presentation/do_demo.sh`
 
+## Miscellaneous
+
+* Launch a terminal with adjusted font size : `xterm -fs 14`
+* Erase all values that are not within a range of tickers : `db.stock_values.deleteMany({ticker: {$nin: ["AAPL", "AMZN", "MSFT"]}})` and `db.company_info.deleteMany({symbol: {$nin: ["AAPL", "AMZN", "MSFT"]}})`
+
 ## Former demo run
 
 ### Show that something is running

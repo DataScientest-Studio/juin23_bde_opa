@@ -12,7 +12,7 @@ x-environment: &environment
   OPA_API_PORT: 8000
   OPA_DATA_REPORT_HOST: 0.0.0.0
   OPA_DATA_REPORT_PORT: 8050
-  OPA_TICKERS_LIST: ${OPA_TICKERS_LIST:-['AAPL', 'MSFT', 'AMZN', 'GOOG', 'META']}
+  OPA_TICKERS_LIST: ${OPA_TICKERS_LIST:-['AAPL', 'MSFT', 'AMZN']}
 
 services:
   financial_data_reader:
