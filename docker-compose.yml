@@ -41,7 +41,6 @@ services:
   database:
     image: mongo
     restart: always
-    user: 1000:1000
     ports:
       - 27117:27017
     command: ["mongod", "--auth"]
