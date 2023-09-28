@@ -10,11 +10,15 @@ It basically consists of :
 
 * Retrieving stock market data at regular intervals,
 * Storing it in a local database,
-* Making it available through an HTTP API,
-* Displaying the data in a dashboard,
+* Making it available through an HTTP API (see it [live](http://141.145.219.241:8000/docs)),
+* Displaying the data in a dashboard (see it [live](http://141.145.219.241:8050/)),
 * Putting all that in production, microservices-style
 
-See a full report (aimed at the pedagogical team) [here](docs/report/opa.pdf).
+Please note that the project is hosted on a free VM which slows down the response time at least by a factor of 2.
+
+See a full technical report (aimed at the pedagogical team) [here](docs/report/opa.pdf).
+
+A demonstration of the project was made to the pedagogical team in late September 2023, with [some slides](https://jherve.github.io/opa/presentation/) that were presented along a [scripted demo](docs/presentation/do_demo.sh) that can be run in a terminal.
 
 ## Running the project
 
