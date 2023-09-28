@@ -163,10 +163,6 @@ secrets:
 volumes:
   db-data:
     driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: './app_data/db/data'
 
   http-cache:
     driver: local
